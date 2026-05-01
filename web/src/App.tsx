@@ -3,10 +3,11 @@ import { HomeTab } from './components/HomeTab'
 import { SearchTab } from './components/SearchTab'
 import { RadioTab } from './components/RadioTab'
 import { FavoritesTab } from './components/FavoritesTab'
+import { AboutTab } from './components/AboutTab'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
-type Tab = 'home' | 'search' | 'radio' | 'favorites'
+type Tab = 'home' | 'search' | 'radio' | 'favorites' | 'about'
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home')
@@ -21,6 +22,7 @@ export default function App() {
         {tab === 'search' && <SearchTab />}
         {tab === 'radio' && <RadioTab />}
         {tab === 'favorites' && <FavoritesTab />}
+        {tab === 'about' && <AboutTab />}
       </div>
 
       {/* Mini Player */}
@@ -33,6 +35,7 @@ export default function App() {
           <TabButton icon="search" label="Search" active={tab === 'search'} onClick={() => setTab('search')} />
           <TabButton icon="radio" label="Radio" active={tab === 'radio'} onClick={() => setTab('radio')} />
           <TabButton icon="heart" label="Favorites" active={tab === 'favorites'} onClick={() => setTab('favorites')} />
+          <TabButton icon="about" label="About" active={tab === 'about'} onClick={() => setTab('about')} />
         </div>
       </nav>
     </div>
@@ -59,6 +62,8 @@ function TabIcon({ name }: { name: string }) {
       return <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
     case 'heart':
       return <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+    case 'about':
+      return <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
     default:
       return null
   }
