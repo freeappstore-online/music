@@ -1,22 +1,12 @@
 {
   "name": "freemusic",
-  "version": "1.0.0",
-  "main": "index.ts",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.30.3",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "~54.0.33",
-    "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-native": "0.81.5"
-  },
-  "devDependencies": {
-    "@types/react": "~19.1.0",
-    "typescript": "~5.9.2"
-  },
-  "private": true
+    "dev": "pnpm --filter @freemusic/web dev",
+    "build": "pnpm --filter @freemusic/web build",
+    "preview": "pnpm --filter @freemusic/web preview",
+    "ios:generate": "cd ios && xcodegen generate"
+  }
 }

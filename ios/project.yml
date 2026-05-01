@@ -1,0 +1,19 @@
+name: FreeMusic
+options:
+  bundleIdPrefix: com.freemusic
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+
+targets:
+  FreeMusic:
+    type: application
+    platform: iOS
+    sources:
+      - path: FreeMusic
+    settings:
+      base:
+        INFOPLIST_FILE: FreeMusic/Info.plist
+        DEVELOPMENT_TEAM: 55DT52UQXE
+        PRODUCT_BUNDLE_IDENTIFIER: com.freemusic.app
+        SWIFT_VERSION: "5.0"
