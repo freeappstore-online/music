@@ -31,7 +31,7 @@ export default function App() {
       <MiniPlayer />
 
       {/* Tab Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-[var(--bg)]/95 backdrop-blur-lg border-t border-[var(--border)] pb-[env(safe-area-inset-bottom)]">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-[var(--bg)]/90 backdrop-blur-xl border-t border-white/[0.04] pb-[env(safe-area-inset-bottom)]">
         <div className="flex max-w-2xl mx-auto">
           <TabButton icon="home" label="Home" active={tab === 'home'} onClick={() => setTab('home')} />
           <TabButton icon="search" label="Search" active={tab === 'search'} onClick={() => setTab('search')} />
@@ -45,11 +45,11 @@ export default function App() {
 }
 
 function TabButton({ icon, label, active, onClick }: { icon: string; label: string; active: boolean; onClick: () => void }) {
-  const color = active ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
   return (
-    <button className={`flex-1 flex flex-col items-center py-2 gap-0.5 ${color}`} onClick={onClick}>
+    <button className={`flex-1 flex flex-col items-center py-2.5 gap-0.5 relative ${active ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'}`} onClick={onClick}>
+      {active && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-[var(--accent)]" />}
       <TabIcon name={icon} />
-      <span className="text-[10px] font-medium">{label}</span>
+      <span className="text-[10px] font-medium tracking-wide">{label}</span>
     </button>
   )
 }
