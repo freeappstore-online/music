@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeMusic — Free Music, Forever</title>
+  <meta name="description" content="All the world's free music in one beautiful app. No ads, no subscription, no tracking. Just music.">
+  <meta property="og:title" content="FreeMusic — Free Music, Forever">
+  <meta property="og:description" content="600,000+ tracks. 30,000+ radio stations. Zero cost. Zero ads.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#111111">
+  <link rel="icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --surface-2: #1a1a1a;
+      --border: #222;
+      --text: #f5f5f5;
+      --muted: #888;
+      --dim: #555;
+      --accent: #6ECE9E;
+      --accent-dim: #6ECE9E30;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all .2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #0a0a0a;
+    }
+    .btn-accent:hover { background: #5cb888; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    header .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo svg { width: 28px; height: 28px; }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      padding: 160px 0 100px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 7vw, 72px);
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero p {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 80px auto 0;
+      max-width: 720px;
+    }
+    .stat {
+      background: var(--surface);
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 36px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* Features */
+    .features { padding: 120px 0; }
+    .features .section-label {
+      text-align: center;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .features h2 {
+      text-align: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      margin-bottom: 64px;
+      line-height: 1.2;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: border-color .2s;
+    }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent-dim);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Sources */
+    .sources { padding: 100px 0; }
+    .sources h2 {
+      text-align: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      margin-bottom: 16px;
+    }
+    .sources > .container > p {
+      text-align: center;
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 56px;
+    }
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .source-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+    .source-card .source-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .source-card .source-count {
+      font-size: 28px;
+      font-family: 'DM Serif Display', serif;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .source-card .source-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Vision */
+    .vision {
+      padding: 100px 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .vision .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .vision h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 40px);
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+    .vision p {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .vision-values {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .vision-values li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .vision-values .check {
+      width: 24px;
+      height: 24px;
+      background: var(--accent-dim);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    /* How it works */
+    .how {
+      padding: 120px 0;
+    }
+    .how .section-label {
+      text-align: center;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .how h2 {
+      text-align: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      margin-bottom: 64px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .step {
+      text-align: center;
+    }
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 auto 20px;
+    }
+    .step h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .step p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* CTA */
+    .cta {
+      padding: 120px 0;
+      text-align: center;
+    }
+    .cta-box {
+      background: linear-gradient(135deg, var(--accent-dim), var(--surface));
+      border: 1px solid var(--accent);
+      border-radius: 24px;
+      padding: 64px 40px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .cta-box h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 40px);
+      margin-bottom: 16px;
+    }
+    .cta-box p {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    footer .inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer .copy {
+      font-size: 14px;
+      color: var(--dim);
+    }
+    footer .links {
+      display: flex;
+      gap: 24px;
+    }
+    footer .links a {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    footer .links a:hover { color: var(--accent); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: 1fr; }
+      .vision .container { grid-template-columns: 1fr; gap: 40px; }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      nav { display: none; }
+      footer .inner { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container inner">
+      <a href="/" class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="30" stroke="#6ECE9E" stroke-width="5"/>
+          <circle cx="50" cy="50" r="16" stroke="#6ECE9E" stroke-width="5"/>
+          <circle cx="50" cy="50" r="5" fill="#6ECE9E"/>
+        </svg>
+        FreeMusic
+      </a>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#sources">Sources</a>
+        <a href="#vision">Vision</a>
+        <a href="/app" class="btn btn-accent" style="padding:10px 24px; font-size:14px;">Open App</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span>&#9835;</span>
+        100% Free &middot; No Ads &middot; No Account
+      </div>
+      <h1 class="font-display">
+        All the world's<br><em>free music</em><br>in one app
+      </h1>
+      <p>
+        600,000+ Creative Commons tracks. 30,000+ live radio stations.
+        Public domain recordings. Beautiful player. Zero cost, forever.
+      </p>
+      <div class="hero-buttons">
+        <a href="/app" class="btn btn-accent">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"/></svg>
+          Start Listening
+        </a>
+        <a href="https://github.com/FreeMusicApp/freemusic" class="btn btn-outline" target="_blank">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">600K+</div>
+          <div class="stat-label">Free Tracks</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">30K+</div>
+          <div class="stat-label">Radio Stations</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">$0</div>
+          <div class="stat-label">Forever</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="font-display">Music should be free.<br>We made it happen.</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">&#127925;</div>
+          <h3>No Ads, Ever</h3>
+          <p>No audio ads between songs. No banner ads. No sponsored playlists. No interruptions. Just press play.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128274;</div>
+          <h3>No Account Required</h3>
+          <p>No sign-up, no email, no phone number. Open the app and start listening immediately. Your favorites are saved locally.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128225;</div>
+          <h3>No Tracking</h3>
+          <p>We don't collect your data. No analytics. No listening history sent to servers. Your music is your business.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#127760;</div>
+          <h3>Works Everywhere</h3>
+          <p>Install as a PWA on iOS, Android, or desktop. Works in any browser. Save to home screen for a native app experience.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128251;</div>
+          <h3>Live Radio</h3>
+          <p>30,000+ internet radio stations from every country and genre. From jazz in Tokyo to electronic in Berlin.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128248;</div>
+          <h3>Background Playback</h3>
+          <p>Lock your phone, switch apps &mdash; music keeps playing. Full lock screen controls and notification integration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sources -->
+  <section class="sources" id="sources">
+    <div class="container">
+      <h2 class="font-display">Where the music comes from</h2>
+      <p>We aggregate music from the world's best free and legal sources. Every track is Creative Commons licensed or public domain.</p>
+      <div class="sources-grid">
+        <div class="source-card">
+          <div class="source-count">600,000+</div>
+          <div class="source-name">Jamendo</div>
+          <div class="source-desc">The world's largest Creative Commons music catalog. Indie artists across every genre &mdash; electronic, rock, jazz, hip-hop, ambient, classical, and more.</div>
+        </div>
+        <div class="source-card">
+          <div class="source-count">30,000+</div>
+          <div class="source-name">Radio Browser</div>
+          <div class="source-desc">A community-maintained database of internet radio stations from around the world. Live streams, 24/7, every genre and language.</div>
+        </div>
+        <div class="source-card">
+          <div class="source-count">Millions</div>
+          <div class="source-name">Internet Archive</div>
+          <div class="source-desc">The digital library of the internet. Live concert recordings, vintage albums, spoken word, and public domain audio spanning decades.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="vision" id="vision">
+    <div class="container">
+      <div>
+        <h2 class="font-display">Music belongs to everyone</h2>
+        <p>
+          We believe access to music is a fundamental part of being human. It shouldn't require a credit card, an account, or sitting through advertisements.
+        </p>
+        <p>
+          Hundreds of thousands of artists have chosen to share their work freely under Creative Commons licenses. They want to be heard. We're building the stage.
+        </p>
+      </div>
+      <div>
+        <ul class="vision-values">
+          <li>
+            <div class="check">&#10003;</div>
+            <span><strong>Open source.</strong> Our code is on GitHub. Anyone can inspect it, contribute to it, or fork it.</span>
+          </li>
+          <li>
+            <div class="check">&#10003;</div>
+            <span><strong>Artist-first.</strong> We link back to artists. We respect their licenses. We help them get discovered.</span>
+          </li>
+          <li>
+            <div class="check">&#10003;</div>
+            <span><strong>No venture capital.</strong> No investors pushing us to monetize your attention. This is a community project.</span>
+          </li>
+          <li>
+            <div class="check">&#10003;</div>
+            <span><strong>Privacy by design.</strong> No accounts, no analytics, no data collection. We literally can't track you.</span>
+          </li>
+          <li>
+            <div class="check">&#10003;</div>
+            <span><strong>Forever free.</strong> Not freemium. Not "free with ads." Not "free trial." Free. Period.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how">
+    <div class="container">
+      <div class="section-label">Get Started</div>
+      <h2 class="font-display">Three seconds to music</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Open the app</h3>
+          <p>Visit the web app in any browser. No download required. No account needed.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Find your sound</h3>
+          <p>Search tracks, browse genres, or tune into live radio from around the world.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Press play</h3>
+          <p>That's it. Music plays. Save to home screen if you want the native app feel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-box">
+        <h2 class="font-display">Ready to listen?</h2>
+        <p>No sign-up. No download. Just open and play.</p>
+        <a href="/app" class="btn btn-accent" style="font-size:18px; padding:16px 40px;">
+          <svg width="22" height="22" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"/></svg>
+          Open FreeMusic
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container inner">
+      <div class="copy">&copy; 2026 FreeMusic. Open source, open music.</div>
+      <div class="links">
+        <a href="https://github.com/FreeMusicApp/freemusic" target="_blank">GitHub</a>
+        <a href="/app">Web App</a>
+        <a href="#vision">Our Vision</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

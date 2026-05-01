@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — FreeMusic</title>
+  <meta name="description" content="FreeMusic is an open-source project to make all the world's free music accessible in one beautiful app.">
+  <meta name="theme-color" content="#111111">
+  <link rel="icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #222;
+      --text: #f5f5f5;
+      --muted: #888;
+      --dim: #555;
+      --accent: #6ECE9E;
+      --accent-dim: #6ECE9E30;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+    .font-display { font-family: 'DM Serif Display', serif; }
+    .container { max-width: 740px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+    }
+    header .inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between; height: 64px;
+    }
+    .logo {
+      font-family: 'DM Serif Display', serif; font-size: 22px;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo svg { width: 28px; height: 28px; }
+    .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+    .back:hover { color: var(--accent); }
+
+    .page { padding: 120px 0 80px; }
+    .page h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 44px;
+      margin-bottom: 32px;
+      line-height: 1.2;
+    }
+    .page h1 em { color: var(--accent); font-style: italic; }
+    .page h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      margin: 48px 0 16px;
+    }
+    .page p {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .page p strong { color: var(--text); }
+    .page ul {
+      list-style: none;
+      margin: 0 0 24px;
+    }
+    .page ul li {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.8;
+      padding-left: 24px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .page ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      text-align: center;
+      font-size: 14px;
+      color: var(--dim);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="inner">
+      <a href="/" class="logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="30" stroke="#6ECE9E" stroke-width="5"/>
+          <circle cx="50" cy="50" r="16" stroke="#6ECE9E" stroke-width="5"/>
+          <circle cx="50" cy="50" r="5" fill="#6ECE9E"/>
+        </svg>
+        FreeMusic
+      </a>
+      <a href="/" class="back">&larr; Home</a>
+    </div>
+  </header>
+
+  <div class="page">
+    <div class="container">
+      <h1 class="font-display">About <em>FreeMusic</em></h1>
+
+      <p>
+        FreeMusic exists because we believe music should be accessible to everyone, everywhere, without barriers. No credit card. No advertisements. No data harvesting. Just music.
+      </p>
+
+      <h2>Our Mission</h2>
+      <p>
+        To aggregate all the world's legally free music into one beautiful, fast, open-source application that anyone can use on any device.
+      </p>
+
+      <h2>Our Vision</h2>
+      <p>
+        A world where discovering new music doesn't require a subscription, where independent artists can reach listeners without gatekeepers, and where the act of listening to music is as free as the air we breathe.
+      </p>
+
+      <h2>Why This Exists</h2>
+      <p>
+        Hundreds of thousands of musicians have chosen to release their work under Creative Commons licenses. They've decided that being heard matters more than being paid per stream. These artists span every genre &mdash; from ambient to metal, jazz to electronic, classical to hip-hop.
+      </p>
+      <p>
+        But this incredible library of free music is scattered across dozens of platforms and archives. Finding it requires knowing where to look. <strong>FreeMusic brings it all together.</strong>
+      </p>
+
+      <h2>What We Believe</h2>
+      <ul>
+        <li><strong>Music is culture.</strong> Access to it shouldn't depend on your ability to pay.</li>
+        <li><strong>Artists deserve respect.</strong> We always credit artists and honor their chosen licenses.</li>
+        <li><strong>Privacy is a right.</strong> We don't track what you listen to. We can't &mdash; we don't have servers.</li>
+        <li><strong>Open source wins.</strong> Anyone can audit our code, suggest improvements, or build something better.</li>
+        <li><strong>Simplicity is a feature.</strong> No accounts, no settings to configure, no onboarding flows. Just press play.</li>
+      </ul>
+
+      <h2>Open Source</h2>
+      <p>
+        FreeMusic is fully open source under the MIT license. The entire codebase &mdash; iOS app, web PWA, and this website &mdash; is available on <a href="https://github.com/FreeMusicApp/freemusic" style="color: var(--accent);">GitHub</a>.
+      </p>
+      <p>
+        Contributions are welcome. Whether it's a bug fix, a new music source integration, or a design improvement, we'd love to have you.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 FreeMusic. Open source, open music.
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -3,25 +3,26 @@ import type { Track } from '../types'
 const CLIENT_ID = 'b6747d04'
 const BASE = 'https://api.jamendo.com/v3.0'
 
-export async function searchTracks(query: string, limit = 20): Promise<Track[]> {
-  const url = `${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&search=${encodeURIComponent(query)}`
-  const res = await fetch(url)
-  const data = await res.json()
-  return (data.results || []).map(mapTrack)
+async function jamendoFetch(url: string): Promise<Track[]> {
+  try {
+    const res = await fetch(url)
+    const data = await res.json()
+    return (data.results || []).map(mapTrack)
+  } catch {
+    return []
+  }
 }
 
-export async function getTrending(limit = 20): Promise<Track[]> {
-  const url = `${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&order=popularity_week`
-  const res = await fetch(url)
-  const data = await res.json()
-  return (data.results || []).map(mapTrack)
+export function searchTracks(query: string, limit = 20): Promise<Track[]> {
+  return jamendoFetch(`${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&search=${encodeURIComponent(query)}`)
 }
 
-export async function getByGenre(genre: string, limit = 20): Promise<Track[]> {
-  const url = `${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&tags=${encodeURIComponent(genre)}&order=popularity_week`
-  const res = await fetch(url)
-  const data = await res.json()
-  return (data.results || []).map(mapTrack)
+export function getTrending(limit = 20): Promise<Track[]> {
+  return jamendoFetch(`${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&order=popularity_week`)
+}
+
+export function getByGenre(genre: string, limit = 20): Promise<Track[]> {
+  return jamendoFetch(`${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&tags=${encodeURIComponent(genre)}&order=popularity_week`)
 }
 
 function mapTrack(t: any): Track {

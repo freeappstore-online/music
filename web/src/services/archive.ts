@@ -3,6 +3,7 @@ import type { Track } from '../types'
 const BASE = 'https://archive.org'
 
 export async function searchTracks(query: string, limit = 10): Promise<Track[]> {
+  try {
   const url = `${BASE}/advancedsearch.php?q=${encodeURIComponent(query)}+mediatype:audio&fl[]=identifier,title,creator&rows=${limit}&output=json`
   const res = await fetch(url)
   const data = await res.json()
@@ -33,6 +34,9 @@ export async function searchTracks(query: string, limit = 10): Promise<Track[]> 
     })
   )
   return results
+  } catch {
+    return []
+  }
 }
 
 function parseDuration(length?: string): number {
