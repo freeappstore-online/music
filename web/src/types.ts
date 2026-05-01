@@ -16,4 +16,5 @@ export interface RadioStation {
   genre?: string
   country?: string
   favicon?: string
+  votes?: number
 }

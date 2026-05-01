@@ -13,11 +13,23 @@ async function radioFetch(url: string): Promise<RadioStation[]> {
 }
 
 export function searchStations(query: string, limit = 20): Promise<RadioStation[]> {
-  return radioFetch(`${BASE}/stations/byname/${encodeURIComponent(query)}?limit=${limit}&order=clickcount&reverse=true`)
+  return radioFetch(`${BASE}/stations/byname/${encodeURIComponent(query)}?limit=${limit}&order=clickcount&reverse=true&hidebroken=true`)
 }
 
 export function getTopStations(limit = 20): Promise<RadioStation[]> {
-  return radioFetch(`${BASE}/stations/topclick/${limit}`)
+  return radioFetch(`${BASE}/stations/topclick/${limit}?hidebroken=true`)
+}
+
+export function getByGenre(genre: string, limit = 20): Promise<RadioStation[]> {
+  return radioFetch(`${BASE}/stations/bytag/${encodeURIComponent(genre)}?limit=${limit}&order=clickcount&reverse=true&hidebroken=true`)
+}
+
+export function getByCountry(country: string, limit = 20): Promise<RadioStation[]> {
+  return radioFetch(`${BASE}/stations/bycountry/${encodeURIComponent(country)}?limit=${limit}&order=clickcount&reverse=true&hidebroken=true`)
+}
+
+export function getByLanguage(language: string, limit = 20): Promise<RadioStation[]> {
+  return radioFetch(`${BASE}/stations/bylanguage/${encodeURIComponent(language)}?limit=${limit}&order=clickcount&reverse=true&hidebroken=true`)
 }
 
 function mapStation(s: any): RadioStation {
@@ -28,5 +40,6 @@ function mapStation(s: any): RadioStation {
     genre: s.tags,
     country: s.country,
     favicon: s.favicon || undefined,
+    votes: s.votes || 0,
   }
 }

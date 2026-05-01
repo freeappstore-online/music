@@ -4,6 +4,12 @@ import { isStationFavorite, toggleStationFavorite } from '../services/favorites'
 import { usePlayer } from '../hooks'
 import { useState } from 'react'
 
+function formatVotes(n: number): string {
+  if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`
+  return String(n)
+}
+
 export function StationRow({ station }: { station: RadioStation }) {
   const ps = usePlayer()
   const [fav, setFav] = useState(() => isStationFavorite(station.id))
@@ -15,11 +21,11 @@ export function StationRow({ station }: { station: RadioStation }) {
       className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-[var(--surface-hover)] active:bg-[var(--surface)] transition-colors text-left"
       onClick={() => player.playStation(station)}
     >
-      <div className="w-11 h-11 rounded-md overflow-hidden flex-shrink-0 bg-[var(--surface)]">
+      <div className="w-11 h-11 rounded-md overflow-hidden flex-shrink-0 bg-[var(--surface)] flex items-center justify-center">
         {station.favicon ? (
-          <img src={station.favicon} alt="" className="w-full h-full object-cover" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+          <img src={station.favicon} alt="" className="w-full h-full object-cover" loading="lazy" onError={(e) => { const el = e.target as HTMLImageElement; el.style.display = 'none'; el.nextElementSibling?.classList.remove('hidden') }} />
         ) : null}
-        <div className="w-full h-full flex items-center justify-center text-[var(--accent)]">
+        <div className={`flex items-center justify-center text-[var(--accent)] ${station.favicon ? 'hidden' : ''}`}>
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
         </div>
       </div>
@@ -29,7 +35,7 @@ export function StationRow({ station }: { station: RadioStation }) {
           {station.name}
         </div>
         <div className="text-xs text-[var(--text-muted)] truncate">
-          {genre}{station.country ? ` · ${station.country}` : ''}
+          {genre}{station.country ? ` · ${station.country}` : ''}{station.votes ? ` · ${formatVotes(station.votes)} votes` : ''}
         </div>
       </div>
 
