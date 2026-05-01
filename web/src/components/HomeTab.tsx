@@ -70,7 +70,7 @@ export function HomeTab() {
 
       {/* Genres */}
       <h2 className="text-lg font-semibold px-4 mb-2 mt-2">Browse by Genre</h2>
-      <div className="grid grid-cols-2 gap-2 px-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4">
         {GENRES.map(genre => (
           <button
             key={genre}

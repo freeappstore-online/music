@@ -22,7 +22,8 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   const sourceLabel = ps.track?.source === 'jamendo' ? 'Jamendo' : ps.track?.source === 'internetarchive' ? 'Internet Archive' : ''
 
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--bg)] flex flex-col animate-slideUp">
+    <div className="fixed inset-0 z-50 bg-[var(--bg)] flex flex-col items-center animate-slideUp">
+      <div className="w-full max-w-2xl flex flex-col flex-1">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <button onClick={onClose} className="p-2 -ml-2">
@@ -103,6 +104,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
         </button>
       </div>
 
+      </div>
       <style>{`
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .animate-slideUp { animation: slideUp 0.3s ease-out; }

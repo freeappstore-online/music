@@ -17,8 +17,9 @@ export function MiniPlayer() {
   return (
     <>
       <div className="fixed bottom-14 left-0 right-0 z-40 px-2" onClick={() => setShowFull(true)}>
+        <div className="max-w-2xl mx-auto relative">
         {/* progress bar */}
-        <div className="absolute top-0 left-2 right-2 h-0.5 bg-[var(--border)] rounded-full overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--border)] rounded-full overflow-hidden">
           <div className="h-full bg-[var(--accent)] transition-all duration-500" style={{ width: `${progress * 100}%` }} />
         </div>
         <div className="flex items-center gap-3 bg-[var(--surface)]/95 backdrop-blur-lg rounded-xl px-3 py-2 border border-[var(--border)]">
@@ -61,6 +62,7 @@ export function MiniPlayer() {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z" /></svg>
             </button>
           )}
+        </div>
         </div>
       </div>
 

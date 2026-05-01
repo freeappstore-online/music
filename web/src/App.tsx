@@ -18,11 +18,13 @@ export default function App() {
     <div className="flex flex-col min-h-[100dvh]">
       {/* Content */}
       <div className={`flex-1 overflow-y-auto ${hasPlayer ? 'pb-28' : 'pb-14'}`}>
-        {tab === 'home' && <HomeTab />}
-        {tab === 'search' && <SearchTab />}
-        {tab === 'radio' && <RadioTab />}
-        {tab === 'favorites' && <FavoritesTab />}
-        {tab === 'about' && <AboutTab />}
+        <div className="max-w-2xl mx-auto">
+          {tab === 'home' && <HomeTab />}
+          {tab === 'search' && <SearchTab />}
+          {tab === 'radio' && <RadioTab />}
+          {tab === 'favorites' && <FavoritesTab />}
+          {tab === 'about' && <AboutTab />}
+        </div>
       </div>
 
       {/* Mini Player */}
@@ -30,7 +32,7 @@ export default function App() {
 
       {/* Tab Bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-30 bg-[var(--bg)]/95 backdrop-blur-lg border-t border-[var(--border)] pb-[env(safe-area-inset-bottom)]">
-        <div className="flex">
+        <div className="flex max-w-2xl mx-auto">
           <TabButton icon="home" label="Home" active={tab === 'home'} onClick={() => setTab('home')} />
           <TabButton icon="search" label="Search" active={tab === 'search'} onClick={() => setTab('search')} />
           <TabButton icon="radio" label="Radio" active={tab === 'radio'} onClick={() => setTab('radio')} />
