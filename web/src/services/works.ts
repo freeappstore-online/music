@@ -28,7 +28,7 @@ export const WORK_TYPES: { id: WorkType; label: string; icon: string }[] = [
 ]
 
 // Curated catalog of famous classical works
-export const WORKS: Work[] = [
+export const WORKS = [
   // Operas
   { title: 'The Magic Flute', composer: 'Mozart', composerId: 'mozart', year: 1791, type: 'opera', searchQuery: 'magic flute mozart' },
   { title: 'The Marriage of Figaro', composer: 'Mozart', composerId: 'mozart', year: 1786, type: 'opera', searchQuery: 'marriage figaro mozart' },
@@ -106,7 +106,7 @@ export const WORKS: Work[] = [
   // Quartets
   { title: 'String Quartet No. 14 "Death and the Maiden"', composer: 'Schubert', composerId: 'schubert', year: 1824, type: 'quartet', searchQuery: 'schubert death maiden quartet' },
   { title: 'String Quartet No. 8', composer: 'Shostakovich', composerId: 'shostakovich', year: 1960, type: 'quartet', searchQuery: 'shostakovich string quartet 8' },
-].sort((a, b) => a.year - b.year)
+].sort((a, b) => a.year - b.year) as Work[]
 
 export async function searchWork(work: Work, limit = 15): Promise<Track[]> {
   const [jamendo, ia] = await Promise.all([
