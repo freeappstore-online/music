@@ -5,10 +5,23 @@ import type { RadioStation } from '../types'
 import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-const GENRES = ['pop', 'rock', 'jazz', 'classical', 'electronic', 'dance', 'hiphop', 'blues', 'oldies', '80s', 'country', 'reggae', 'metal', 'ambient', 'folk', 'latin', 'soul', 'funk', 'r&b', 'indie', 'punk', 'world', 'christian', 'news', 'talk', 'sports']
+const GENRES: { tag: string; count: number }[] = [
+  { tag: 'pop', count: 5243 }, { tag: 'rock', count: 2804 }, { tag: 'news', count: 2604 },
+  { tag: 'classical', count: 1544 }, { tag: 'dance', count: 1389 }, { tag: 'talk', count: 1351 },
+  { tag: 'oldies', count: 1243 }, { tag: '80s', count: 1110 }, { tag: 'jazz', count: 1068 },
+  { tag: 'electronic', count: 866 }, { tag: 'christian', count: 881 }, { tag: 'country', count: 645 },
+  { tag: 'folk', count: 540 }, { tag: 'metal', count: 396 }, { tag: 'soul', count: 380 },
+  { tag: 'indie', count: 368 }, { tag: 'ambient', count: 314 }, { tag: 'sports', count: 313 },
+  { tag: 'blues', count: 286 }, { tag: 'funk', count: 280 }, { tag: 'hiphop', count: 267 },
+  { tag: 'reggae', count: 216 }, { tag: 'r&b', count: 144 }, { tag: 'punk', count: 142 },
+  { tag: 'latin', count: 134 },
+]
 const COUNTRIES = ['United States', 'United Kingdom', 'Germany', 'France', 'Brazil', 'Japan', 'Spain', 'Italy', 'Canada', 'Australia', 'Russia', 'Mexico', 'India', 'Netherlands', 'Poland', 'Greece', 'China', 'Turkey', 'Argentina', 'South Korea']
 const LANGUAGES = ['english', 'spanish', 'german', 'french', 'russian', 'italian', 'portuguese', 'chinese', 'japanese', 'arabic', 'dutch', 'polish', 'greek', 'turkish', 'korean', 'hindi']
-const DECADES = ['50s', '60s', '70s', '80s', '90s', '00s']
+const DECADES: { tag: string; count: number }[] = [
+  { tag: '80s', count: 1110 }, { tag: '90s', count: 876 }, { tag: '70s', count: 527 },
+  { tag: '60s', count: 241 }, { tag: '00s', count: 162 },
+]
 const SORT_OPTIONS = [
   { id: 'clickcount', label: 'Most Popular' },
   { id: 'votes', label: 'Most Voted' },
@@ -120,7 +133,7 @@ export function RadioTab() {
 
           <div className="p-3">
             {activeSection === 'genre' && (
-              <div className="flex gap-1.5 flex-wrap">{GENRES.map(g => <Pill key={g} label={g} active={genre === g} onClick={() => setGenre(genre === g ? '' : g)} />)}</div>
+              <div className="flex gap-1.5 flex-wrap">{GENRES.map(g => <Pill key={g.tag} label={`${g.tag} (${g.count})`} active={genre === g.tag} onClick={() => setGenre(genre === g.tag ? '' : g.tag)} />)}</div>
             )}
             {activeSection === 'country' && (
               <div className="flex gap-1.5 flex-wrap">{COUNTRIES.map(c => <Pill key={c} label={c} active={country === c} onClick={() => setCountry(country === c ? '' : c)} />)}</div>
@@ -136,7 +149,7 @@ export function RadioTab() {
 
           <div className="px-3 pb-3 border-t border-border pt-2">
             <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1.5">Decade</div>
-            <div className="flex gap-1.5">{DECADES.map(d => <Pill key={d} label={d} active={genre === d} onClick={() => setGenre(genre === d ? '' : d)} />)}</div>
+            <div className="flex gap-1.5">{DECADES.map(d => <Pill key={d.tag} label={`${d.tag} (${d.count})`} active={genre === d.tag} onClick={() => setGenre(genre === d.tag ? '' : d.tag)} />)}</div>
           </div>
         </div>
       )}
