@@ -53,7 +53,7 @@ export function MiniPlayer() {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/5">
           <div className="h-full bg-accent transition-all duration-500" style={{ width: `${progress * 100}%` }} />
         </div>
-        <div className="flex items-center gap-4 px-6 py-3 max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 px-6 py-3 max-w-4xl mx-auto">
           <div className="flex items-center gap-3 w-72 flex-shrink-0 cursor-pointer" onClick={() => setShowFull(true)}>
             <Artwork src={artwork} alt={title} size={48} />
             <div className="min-w-0">

@@ -53,8 +53,8 @@ export function GenreBrowser() {
 
   return (
     <section>
-      <h2 className="text-sm md:text-base font-bold px-4 md:px-6 mb-2 mt-4">Browse Genre</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 md:gap-2 px-4 md:px-6">
+      <h2 className="text-sm font-bold px-4 mb-2 mt-4">Browse Genre</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 px-4">
         {GENRES.map(genre => (
           <button
             key={genre}
@@ -106,7 +106,7 @@ export function GenrePicker({ favGenre, onPick }: GenrePickerProps) {
     <div className="px-4 md:px-6 mb-4">
       <div className="bg-surface border border-white/6 rounded-2xl p-3 md:p-4">
         <div className="text-xs font-semibold mb-2 text-muted">Pick your genre — one tap to play next time</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
           {GENRES.map(g => (
             <button
               key={g}

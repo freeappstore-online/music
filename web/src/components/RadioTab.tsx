@@ -66,11 +66,11 @@ export function RadioTab() {
 
   return (
     <div className="pb-4">
-      <h1 className="text-2xl md:text-3xl font-bold px-4 md:px-6 pt-4 md:pt-8 pb-1">Radio</h1>
-      <p className="text-xs text-muted px-4 md:px-6 pb-3">30,000+ stations worldwide</p>
+      <h1 className="text-2xl font-bold px-4 pt-4 pb-1">Radio</h1>
+      <p className="text-xs text-muted px-4 pb-3">30,000+ stations worldwide</p>
 
       {/* Search bar */}
-      <form className="px-4 md:px-6 mb-2" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
+      <form className="px-4 mb-2" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
         <div className="flex items-center gap-2 bg-surface rounded-xl px-3 py-2.5 border border-border">
           <svg className="w-5 h-5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
@@ -94,7 +94,7 @@ export function RadioTab() {
 
       {/* Active filter chips */}
       {hasFilters && (
-        <div className="flex gap-1.5 px-4 md:px-6 mb-2 flex-wrap">
+        <div className="flex gap-1.5 px-4 mb-2 flex-wrap">
           {genre && <FilterChip label={genre} onRemove={() => setGenre('')} />}
           {country && <FilterChip label={country} onRemove={() => setCountry('')} />}
           {language && <FilterChip label={language} onRemove={() => setLanguage('')} />}
@@ -104,7 +104,7 @@ export function RadioTab() {
 
       {/* Filter panel */}
       {showFilters && (
-        <div className="mx-4 md:mx-6 mb-3 bg-surface border border-border rounded-2xl p-3 space-y-3">
+        <div className="mx-4 mb-3 bg-surface border border-border rounded-2xl p-3 space-y-3">
           <FilterSection label="Genre" items={GENRES} selected={genre} onSelect={(g) => setGenre(genre === g ? '' : g)} />
           <FilterSection label="Country" items={COUNTRIES} selected={country} onSelect={(c) => setCountry(country === c ? '' : c)} />
           <FilterSection label="Language" items={LANGUAGES} selected={language} onSelect={(l) => setLanguage(language === l ? '' : l)} capitalize />
@@ -124,7 +124,7 @@ export function RadioTab() {
           <div key={station.id}>
             <StationRow station={station} />
             {/* User tags */}
-            <div className="px-4 md:px-6 -mt-1 mb-1 flex items-center gap-1 flex-wrap">
+            <div className="px-4 -mt-1 mb-1 flex items-center gap-1 flex-wrap">
               {getUserTags(station.id).map(tag => (
                 <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent inline-flex items-center gap-1">
                   {tag}

@@ -26,7 +26,7 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
 
   return (
     <button
-      className="flex items-center gap-3 w-full px-4 md:px-6 py-2 hover:bg-white/3 active:bg-white/6 transition-colors text-left group"
+      className="flex items-center gap-3 w-full px-4 py-2 hover:bg-white/3 active:bg-white/6 transition-colors text-left group"
       onClick={() => player.playStation(station)}
       aria-label={`Play ${station.name}`}
     >

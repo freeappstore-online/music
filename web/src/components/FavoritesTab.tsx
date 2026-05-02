@@ -44,7 +44,7 @@ export function FavoritesTab() {
 
   return (
     <div className="pb-4">
-      <h1 className="text-2xl md:text-3xl font-bold px-4 md:px-6 pt-4 md:pt-8 pb-3">Favorites</h1>
+      <h1 className="text-2xl font-bold px-4 pt-4 pb-3">Favorites</h1>
 
       {empty ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted">
@@ -56,13 +56,13 @@ export function FavoritesTab() {
         <>
           {tracks.length > 0 && (
             <>
-              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 md:px-6 mb-1">Tracks</h2>
+              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 mb-1">Tracks</h2>
               {tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)}
             </>
           )}
           {stations.length > 0 && (
             <>
-              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 md:px-6 mb-1 mt-4">Stations</h2>
+              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 mb-1 mt-4">Stations</h2>
               {stations.map(s => <StationRow key={s.id} station={s} />)}
             </>
           )}
@@ -71,7 +71,7 @@ export function FavoritesTab() {
 
       {/* Blacklist section */}
       {blacklistCount > 0 && (
-        <div className="mt-8 px-4 md:px-6">
+        <div className="mt-8 px-4">
           <button
             onClick={() => { setShowBlacklist(!showBlacklist); if (!showBlacklist) { setBlTrackIds([...getBlacklistedTrackIds()]); setBlStationIds([...getBlacklistedStationIds()]) } }}
             className="flex items-center gap-2 text-xs font-semibold text-muted"

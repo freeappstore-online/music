@@ -30,7 +30,7 @@ export function QuickPlayCards({ favTracks, favStations, topStations, tracks, fa
     : 'Pick genre'
 
   return (
-    <div className="grid grid-cols-3 gap-2 md:gap-3 px-4 md:px-6 mb-6 mt-4">
+    <div className="grid grid-cols-3 gap-2 px-4 mb-6 mt-4">
       <QuickCard
         gradient="from-emerald-500 to-emerald-900"
         icon={<RadioSvg />}
@@ -62,7 +62,7 @@ function QuickCard({ gradient, icon, label, subtitle, onClick }: {
   return (
     <button
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} border border-white/6 p-4 lg:p-6 text-left group active:scale-[0.97] transition-transform min-h-[100px] lg:min-h-[120px]`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} border border-white/6 p-4 text-left group active:scale-[0.97] transition-transform`}
       aria-label={`Play ${label}`}
     >
       <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
