@@ -9,8 +9,12 @@ struct MiniPlayerBar: View {
         Button { showFullPlayer = true } label: {
             HStack(spacing: 12) {
                 artworkView
-                    .frame(width: 40, height: 40)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .frame(width: 44, height: 44)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .strokeBorder(.white.opacity(0.06), lineWidth: 1)
+                    )
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(player.nowPlayingTitle)
@@ -26,11 +30,14 @@ struct MiniPlayerBar: View {
 
                 if player.isLoading {
                     ProgressView()
-                        .tint(.white)
+                        .tint(Color.accentColor)
                 } else {
                     Button { player.togglePlayPause() } label: {
                         Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
                             .font(.title3)
+                            .frame(width: 36, height: 36)
+                            .background(.white.opacity(0.06))
+                            .clipShape(Circle())
                     }
                 }
 
@@ -38,15 +45,24 @@ struct MiniPlayerBar: View {
                     Button { player.next() } label: {
                         Image(systemName: "forward.fill")
                             .font(.subheadline)
+                            .frame(width: 36, height: 36)
+                            .background(.white.opacity(0.06))
+                            .clipShape(Circle())
                     }
                 }
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.vertical, 10)
+            .background(Color.brandSurface.opacity(0.9))
             .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(.white.opacity(0.06), lineWidth: 1)
+            )
             .padding(.horizontal, 8)
-            .shadow(color: .black.opacity(0.3), radius: 8, y: 4)
+            .shadow(color: Color.accentColor.opacity(0.08), radius: 20, y: 0)
+            .shadow(color: .black.opacity(0.4), radius: 12, y: 4)
         }
         .buttonStyle(.plain)
         .sheet(isPresented: $showFullPlayer) {
@@ -61,19 +77,20 @@ struct MiniPlayerBar: View {
             AsyncImage(url: imageUrl) { image in
                 image.resizable().aspectRatio(contentMode: .fill)
             } placeholder: {
-                musicPlaceholder
+                artworkPlaceholder
             }
         } else {
-            musicPlaceholder
+            artworkPlaceholder
         }
     }
 
-    private var musicPlaceholder: some View {
-        RoundedRectangle(cornerRadius: 6)
-            .fill(Color.accentColor.opacity(0.3))
+    private var artworkPlaceholder: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .fill(Color.accentColor.opacity(0.15))
             .overlay {
                 Image(systemName: player.isRadioMode ? "radio.fill" : "music.note")
-                    .foregroundStyle(Color.accentColor)
+                    .font(.caption)
+                    .foregroundStyle(Color.accentColor.opacity(0.6))
             }
     }
 }

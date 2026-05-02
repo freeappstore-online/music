@@ -8,13 +8,52 @@ struct HomeTab: View {
 
     private let genres = ["pop", "rock", "electronic", "jazz", "classical", "hiphop", "ambient", "metal", "dance", "oldies", "80s", "blues"]
 
+    @Environment(FavoritesManager.self) private var favorites
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    // Trending tracks (if Jamendo works)
+                VStack(alignment: .leading, spacing: 20) {
+                    // Tagline
+                    Text("One tap. Your music. Right now.")
+                        .font(.caption)
+                        .foregroundStyle(Color.brandMuted)
+                        .padding(.horizontal)
+
+                    // Quick-play cards
+                    HStack(spacing: 8) {
+                        QuickPlayCard(
+                            gradient: [Color.green.opacity(0.6), Color.green.opacity(0.15)],
+                            icon: "radio.fill",
+                            label: "Radio",
+                            subtitle: favorites.stations.isEmpty ? "Top stations" : "\(favorites.stations.count) saved"
+                        ) {
+                            let stations = favorites.stations.isEmpty ? topStations : favorites.stations
+                            if let first = stations.first { player.playStation(first) }
+                        }
+                        QuickPlayCard(
+                            gradient: [Color.purple.opacity(0.6), Color.purple.opacity(0.15)],
+                            icon: "heart.fill",
+                            label: "My Tracks",
+                            subtitle: favorites.tracks.isEmpty ? "Popular mix" : "\(favorites.tracks.count) saved"
+                        ) {
+                            let tracks = favorites.tracks.isEmpty ? trending : favorites.tracks
+                            if let first = tracks.first { player.playTrack(first, queue: tracks, index: 0) }
+                        }
+                        QuickPlayCard(
+                            gradient: [Color.orange.opacity(0.6), Color.orange.opacity(0.15)],
+                            icon: "music.note",
+                            label: "Genre",
+                            subtitle: "Browse"
+                        ) {
+                            if let first = trending.first { player.playTrack(first, queue: trending, index: 0) }
+                        }
+                    }
+                    .padding(.horizontal)
+
+                    // Trending tracks
                     if !trending.isEmpty {
-                        sectionHeader("Trending Tracks")
+                        sectionHeader("Trending")
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack(spacing: 12) {
                                 ForEach(trending) { track in
@@ -78,6 +117,7 @@ struct HomeTab: View {
                 }
                 .padding(.top)
             }
+            .background(Color.brandBg)
             .navigationTitle("FreeMusic")
             .task { await loadContent() }
         }
@@ -183,6 +223,47 @@ struct StationCard: View {
                     .font(.title2)
                     .foregroundStyle(Color.accentColor)
             }
+    }
+}
+
+struct QuickPlayCard: View {
+    let gradient: [Color]
+    let icon: String
+    let label: String
+    let subtitle: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Image(systemName: icon)
+                        .font(.body)
+                        .opacity(0.8)
+                    Spacer()
+                    Image(systemName: "play.circle.fill")
+                        .font(.title3)
+                        .opacity(0.6)
+                }
+                Spacer()
+                Text(label)
+                    .font(.caption.weight(.bold))
+                Text(subtitle)
+                    .font(.caption2)
+                    .opacity(0.5)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
+            .background(
+                LinearGradient(colors: gradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(.white.opacity(0.06), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 

@@ -46,6 +46,8 @@ struct FavoritesTab: View {
                 }
             }
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(Color.brandBg)
             .navigationTitle("Favorites")
             .contentMargins(.bottom, 80)
         }

@@ -28,6 +28,8 @@ struct RadioTab: View {
                 }
             }
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(Color.brandBg)
             .navigationTitle("Radio")
             .searchable(text: $searchQuery, prompt: "Search stations...")
             .onSubmit(of: .search) {

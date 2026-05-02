@@ -26,6 +26,8 @@ struct GenreView: View {
             }
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color.brandBg)
         .navigationTitle(genre.capitalized)
         .task { await loadGenre() }
         .contentMargins(.bottom, 80)

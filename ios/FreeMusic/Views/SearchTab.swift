@@ -46,6 +46,8 @@ struct SearchTab: View {
                 }
             }
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(Color.brandBg)
             .navigationTitle("Search")
             .searchable(text: $query, prompt: "Songs, artists, albums...")
             .onSubmit(of: .search) {
