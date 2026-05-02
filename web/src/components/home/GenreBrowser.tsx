@@ -53,8 +53,8 @@ export function GenreBrowser() {
 
   return (
     <section>
-      <h2 className="text-sm font-bold px-4 mb-2 mt-4">Browse Genre</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 px-4">
+      <h2 className="text-base font-bold px-4 md:px-6 mb-3 mt-6">Browse Genre</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 px-4 md:px-6">
         {GENRES.map(genre => (
           <button
             key={genre}

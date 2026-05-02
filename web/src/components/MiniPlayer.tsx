@@ -22,7 +22,7 @@ export function MiniPlayer() {
   return (
     <>
       {/* Mobile */}
-      <div className="lg:hidden fixed bottom-14 left-0 right-0 z-40 px-2" onClick={() => setShowFull(true)}>
+      <div className="md:hidden fixed bottom-14 left-0 right-0 z-40 px-2" onClick={() => setShowFull(true)}>
         <div className="max-w-2xl mx-auto relative">
           <div className="absolute -inset-1 bg-accent/5 rounded-2xl blur-xl" />
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/5 rounded-full overflow-hidden z-10">
@@ -49,11 +49,11 @@ export function MiniPlayer() {
       </div>
 
       {/* Desktop */}
-      <div className="hidden lg:block fixed bottom-0 left-56 right-0 z-40 bg-surface/95 backdrop-blur-xl border-t border-white/6">
+      <div className="hidden md:block fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-xl border-t border-white/6">
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/5">
           <div className="h-full bg-accent transition-all duration-500" style={{ width: `${progress * 100}%` }} />
         </div>
-        <div className="flex items-center gap-4 px-6 py-3 max-w-4xl mx-auto">
+        <div className="flex items-center gap-4 px-6 py-3 max-w-5xl mx-auto">
           <div className="flex items-center gap-3 w-72 flex-shrink-0 cursor-pointer" onClick={() => setShowFull(true)}>
             <Artwork src={artwork} alt={title} size={48} />
             <div className="min-w-0">

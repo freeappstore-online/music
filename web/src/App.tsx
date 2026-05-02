@@ -23,50 +23,41 @@ export default function App() {
   const hasPlayer = ps.track !== null || ps.station !== null
 
   return (
-    <div className="flex min-h-[100dvh]">
-      {/* ===== DESKTOP SIDEBAR (hidden on mobile) ===== */}
-      <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-white/6 bg-bg fixed top-0 left-0 bottom-0 z-20">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/6">
-          <svg className="w-7 h-7" viewBox="0 0 512 512" fill="none">
-            <rect width="512" height="512" rx="112" fill="#1a1a2e"/>
-            <circle cx="256" cy="256" r="140" stroke="#6ECE9E" strokeWidth="8" opacity="0.3"/>
-            <circle cx="256" cy="256" r="85" stroke="#6ECE9E" strokeWidth="6" opacity="0.5"/>
-            <circle cx="256" cy="256" r="32" fill="#6ECE9E"/>
-            <path d="M244 234 L244 278 L274 256 Z" fill="#1a1a2e"/>
-          </svg>
-          <span className="text-base font-bold tracking-tight">FreeMusic</span>
+    <div className="min-h-[100dvh] bg-bg">
+      {/* ===== DESKTOP TOP NAV (hidden on mobile) ===== */}
+      <header className="hidden md:block border-b border-white/6">
+        <div className="flex items-center justify-between gap-4 max-w-5xl mx-auto px-6 h-14">
+          <div className="flex items-center gap-2.5">
+            <svg className="w-6 h-6" viewBox="0 0 512 512" fill="none">
+              <rect width="512" height="512" rx="112" fill="#1a1a2e"/>
+              <circle cx="256" cy="256" r="140" stroke="#6ECE9E" strokeWidth="8" opacity="0.3"/>
+              <circle cx="256" cy="256" r="85" stroke="#6ECE9E" strokeWidth="6" opacity="0.5"/>
+              <circle cx="256" cy="256" r="32" fill="#6ECE9E"/>
+              <path d="M244 234 L244 278 L274 256 Z" fill="#1a1a2e"/>
+            </svg>
+            <span className="text-base font-bold tracking-tight">FreeMusic</span>
+          </div>
+          <nav className="flex items-center gap-1">
+            {TABS.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  tab === t.id
+                    ? 'text-accent bg-accent/10'
+                    : 'text-muted hover:text-txt hover:bg-white/4'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
         </div>
-
-        {/* Nav items */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {TABS.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                tab === t.id
-                  ? 'bg-accent/10 text-accent'
-                  : 'text-muted hover:text-txt hover:bg-white/4'
-              }`}
-            >
-              <TabIcon name={t.icon} size={20} />
-              {t.label}
-            </button>
-          ))}
-        </nav>
-
-        {/* Sidebar footer */}
-        <div className="px-5 py-4 border-t border-white/6">
-          <p className="text-[10px] text-muted/50 leading-relaxed">
-            Creative Commons &<br/>public domain music.<br/>Free forever.
-          </p>
-        </div>
-      </aside>
+      </header>
 
       {/* ===== MAIN CONTENT ===== */}
-      <main className={`flex-1 lg:ml-56 ${hasPlayer ? 'pb-28 lg:pb-20' : 'pb-14 lg:pb-0'}`}>
-        <div className="max-w-2xl mx-auto">
+      <main className={`${hasPlayer ? 'pb-28 md:pb-24' : 'pb-14 md:pb-0'}`}>
+        <div className="max-w-5xl mx-auto">
           {tab === 'home' && <HomeTab />}
           {tab === 'search' && <SearchTab />}
           {tab === 'radio' && <RadioTab />}
@@ -79,7 +70,7 @@ export default function App() {
       <MiniPlayer />
 
       {/* ===== MOBILE TAB BAR (hidden on desktop) ===== */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-bg/90 backdrop-blur-xl border-t border-white/6 pb-[env(safe-area-inset-bottom)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-bg/90 backdrop-blur-xl border-t border-white/6 pb-[env(safe-area-inset-bottom)]">
         <div className="flex">
           {TABS.map(t => (
             <button
