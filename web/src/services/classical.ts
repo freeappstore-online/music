@@ -1,5 +1,5 @@
 import type { Track, RadioStation } from '../types'
-import { getByGenre, advancedSearch } from './jamendo'
+import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
 import { getByGenre as getStationsByGenre } from './radio'
 
@@ -9,69 +9,122 @@ export type ClassicalCategory = {
   id: string
   label: string
   icon: string
-  query: string // Jamendo tag or IA search query
-  iaQuery?: string // Override for Internet Archive search
+  // Jamendo: always uses tags=classical + optional search term
+  jamendoSearch?: string    // search= param (composer name, form, etc.)
+  jamendoTags: string       // tags= param (always includes classical)
+  // Internet Archive: precise queries with subject:classical
+  iaQuery: string
+}
+
+// Helper to define a composer entry
+function composer(id: string, label: string, icon: string, fullName?: string): ClassicalCategory {
+  const name = fullName || label
+  return {
+    id, label, icon,
+    jamendoSearch: name.toLowerCase(),
+    jamendoTags: 'classical',
+    iaQuery: `creator:"${name}" subject:classical mediatype:audio`,
+  }
+}
+
+// Helper for tag-based categories (instruments, forms, moods)
+function classicalTag(id: string, label: string, icon: string, tag: string, iaSubject?: string): ClassicalCategory {
+  return {
+    id, label, icon,
+    jamendoTags: `classical+${tag}`,
+    iaQuery: `subject:(${iaSubject || tag}) subject:classical mediatype:audio`,
+  }
 }
 
 export const ERAS: ClassicalCategory[] = [
-  { id: 'baroque', label: 'Baroque', icon: '🏛️', query: 'baroque', iaQuery: 'baroque' },
-  { id: 'classical', label: 'Classical', icon: '🎼', query: 'classical', iaQuery: 'classical+period' },
-  { id: 'romantic', label: 'Romantic', icon: '🌹', query: 'romantic+classical', iaQuery: 'romantic+classical' },
-  { id: 'modern', label: 'Modern', icon: '🔷', query: 'contemporary+classical', iaQuery: '20th+century+classical' },
+  { id: 'baroque', label: 'Baroque', icon: '🏛️', jamendoTags: 'baroque', iaQuery: 'subject:baroque subject:classical mediatype:audio' },
+  { id: 'classical-era', label: 'Classical Era', icon: '🎼', jamendoTags: 'classical', iaQuery: 'subject:"classical period" mediatype:audio' },
+  { id: 'romantic', label: 'Romantic', icon: '🌹', jamendoTags: 'classical+romantic', iaQuery: 'subject:romantic subject:classical mediatype:audio' },
+  { id: 'impressionist', label: 'Impressionist', icon: '🎨', jamendoTags: 'classical', jamendoSearch: 'impressionist', iaQuery: 'subject:impressionist mediatype:audio' },
+  { id: 'modern', label: '20th Century', icon: '🔷', jamendoTags: 'classical+contemporary', iaQuery: 'subject:"20th century" subject:classical mediatype:audio' },
+  { id: 'minimalist', label: 'Minimalist', icon: '◻️', jamendoTags: 'classical', jamendoSearch: 'minimalist', iaQuery: 'subject:minimalist subject:classical mediatype:audio' },
 ]
 
 export const COMPOSERS: ClassicalCategory[] = [
-  { id: 'mozart', label: 'Mozart', icon: '🎵', query: 'mozart', iaQuery: 'creator:mozart' },
-  { id: 'beethoven', label: 'Beethoven', icon: '🎵', query: 'beethoven', iaQuery: 'creator:beethoven' },
-  { id: 'bach', label: 'Bach', icon: '🎵', query: 'bach', iaQuery: 'creator:bach' },
-  { id: 'chopin', label: 'Chopin', icon: '🎹', query: 'chopin', iaQuery: 'creator:chopin' },
-  { id: 'vivaldi', label: 'Vivaldi', icon: '🎻', query: 'vivaldi', iaQuery: 'creator:vivaldi' },
-  { id: 'brahms', label: 'Brahms', icon: '🎵', query: 'brahms', iaQuery: 'creator:brahms' },
-  { id: 'tchaikovsky', label: 'Tchaikovsky', icon: '🩰', query: 'tchaikovsky', iaQuery: 'creator:tchaikovsky' },
-  { id: 'debussy', label: 'Debussy', icon: '🌊', query: 'debussy', iaQuery: 'creator:debussy' },
-  { id: 'schubert', label: 'Schubert', icon: '🎵', query: 'schubert', iaQuery: 'creator:schubert' },
-  { id: 'handel', label: 'Handel', icon: '🎵', query: 'handel', iaQuery: 'creator:handel' },
-  { id: 'liszt', label: 'Liszt', icon: '🎹', query: 'liszt', iaQuery: 'creator:liszt' },
-  { id: 'ravel', label: 'Ravel', icon: '🎵', query: 'ravel', iaQuery: 'creator:ravel' },
+  composer('bach', 'Bach', '⛪', 'Johann Sebastian Bach'),
+  composer('mozart', 'Mozart', '🎼', 'Wolfgang Amadeus Mozart'),
+  composer('beethoven', 'Beethoven', '🎵', 'Ludwig van Beethoven'),
+  composer('chopin', 'Chopin', '🎹', 'Frédéric Chopin'),
+  composer('vivaldi', 'Vivaldi', '🎻', 'Antonio Vivaldi'),
+  composer('brahms', 'Brahms', '🎵', 'Johannes Brahms'),
+  composer('tchaikovsky', 'Tchaikovsky', '🩰', 'Pyotr Ilyich Tchaikovsky'),
+  composer('debussy', 'Debussy', '🌊', 'Claude Debussy'),
+  composer('schubert', 'Schubert', '🎵', 'Franz Schubert'),
+  composer('handel', 'Handel', '🎵', 'George Frideric Handel'),
+  composer('liszt', 'Liszt', '🎹', 'Franz Liszt'),
+  composer('ravel', 'Ravel', '🎵', 'Maurice Ravel'),
+  composer('haydn', 'Haydn', '🎼', 'Joseph Haydn'),
+  composer('mendelssohn', 'Mendelssohn', '🎵', 'Felix Mendelssohn'),
+  composer('dvorak', 'Dvořák', '🎵', 'Antonín Dvořák'),
+  composer('rachmaninoff', 'Rachmaninoff', '🎹', 'Sergei Rachmaninoff'),
+  composer('mahler', 'Mahler', '🎼', 'Gustav Mahler'),
+  composer('shostakovich', 'Shostakovich', '🎵', 'Dmitri Shostakovich'),
+  composer('strauss', 'Strauss', '💃', 'Johann Strauss'),
+  composer('verdi', 'Verdi', '🎤', 'Giuseppe Verdi'),
+  composer('puccini', 'Puccini', '🎭', 'Giacomo Puccini'),
+  composer('wagner', 'Wagner', '🎭', 'Richard Wagner'),
+  composer('grieg', 'Grieg', '🏔️', 'Edvard Grieg'),
+  composer('saint-saens', 'Saint-Saëns', '🎵', 'Camille Saint-Saëns'),
 ]
 
 export const INSTRUMENTS: ClassicalCategory[] = [
-  { id: 'piano', label: 'Piano', icon: '🎹', query: 'piano+classical', iaQuery: 'piano+classical' },
-  { id: 'violin', label: 'Violin', icon: '🎻', query: 'violin+classical', iaQuery: 'violin+classical' },
-  { id: 'cello', label: 'Cello', icon: '🎻', query: 'cello+classical', iaQuery: 'cello+classical' },
-  { id: 'orchestra', label: 'Orchestra', icon: '🎼', query: 'orchestra+classical', iaQuery: 'orchestra+classical' },
-  { id: 'organ', label: 'Organ', icon: '⛪', query: 'organ+classical', iaQuery: 'organ+classical' },
-  { id: 'quartet', label: 'String Quartet', icon: '🎶', query: 'string+quartet', iaQuery: 'string+quartet' },
-  { id: 'opera', label: 'Opera / Voice', icon: '🎤', query: 'opera', iaQuery: 'opera' },
-  { id: 'guitar', label: 'Guitar', icon: '🎸', query: 'guitar+classical', iaQuery: 'guitar+classical' },
+  classicalTag('piano', 'Piano', '🎹', 'piano'),
+  classicalTag('violin', 'Violin', '🎻', 'violin'),
+  classicalTag('cello', 'Cello', '🎻', 'cello'),
+  classicalTag('orchestra', 'Orchestra', '🎼', 'orchestra'),
+  classicalTag('organ', 'Organ', '⛪', 'organ'),
+  classicalTag('quartet', 'String Quartet', '🎶', 'quartet', 'string quartet'),
+  classicalTag('opera', 'Opera / Voice', '🎤', 'opera', 'opera'),
+  classicalTag('guitar', 'Guitar', '🎸', 'guitar'),
+  classicalTag('flute', 'Flute', '🎵', 'flute'),
+  classicalTag('harp', 'Harp', '🎵', 'harp'),
+  classicalTag('trumpet', 'Trumpet', '🎺', 'trumpet'),
+  classicalTag('clarinet', 'Clarinet', '🎵', 'clarinet'),
 ]
 
 export const FORMS: ClassicalCategory[] = [
-  { id: 'symphony', label: 'Symphony', icon: '🎼', query: 'symphony', iaQuery: 'symphony' },
-  { id: 'concerto', label: 'Concerto', icon: '🎹', query: 'concerto', iaQuery: 'concerto' },
-  { id: 'sonata', label: 'Sonata', icon: '🎵', query: 'sonata', iaQuery: 'sonata' },
-  { id: 'chamber', label: 'Chamber', icon: '🏠', query: 'chamber+music', iaQuery: 'chamber+music' },
-  { id: 'choral', label: 'Choral', icon: '🎶', query: 'choral', iaQuery: 'choral' },
-  { id: 'nocturne', label: 'Nocturne', icon: '🌙', query: 'nocturne', iaQuery: 'nocturne' },
+  classicalTag('symphony', 'Symphony', '🎼', 'symphony', 'symphony'),
+  classicalTag('concerto', 'Concerto', '🎹', 'concerto', 'concerto'),
+  classicalTag('sonata', 'Sonata', '🎵', 'sonata', 'sonata'),
+  classicalTag('chamber', 'Chamber Music', '🏠', 'chamber', 'chamber music'),
+  classicalTag('choral', 'Choral', '🎶', 'choral', 'choral'),
+  classicalTag('nocturne', 'Nocturne', '🌙', 'nocturne', 'nocturne'),
+  classicalTag('etude', 'Étude', '📖', 'etude', 'etude'),
+  classicalTag('waltz', 'Waltz', '💃', 'waltz', 'waltz'),
+  classicalTag('prelude', 'Prelude', '🎵', 'prelude', 'prelude'),
+  classicalTag('fugue', 'Fugue', '🔄', 'fugue', 'fugue'),
+  classicalTag('overture', 'Overture', '🎬', 'overture', 'overture'),
+  classicalTag('requiem', 'Requiem', '🕯️', 'requiem', 'requiem'),
 ]
 
 export const MOODS: ClassicalCategory[] = [
-  { id: 'peaceful', label: 'Peaceful', icon: '☁️', query: 'classical+relaxation', iaQuery: 'classical+peaceful' },
-  { id: 'dramatic', label: 'Dramatic', icon: '⚡', query: 'classical+epic', iaQuery: 'classical+dramatic' },
-  { id: 'melancholic', label: 'Melancholic', icon: '🌧️', query: 'classical+sad', iaQuery: 'classical+melancholic' },
-  { id: 'triumphant', label: 'Triumphant', icon: '🏆', query: 'classical+energetic', iaQuery: 'classical+triumphant' },
-  { id: 'meditative', label: 'Meditative', icon: '🧘', query: 'classical+ambient', iaQuery: 'classical+meditation' },
-  { id: 'joyful', label: 'Joyful', icon: '☀️', query: 'classical+happy', iaQuery: 'classical+joyful' },
+  classicalTag('peaceful', 'Peaceful', '☁️', 'relaxation', 'peaceful'),
+  classicalTag('dramatic', 'Dramatic', '⚡', 'epic', 'dramatic'),
+  classicalTag('melancholic', 'Melancholic', '🌧️', 'sad', 'melancholy'),
+  classicalTag('triumphant', 'Triumphant', '🏆', 'energetic', 'triumphant'),
+  classicalTag('meditative', 'Meditative', '🧘', 'ambient', 'meditation'),
+  classicalTag('joyful', 'Joyful', '☀️', 'happy', 'joyful'),
+  classicalTag('dark', 'Dark & Intense', '🖤', 'dark', 'dark'),
+  classicalTag('pastoral', 'Pastoral', '🌿', 'nature', 'pastoral'),
 ]
 
 // ===== Data fetching =====
 
 export async function getClassicalTracks(category: ClassicalCategory, limit = 20): Promise<Track[]> {
   const [jamendo, ia] = await Promise.all([
-    getByGenre(category.query, limit),
-    searchIA(category.iaQuery || category.query, Math.min(limit, 8)),
+    // Jamendo: always filter by classical tags + optional search
+    advancedSearch({
+      tags: category.jamendoTags,
+      search: category.jamendoSearch,
+    }, limit),
+    // Internet Archive: use precise query with subject:classical
+    searchIA(category.iaQuery, Math.min(limit, 8)),
   ])
-  // Merge, Jamendo first (better metadata), IA for depth
   return [...jamendo, ...ia].slice(0, limit)
 }
 
@@ -81,8 +134,10 @@ export async function getClassicalRadio(limit = 10): Promise<RadioStation[]> {
 
 export async function searchClassical(query: string, limit = 20): Promise<Track[]> {
   const [jamendo, ia] = await Promise.all([
+    // Always require classical tag when searching
     advancedSearch({ search: query, tags: 'classical' }, limit),
-    searchIA(`${query} classical`, Math.min(limit, 8)),
+    // IA: combine query with subject:classical to exclude non-classical
+    searchIA(`(${query}) subject:classical mediatype:audio`, Math.min(limit, 8)),
   ])
   return [...jamendo, ...ia].slice(0, limit)
 }
