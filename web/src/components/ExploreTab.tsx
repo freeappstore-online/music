@@ -3,14 +3,18 @@ import { DiscoverTab } from './DiscoverTab'
 import { ClassicalTab } from './ClassicalTab'
 import { JazzTab } from './JazzTab'
 import { BluesTab } from './BluesTab'
+import { PopTab } from './PopTab'
+import { RockTab } from './RockTab'
 
-type Genre = 'discover' | 'classical' | 'jazz' | 'blues'
+type Genre = 'discover' | 'classical' | 'jazz' | 'blues' | 'pop' | 'rock'
 
 const GENRES: { id: Genre; label: string; color: string }[] = [
   { id: 'discover', label: 'All', color: 'from-accent to-emerald-700' },
   { id: 'classical', label: 'Classical', color: 'from-amber-500 to-amber-800' },
   { id: 'jazz', label: 'Jazz', color: 'from-blue-500 to-indigo-800' },
   { id: 'blues', label: 'Blues', color: 'from-red-600 to-red-900' },
+  { id: 'rock', label: 'Rock', color: 'from-purple-600 to-purple-900' },
+  { id: 'pop', label: 'Pop', color: 'from-pink-500 to-pink-800' },
 ]
 
 export function ExploreTab() {
@@ -38,6 +42,8 @@ export function ExploreTab() {
       <div className={genre === 'classical' ? '' : 'hidden'}><ClassicalTab /></div>
       <div className={genre === 'jazz' ? '' : 'hidden'}><JazzTab /></div>
       <div className={genre === 'blues' ? '' : 'hidden'}><BluesTab /></div>
+      <div className={genre === 'rock' ? '' : 'hidden'}><RockTab /></div>
+      <div className={genre === 'pop' ? '' : 'hidden'}><PopTab /></div>
     </div>
   )
 }
