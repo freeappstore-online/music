@@ -60,8 +60,13 @@ function mapStation(s: any): RadioStation {
     genre: s.tags,
     country: s.country,
     language: s.language,
-    bitrate: s.bitrate,
+    bitrate: s.bitrate || undefined,
+    codec: s.codec || undefined,
     favicon: s.favicon || undefined,
+    homepage: s.homepage || undefined,
     votes: s.votes || 0,
+    clickcount: s.clickcount || 0,
+    state: s.state || undefined,
+    tags: s.tags || undefined,
   }
 }

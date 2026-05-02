@@ -17,7 +17,11 @@ export interface RadioStation {
   country?: string
   language?: string
   bitrate?: number
+  codec?: string
   favicon?: string
+  homepage?: string
   votes?: number
-  userTags?: string[]
+  clickcount?: number
+  state?: string
+  tags?: string
 }
