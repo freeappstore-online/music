@@ -1,7 +1,6 @@
 import type { Track } from '../types'
 
-// Register your own key at https://devportal.jamendo.com
-const CLIENT_ID = localStorage.getItem('jamendo_client_id') || 'b6747d04'
+const CLIENT_ID = 'b0f2e95e'
 const BASE = 'https://api.jamendo.com/v3.0'
 
 async function jamendoFetch(url: string): Promise<Track[]> {
@@ -31,7 +30,7 @@ export async function searchArtists(query: string, limit = 20): Promise<Track[]>
 }
 
 export function isAvailable(): boolean {
-  return CLIENT_ID !== 'b6747d04' || false // demo key is rate-limited
+  return true
 }
 
 function mapTrack(t: any): Track {

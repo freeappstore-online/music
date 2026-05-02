@@ -1,7 +1,7 @@
 import Foundation
 
 struct JamendoService {
-    static let clientId = "b6747d04"
+    static let clientId = "b0f2e95e"
     private static let base = "https://api.jamendo.com/v3.0"
 
     static func search(_ query: String, limit: Int = 20) async -> [Track] {
