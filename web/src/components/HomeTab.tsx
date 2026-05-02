@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getTrending, getByGenre, isAvailable } from '../services/jamendo'
+import { getPopular as getCCPopular, getByTag } from '../services/ccmixter'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
@@ -33,11 +34,12 @@ export function HomeTab() {
 
   useEffect(() => {
     const load = async () => {
-      const [t, s] = await Promise.all([
+      const [jamendo, cc, s] = await Promise.all([
         jamendoOk ? getTrending(20) : Promise.resolve([]),
+        getCCPopular(20),
         getTopStations(10),
       ])
-      setTracks(t)
+      setTracks(jamendo.length > 0 ? jamendo : cc)
       setTopStations(s)
       setLoading(false)
     }
@@ -49,12 +51,13 @@ export function HomeTab() {
     setSelectedGenre(genre)
     setGenreStations([])
     setGenreTracks([])
-    const [stations, jTracks] = await Promise.all([
+    const [stations, jTracks, ccTracks] = await Promise.all([
       getStationsByGenre(genre, 20),
       jamendoOk ? getByGenre(genre, 20) : Promise.resolve([]),
+      getByTag(genre, 10),
     ])
     setGenreStations(stations)
-    setGenreTracks(jTracks)
+    setGenreTracks(jTracks.length > 0 ? jTracks : ccTracks)
   }
 
   return (
