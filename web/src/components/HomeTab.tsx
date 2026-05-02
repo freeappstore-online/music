@@ -86,6 +86,11 @@ export function HomeTab() {
 
       <div className="px-4 md:px-6 mt-8 pb-4">
         <p className="text-[10px] text-text-muted/60">Creative Commons & public domain music. Free forever.</p>
+        <div className="flex items-center gap-3 mt-2">
+          <a href="legal/privacy.html" target="_blank" className="text-[10px] text-text-dim hover:text-accent transition-colors">Privacy</a>
+          <a href="legal/terms.html" target="_blank" className="text-[10px] text-text-dim hover:text-accent transition-colors">Terms</a>
+          <a href="https://github.com/FreeMusicApp/freemusic" target="_blank" className="text-[10px] text-text-dim hover:text-accent transition-colors">GitHub</a>
+        </div>
         <p className="text-[9px] text-text-dim mt-1">v{__APP_VERSION__} &middot; {__BUILD_TIME__.slice(0, 16).replace('T', ' ')}</p>
       </div>
     </div>

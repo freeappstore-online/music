@@ -110,8 +110,13 @@ export function AboutTab() {
         </a>
       </div>
 
-      <div className="px-4 pb-4 text-center text-xs text-text-muted/50">
-        &copy; 2026 FreeMusic. Open source, open music.
+      <div className="px-4 pb-4 text-center">
+        <div className="flex items-center justify-center gap-4 mb-3">
+          <a href="legal/privacy.html" target="_blank" className="text-xs text-text-muted hover:text-accent transition-colors">Privacy Policy</a>
+          <span className="text-text-dim">&middot;</span>
+          <a href="legal/terms.html" target="_blank" className="text-xs text-text-muted hover:text-accent transition-colors">Terms of Use</a>
+        </div>
+        <p className="text-xs text-text-muted/50">&copy; 2026 FreeMusic. Open source, open music.</p>
       </div>
     </div>
   )
