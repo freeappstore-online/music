@@ -103,7 +103,7 @@ export function HomeTab() {
       {/* Header - bigger on desktop */}
       <div className="px-4 md:px-6 pt-4 md:pt-8 pb-1">
         <h1 className="text-2xl md:text-3xl font-bold">FreeMusic</h1>
-        <p className="text-xs md:text-sm text-[var(--text-muted)] mt-1">One tap. Your music. Right now.</p>
+        <p className="text-xs md:text-sm text-muted mt-1">One tap. Your music. Right now.</p>
       </div>
 
       {/* ===== QUICK PLAY CARDS ===== */}
@@ -111,7 +111,7 @@ export function HomeTab() {
         {/* Radio */}
         <button
           onClick={playRadio}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600/60 to-emerald-900/30 border border-white/[0.06] p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600/60 to-emerald-900/30 border border-white/6 p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
         >
           <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
@@ -126,7 +126,7 @@ export function HomeTab() {
         {/* Playlist / Favorites */}
         <button
           onClick={playPlaylist}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600/60 to-violet-900/30 border border-white/[0.06] p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600/60 to-violet-900/30 border border-white/6 p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
         >
           <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
@@ -142,7 +142,7 @@ export function HomeTab() {
         <button
           onClick={() => favGenre ? playGenre() : setShowGenrePicker(true)}
           onContextMenu={(e) => { e.preventDefault(); setShowGenrePicker(true) }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/60 to-amber-900/30 border border-white/[0.06] p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/60 to-amber-900/30 border border-white/6 p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
         >
           <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
@@ -158,14 +158,14 @@ export function HomeTab() {
       {/* Genre picker modal */}
       {showGenrePicker && (
         <div className="px-4 md:px-6 mb-4">
-          <div className="bg-[var(--surface)] border border-white/[0.06] rounded-2xl p-3 md:p-4">
-            <div className="text-xs font-semibold mb-2 text-[var(--text-muted)]">Pick your genre — one tap to play next time</div>
+          <div className="bg-surface border border-white/6 rounded-2xl p-3 md:p-4">
+            <div className="text-xs font-semibold mb-2 text-muted">Pick your genre — one tap to play next time</div>
             <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5">
               {GENRES.map(g => (
                 <button
                   key={g}
                   onClick={() => playGenre(g)}
-                  className={`h-10 rounded-xl text-xs font-semibold bg-gradient-to-br ${GENRE_COLORS[g]} active:scale-95 transition-transform ${favGenre === g ? 'ring-2 ring-[var(--accent)]' : ''}`}
+                  className={`h-10 rounded-xl text-xs font-semibold bg-gradient-to-br ${GENRE_COLORS[g]} active:scale-95 transition-transform ${favGenre === g ? 'ring-2 ring-accent' : ''}`}
                 >
                   {genreLabel(g)}
                 </button>
@@ -182,7 +182,7 @@ export function HomeTab() {
         <>
           <div className="flex items-center justify-between px-4 md:px-6 mb-3 mt-2">
             <h2 className="text-sm md:text-base font-bold">Trending</h2>
-            <button onClick={() => { if (tracks.length > 0) player.playTrack(tracks[0], tracks, 0) }} className="text-[11px] md:text-xs text-[var(--accent)] font-semibold hover:underline">Play All</button>
+            <button onClick={() => { if (tracks.length > 0) player.playTrack(tracks[0], tracks, 0) }} className="text-[11px] md:text-xs text-accent font-semibold hover:underline">Play All</button>
           </div>
           {/* Horizontal scroll on mobile, grid on desktop */}
           <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x md:hidden">
@@ -219,7 +219,7 @@ export function HomeTab() {
 
       {loading && (
         <div className="flex items-center justify-center py-12">
-          <div className="w-6 h-6 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 
@@ -229,7 +229,7 @@ export function HomeTab() {
         {GENRES.map(genre => (
           <button
             key={genre}
-            className={`h-11 rounded-xl font-semibold text-[11px] bg-gradient-to-br ${GENRE_COLORS[genre]} ${selectedGenre === genre ? 'ring-2 ring-[var(--accent)]' : ''} active:scale-95 transition-transform`}
+            className={`h-11 rounded-xl font-semibold text-[11px] bg-gradient-to-br ${GENRE_COLORS[genre]} ${selectedGenre === genre ? 'ring-2 ring-accent' : ''} active:scale-95 transition-transform`}
             onClick={() => handleGenreBrowse(genre)}
           >
             {genreLabel(genre)}
@@ -243,12 +243,12 @@ export function HomeTab() {
           <div className="flex items-center justify-between px-4 mb-1">
             <h2 className="text-sm font-bold">{genreLabel(selectedGenre)}</h2>
             {genreContent.tracks.length > 0 && (
-              <button onClick={() => player.playTrack(genreContent.tracks[0], genreContent.tracks, 0)} className="text-[11px] text-[var(--accent)] font-semibold">Play All</button>
+              <button onClick={() => player.playTrack(genreContent.tracks[0], genreContent.tracks, 0)} className="text-[11px] text-accent font-semibold">Play All</button>
             )}
           </div>
           {genreContent.tracks.length === 0 && genreContent.stations.length === 0 ? (
             <div className="flex items-center justify-center py-6">
-              <div className="w-5 h-5 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
@@ -265,7 +265,7 @@ export function HomeTab() {
 
       {/* Footer */}
       <div className="px-4 md:px-6 mt-8 pb-4">
-        <p className="text-[10px] text-[var(--text-muted)]/60">Creative Commons & public domain music. Free forever.</p>
+        <p className="text-[10px] text-muted/60">Creative Commons & public domain music. Free forever.</p>
       </div>
     </div>
   )
@@ -276,25 +276,25 @@ export function HomeTab() {
 function ArtworkCard({ track, onClick, desktop }: { track: Track; onClick: () => void; desktop?: boolean }) {
   return (
     <button className={`${desktop ? 'w-full' : 'flex-shrink-0 w-32 snap-start'} text-left group`} onClick={onClick}>
-      <div className={`${desktop ? 'w-full aspect-square' : 'w-32 h-32'} rounded-xl overflow-hidden bg-white/[0.04] mb-2 ring-1 ring-white/[0.06] relative`}>
+      <div className={`${desktop ? 'w-full aspect-square' : 'w-32 h-32'} rounded-xl overflow-hidden bg-white/4 mb-2 ring-1 ring-white/6 relative`}>
         {track.artworkUrl ? (
           <img src={track.artworkUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--accent)]/20 to-transparent">
-            <svg className="w-8 h-8 text-[var(--accent)]/40" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent/20 to-transparent">
+            <svg className="w-8 h-8 text-accent/40" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
           </div>
         )}
         {/* Hover play overlay (desktop) */}
         {desktop && (
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center shadow-lg">
               <svg className="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" /></svg>
             </div>
           </div>
         )}
       </div>
       <div className={`${desktop ? 'text-[13px]' : 'text-[11px]'} font-semibold truncate`}>{track.title}</div>
-      <div className={`${desktop ? 'text-xs' : 'text-[10px]'} text-[var(--text-muted)] truncate`}>{track.artist}</div>
+      <div className={`${desktop ? 'text-xs' : 'text-[10px]'} text-muted truncate`}>{track.artist}</div>
     </button>
   )
 }
@@ -302,15 +302,15 @@ function ArtworkCard({ track, onClick, desktop }: { track: Track; onClick: () =>
 function StationThumb({ station, onClick, desktop }: { station: RadioStation; onClick: () => void; desktop?: boolean }) {
   return (
     <button className={`${desktop ? 'w-full' : 'flex-shrink-0 w-24 snap-start'} text-center group`} onClick={onClick}>
-      <div className={`${desktop ? 'w-full aspect-square' : 'w-24 h-24'} rounded-xl overflow-hidden bg-white/[0.04] mb-1.5 ring-1 ring-white/[0.06] flex items-center justify-center relative`}>
+      <div className={`${desktop ? 'w-full aspect-square' : 'w-24 h-24'} rounded-xl overflow-hidden bg-white/4 mb-1.5 ring-1 ring-white/6 flex items-center justify-center relative`}>
         {station.favicon ? (
           <img src={station.favicon} alt="" className="w-full h-full object-cover" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
         ) : (
-          <svg className="w-7 h-7 text-[var(--accent)]/40" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
+          <svg className="w-7 h-7 text-accent/40" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
         )}
         {desktop && (
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="w-10 h-10 rounded-full bg-[var(--accent)] flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-lg">
               <svg className="w-4 h-4 text-black ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" /></svg>
             </div>
           </div>

@@ -53,8 +53,8 @@ export function RadioTab() {
 
       {/* Search */}
       <form className="px-4 md:px-6 mb-3" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
-        <div className="flex items-center gap-2 bg-[var(--surface)] rounded-xl px-3 py-2.5 border border-[var(--border)]">
-          <svg className="w-5 h-5 text-[var(--text-muted)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <div className="flex items-center gap-2 bg-surface rounded-xl px-3 py-2.5 border border-border">
+          <svg className="w-5 h-5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
             type="search"
             placeholder="Search stations..."
@@ -68,16 +68,16 @@ export function RadioTab() {
       {/* Browse filters */}
       <div className="px-4 md:px-6 mb-1">
         <div className="flex gap-2 mb-2">
-          <button onClick={loadTop} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'top' && !selected ? 'bg-[var(--accent)] text-[var(--bg)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>Top</button>
-          <button onClick={() => setMode(mode === 'genre' ? 'top' : 'genre')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'genre' ? 'bg-[var(--accent)] text-[var(--bg)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>Genre</button>
-          <button onClick={() => setMode(mode === 'country' ? 'top' : 'country')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'country' ? 'bg-[var(--accent)] text-[var(--bg)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>Country</button>
+          <button onClick={loadTop} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'top' && !selected ? 'bg-accent text-bg' : 'bg-surface text-muted'}`}>Top</button>
+          <button onClick={() => setMode(mode === 'genre' ? 'top' : 'genre')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'genre' ? 'bg-accent text-bg' : 'bg-surface text-muted'}`}>Genre</button>
+          <button onClick={() => setMode(mode === 'country' ? 'top' : 'country')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'country' ? 'bg-accent text-bg' : 'bg-surface text-muted'}`}>Country</button>
         </div>
 
         {mode === 'genre' && (
           <div className="flex gap-1.5 overflow-x-auto pb-2 snap-x">
             {GENRES.map(g => (
               <button key={g} onClick={() => loadGenre(g)}
-                className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full snap-start transition-colors ${selected === g ? 'bg-[var(--accent)]/20 text-[var(--accent)] ring-1 ring-[var(--accent)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>
+                className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full snap-start transition-colors ${selected === g ? 'bg-accent/20 text-accent ring-1 ring-accent' : 'bg-surface text-muted'}`}>
                 {g === '80s' ? "80's" : g.charAt(0).toUpperCase() + g.slice(1)}
               </button>
             ))}
@@ -88,7 +88,7 @@ export function RadioTab() {
           <div className="flex gap-1.5 overflow-x-auto pb-2 snap-x">
             {COUNTRIES.map(c => (
               <button key={c} onClick={() => loadCountry(c)}
-                className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full snap-start whitespace-nowrap transition-colors ${selected === c ? 'bg-[var(--accent)]/20 text-[var(--accent)] ring-1 ring-[var(--accent)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>
+                className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full snap-start whitespace-nowrap transition-colors ${selected === c ? 'bg-accent/20 text-accent ring-1 ring-accent' : 'bg-surface text-muted'}`}>
                 {c}
               </button>
             ))}
@@ -99,10 +99,10 @@ export function RadioTab() {
       {/* Results */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="w-6 h-6 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
         </div>
       ) : stations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-[var(--text-muted)]">
+        <div className="flex flex-col items-center justify-center py-16 text-muted">
           <span className="text-sm">No stations found</span>
         </div>
       ) : (

@@ -25,9 +25,9 @@ export default function App() {
   return (
     <div className="flex min-h-[100dvh]">
       {/* ===== DESKTOP SIDEBAR (hidden on mobile) ===== */}
-      <aside className="hidden md:flex flex-col w-56 flex-shrink-0 border-r border-white/[0.04] bg-[var(--surface)]/50 fixed top-0 left-0 bottom-0 z-20">
+      <aside className="hidden md:flex flex-col w-56 flex-shrink-0 border-r border-white/4 bg-surface/50 fixed top-0 left-0 bottom-0 z-20">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/[0.04]">
+        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/4">
           <svg className="w-7 h-7" viewBox="0 0 100 100" fill="none">
             <circle cx="50" cy="50" r="30" stroke="#6ECE9E" strokeWidth="5"/>
             <circle cx="50" cy="50" r="16" stroke="#6ECE9E" strokeWidth="5"/>
@@ -44,8 +44,8 @@ export default function App() {
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 tab === t.id
-                  ? 'bg-[var(--accent)]/10 text-[var(--accent)]'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-white/[0.04]'
+                  ? 'bg-accent/10 text-accent'
+                  : 'text-muted hover:text-txt hover:bg-white/4'
               }`}
             >
               <TabIcon name={t.icon} size={20} />
@@ -55,8 +55,8 @@ export default function App() {
         </nav>
 
         {/* Sidebar footer */}
-        <div className="px-5 py-4 border-t border-white/[0.04]">
-          <p className="text-[10px] text-[var(--text-muted)]/50 leading-relaxed">
+        <div className="px-5 py-4 border-t border-white/4">
+          <p className="text-[10px] text-muted/50 leading-relaxed">
             Creative Commons &<br/>public domain music.<br/>Free forever.
           </p>
         </div>
@@ -77,17 +77,17 @@ export default function App() {
       <MiniPlayer />
 
       {/* ===== MOBILE TAB BAR (hidden on desktop) ===== */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--bg)]/90 backdrop-blur-xl border-t border-white/[0.04] pb-[env(safe-area-inset-bottom)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-bg/90 backdrop-blur-xl border-t border-white/4 pb-[env(safe-area-inset-bottom)]">
         <div className="flex">
           {TABS.map(t => (
             <button
               key={t.id}
               className={`flex-1 flex flex-col items-center py-2.5 gap-0.5 relative ${
-                tab === t.id ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
+                tab === t.id ? 'text-accent' : 'text-muted'
               }`}
               onClick={() => setTab(t.id)}
             >
-              {tab === t.id && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-[var(--accent)]" />}
+              {tab === t.id && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-accent" />}
               <TabIcon name={t.icon} size={22} />
               <span className="text-[10px] font-medium tracking-wide">{t.label}</span>
             </button>

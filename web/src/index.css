@@ -1,21 +1,20 @@
 @import "tailwindcss";
 
-:root {
-  --accent: #6ECE9E;
-  --accent-glow: #6ECE9E40;
-  --bg: #0a0a0b;
-  --surface: #151517;
-  --surface-hover: #1c1c1f;
-  --border: #232326;
-  --text: #f0f0f2;
-  --text-muted: #78787e;
+@theme {
+  --color-bg: #0a0a0b;
+  --color-surface: #151517;
+  --color-surface-hover: #1c1c1f;
+  --color-border: #232326;
+  --color-txt: #f0f0f2;
+  --color-muted: #78787e;
+  --color-accent: #6ECE9E;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--color-bg);
+  color: var(--color-txt);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -34,7 +33,6 @@ body {
 ::-webkit-scrollbar { display: none; }
 input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
 
-/* Premium slider */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -45,22 +43,18 @@ input[type="range"] {
 }
 input[type="range"]::-webkit-slider-runnable-track {
   height: 3px;
-  background: var(--border);
+  background: var(--color-border);
   border-radius: 4px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 12px;
   height: 12px;
-  background: var(--accent);
+  background: var(--color-accent);
   border-radius: 50%;
   margin-top: -4.5px;
-  box-shadow: 0 0 8px var(--accent-glow);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
 
-/* Smooth transitions everywhere */
 button, a { transition: all 0.15s ease; }
 button:active { transform: scale(0.97); }
-
-/* Glow effect for accent elements */
-.glow { box-shadow: 0 0 20px var(--accent-glow); }

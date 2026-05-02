@@ -22,14 +22,14 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   const sourceLabel = ps.track?.source === 'jamendo' ? 'Jamendo' : ps.track?.source === 'internetarchive' ? 'Internet Archive' : ''
 
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--bg)] flex flex-col items-center animate-slideUp">
+    <div className="fixed inset-0 z-50 bg-bg flex flex-col items-center animate-slideUp">
       <div className="w-full max-w-2xl flex flex-col flex-1">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <button onClick={onClose} className="p-2 -ml-2">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
         </button>
-        {sourceLabel && <span className="text-xs text-[var(--text-muted)]">{sourceLabel}</span>}
+        {sourceLabel && <span className="text-xs text-muted">{sourceLabel}</span>}
         <div className="w-10" />
       </div>
 
@@ -39,7 +39,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           {artwork ? (
             <img src={artwork} alt="" className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--accent)]/60 to-[var(--accent)]/20">
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent/60 to-accent/20">
               <svg className="w-20 h-20 text-white/80" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
             </div>
           )}
@@ -48,7 +48,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
         {/* Info */}
         <div className="text-center w-full">
           <div className="text-xl font-bold truncate">{title}</div>
-          {subtitle && <div className="text-[var(--text-muted)] mt-1 truncate">{subtitle}</div>}
+          {subtitle && <div className="text-muted mt-1 truncate">{subtitle}</div>}
         </div>
 
         {/* Progress */}
@@ -63,7 +63,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
               onChange={(e) => player.seek(parseFloat(e.target.value))}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-[var(--text-muted)] mt-1">
+            <div className="flex justify-between text-xs text-muted mt-1">
               <span>{formatTime(ps.currentTime)}</span>
               <span>-{formatTime(ps.duration - ps.currentTime)}</span>
             </div>
@@ -98,7 +98,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             else if (ps.station) setFav(toggleStationFavorite(ps.station))
           }}
         >
-          <svg className={`w-7 h-7 ${fav ? 'text-red-500 fill-red-500' : 'text-[var(--text-muted)]'}`} fill={fav ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+          <svg className={`w-7 h-7 ${fav ? 'text-red-500 fill-red-500' : 'text-muted'}`} fill={fav ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </button>
