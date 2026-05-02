@@ -64,6 +64,24 @@ class AudioPlayerService {
       navigator.mediaSession.setActionHandler('previoustrack', () => this.previous())
       navigator.mediaSession.setActionHandler('nexttrack', () => this.next())
     }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Don't capture when typing in inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (!this.state.track && !this.state.station) return
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault()
+          this.next()
+          break
+        case 'ArrowLeft':
+          e.preventDefault()
+          this.previous()
+          break
+      }
+    })
   }
 
   subscribe(fn: Listener) {
@@ -148,12 +166,21 @@ class AudioPlayerService {
 
   private updateMediaSession() {
     if (!('mediaSession' in navigator)) return
+    const artSrc = this.state.track?.artworkUrl ?? this.state.station?.favicon
+    // Ensure HTTPS for iOS
+    const artUrl = artSrc?.replace(/^http:\/\//, 'https://') || ''
+
+    const artwork: MediaImage[] = artUrl ? [
+      { src: artUrl, sizes: '96x96', type: 'image/jpeg' },
+      { src: artUrl, sizes: '256x256', type: 'image/jpeg' },
+      { src: artUrl, sizes: '512x512', type: 'image/jpeg' },
+    ] : []
+
     navigator.mediaSession.metadata = new MediaMetadata({
       title: this.state.track?.title ?? this.state.station?.name ?? '',
       artist: this.state.track?.artist ?? '',
-      artwork: (this.state.track?.artworkUrl ?? this.state.station?.favicon)
-        ? [{ src: (this.state.track?.artworkUrl ?? this.state.station?.favicon)!, sizes: '512x512' }]
-        : [],
+      album: this.state.track?.album ?? '',
+      artwork,
     })
   }
 }

@@ -1,6 +1,7 @@
 import AVFoundation
 import MediaPlayer
 import Foundation
+import UIKit
 
 @MainActor @Observable
 final class AudioPlayer {
@@ -177,6 +178,9 @@ final class AudioPlayer {
         }
     }
 
+    private var cachedArtworkUrl: String?
+    private var cachedArtwork: MPMediaItemArtwork?
+
     private func updateNowPlaying() {
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: nowPlayingTitle,
@@ -187,7 +191,36 @@ final class AudioPlayer {
         if duration > 0 {
             info[MPMediaItemPropertyPlaybackDuration] = duration
         }
+        if let artwork = cachedArtwork {
+            info[MPMediaItemPropertyArtwork] = artwork
+        }
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+
+        // Fetch artwork if URL changed
+        let artUrl = currentTrack?.artworkUrl ?? currentStation?.favicon
+        if let artUrl, artUrl != cachedArtworkUrl {
+            cachedArtworkUrl = artUrl
+            Task {
+                await fetchArtwork(from: artUrl)
+            }
+        }
+    }
+
+    private func fetchArtwork(from urlString: String) async {
+        guard let url = URL(string: urlString) else { return }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let image = UIImage(data: data) else { return }
+            let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            cachedArtwork = artwork
+            // Update now playing info again with artwork
+            var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+            info[MPMediaItemPropertyArtwork] = artwork
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+            Log.info("Lock screen artwork set for: \(urlString)")
+        } catch {
+            Log.error("Failed to fetch artwork: \(error)")
+        }
     }
 
     private func cleanup() {
