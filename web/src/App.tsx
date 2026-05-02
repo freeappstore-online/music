@@ -28,10 +28,12 @@ export default function App() {
       <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-white/4 bg-surface/50 fixed top-0 left-0 bottom-0 z-20">
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/4">
-          <svg className="w-7 h-7" viewBox="0 0 100 100" fill="none">
-            <circle cx="50" cy="50" r="30" stroke="#6ECE9E" strokeWidth="5"/>
-            <circle cx="50" cy="50" r="16" stroke="#6ECE9E" strokeWidth="5"/>
-            <circle cx="50" cy="50" r="5" fill="#6ECE9E"/>
+          <svg className="w-7 h-7" viewBox="0 0 512 512" fill="none">
+            <rect width="512" height="512" rx="112" fill="#1a1a2e"/>
+            <circle cx="256" cy="256" r="140" stroke="#6ECE9E" strokeWidth="8" opacity="0.3"/>
+            <circle cx="256" cy="256" r="85" stroke="#6ECE9E" strokeWidth="6" opacity="0.5"/>
+            <circle cx="256" cy="256" r="32" fill="#6ECE9E"/>
+            <path d="M244 234 L244 278 L274 256 Z" fill="#1a1a2e"/>
           </svg>
           <span className="text-base font-bold tracking-tight">FreeMusic</span>
         </div>
