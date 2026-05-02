@@ -78,18 +78,33 @@ struct FullPlayerView: View {
                     }
                 }
 
-                // Favorite button
-                if let track = player.currentTrack {
-                    Button { favorites.toggleTrack(track) } label: {
-                        Image(systemName: favorites.isTrackFavorite(track) ? "heart.fill" : "heart")
-                            .font(.title3)
-                            .foregroundStyle(favorites.isTrackFavorite(track) ? .red : .secondary)
+                // Like / Dislike
+                HStack(spacing: 40) {
+                    // Thumbs down
+                    Button {
+                        if let track = player.currentTrack {
+                            favorites.toggleTrack(track) // remove from favs
+                            player.next()
+                        }
+                    } label: {
+                        Image(systemName: "hand.thumbsdown")
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
                     }
-                } else if let station = player.currentStation {
-                    Button { favorites.toggleStation(station) } label: {
-                        Image(systemName: favorites.isStationFavorite(station) ? "heart.fill" : "heart")
-                            .font(.title3)
-                            .foregroundStyle(favorites.isStationFavorite(station) ? .red : .secondary)
+
+                    // Heart
+                    if let track = player.currentTrack {
+                        Button { favorites.toggleTrack(track) } label: {
+                            Image(systemName: favorites.isTrackFavorite(track) ? "heart.fill" : "heart")
+                                .font(.title2)
+                                .foregroundStyle(favorites.isTrackFavorite(track) ? .red : .secondary)
+                        }
+                    } else if let station = player.currentStation {
+                        Button { favorites.toggleStation(station) } label: {
+                            Image(systemName: favorites.isStationFavorite(station) ? "heart.fill" : "heart")
+                                .font(.title2)
+                                .foregroundStyle(favorites.isStationFavorite(station) ? .red : .secondary)
+                        }
                     }
                 }
 

@@ -12,18 +12,18 @@ import { Spinner } from '../ui/Spinner'
 export const GENRES = ['pop', 'rock', 'electronic', 'jazz', 'classical', 'hiphop', 'ambient', 'metal', 'dance', 'oldies', '80s', 'blues']
 
 const COLORS: Record<string, string> = {
-  pop: 'from-pink-500/80 to-pink-500/20',
-  rock: 'from-red-600/80 to-red-600/20',
-  electronic: 'from-blue-500/80 to-blue-500/20',
-  jazz: 'from-orange-500/80 to-orange-500/20',
-  classical: 'from-amber-700/80 to-amber-700/20',
-  hiphop: 'from-purple-500/80 to-purple-500/20',
-  ambient: 'from-teal-500/80 to-teal-500/20',
-  metal: 'from-gray-500/80 to-gray-500/20',
-  dance: 'from-violet-500/80 to-violet-500/20',
-  oldies: 'from-yellow-600/80 to-yellow-600/20',
-  '80s': 'from-fuchsia-500/80 to-fuchsia-500/20',
-  blues: 'from-indigo-500/80 to-indigo-500/20',
+  pop: 'from-pink-500 to-pink-900',
+  rock: 'from-red-600 to-red-950',
+  electronic: 'from-blue-500 to-blue-950',
+  jazz: 'from-orange-500 to-orange-950',
+  classical: 'from-amber-600 to-amber-950',
+  hiphop: 'from-purple-500 to-purple-950',
+  ambient: 'from-teal-500 to-teal-950',
+  metal: 'from-gray-400 to-gray-800',
+  dance: 'from-violet-500 to-violet-950',
+  oldies: 'from-yellow-500 to-yellow-900',
+  '80s': 'from-fuchsia-500 to-fuchsia-950',
+  blues: 'from-indigo-500 to-indigo-950',
 }
 
 export function genreLabel(g: string) {
@@ -56,7 +56,7 @@ export function GenreBrowser() {
   return (
     <section>
       <h2 className="text-sm md:text-base font-bold px-4 md:px-6 mb-2 mt-4">Browse Genre</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 md:gap-2 px-4 md:px-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 md:gap-2 px-4 md:px-6">
         {GENRES.map(genre => (
           <button
             key={genre}

@@ -62,7 +62,7 @@ function QuickCard({ gradient, icon, label, subtitle, onClick }: {
   return (
     <button
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} border border-white/6 p-4 lg:p-5 text-left group active:scale-[0.97] transition-transform`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} border border-white/6 p-4 lg:p-6 text-left group active:scale-[0.97] transition-transform min-h-[100px] lg:min-h-[120px]`}
       aria-label={`Play ${label}`}
     >
       <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
