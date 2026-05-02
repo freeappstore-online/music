@@ -1,17 +1,28 @@
 import { useState } from 'react'
 import type { RadioStation } from '../types'
 import { player } from '../services/player'
-import { isStationFavorite, toggleStationFavorite } from '../services/favorites'
+import { isStationFavorite, toggleStationFavorite, isStationBlacklisted, blacklistStation } from '../services/favorites'
 import { usePlayer } from '../hooks'
 import { formatVotes } from '../lib/format'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon, PlayingBars } from './ui/Icons'
+import { HeartIcon, ThumbDownIcon, PlayingBars } from './ui/Icons'
 
-export function StationRow({ station }: { station: RadioStation }) {
+export function StationRow({ station, onBlacklist }: { station: RadioStation; onBlacklist?: () => void }) {
   const ps = usePlayer()
   const [fav, setFav] = useState(() => isStationFavorite(station.id))
+  const [blocked, setBlocked] = useState(() => isStationBlacklisted(station.id))
   const playing = ps.station?.id === station.id && ps.isPlaying
   const genre = station.genre?.split(',')[0] || ''
+
+  if (blocked) return null
+
+  const handleBlacklist = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    blacklistStation(station)
+    setBlocked(true)
+    setFav(false)
+    onBlacklist?.()
+  }
 
   return (
     <button
@@ -31,6 +42,14 @@ export function StationRow({ station }: { station: RadioStation }) {
       </div>
 
       {playing && <PlayingBars />}
+
+      <button
+        className="p-1.5 flex-shrink-0 rounded-full hover:bg-white/6 opacity-0 group-hover:opacity-60 transition-opacity"
+        onClick={handleBlacklist}
+        aria-label="Never play again"
+      >
+        <ThumbDownIcon className="w-4 h-4" />
+      </button>
 
       <button
         className="p-1.5 flex-shrink-0 rounded-full hover:bg-white/6 opacity-60 group-hover:opacity-100 transition-opacity"

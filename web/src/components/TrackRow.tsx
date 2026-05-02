@@ -1,17 +1,30 @@
 import { useState } from 'react'
 import type { Track } from '../types'
 import { player } from '../services/player'
-import { isTrackFavorite, toggleTrackFavorite } from '../services/favorites'
+import { isTrackFavorite, toggleTrackFavorite, isTrackBlacklisted, blacklistTrack } from '../services/favorites'
 import { usePlayer } from '../hooks'
 import { formatDuration } from '../lib/format'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon, PlayingBars } from './ui/Icons'
+import { HeartIcon, ThumbDownIcon, PlayingBars } from './ui/Icons'
 
-export function TrackRow({ track, queue, index }: { track: Track; queue?: Track[]; index?: number }) {
+export function TrackRow({ track, queue, index, onBlacklist }: { track: Track; queue?: Track[]; index?: number; onBlacklist?: () => void }) {
   const ps = usePlayer()
   const [fav, setFav] = useState(() => isTrackFavorite(track.id))
+  const [blocked, setBlocked] = useState(() => isTrackBlacklisted(track.id))
   const playing = ps.track?.id === track.id && ps.isPlaying
   const dur = formatDuration(track.duration)
+
+  if (blocked) return null
+
+  const handleBlacklist = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    blacklistTrack(track)
+    setBlocked(true)
+    setFav(false)
+    onBlacklist?.()
+    // Skip to next if currently playing
+    if (ps.track?.id === track.id) player.next()
+  }
 
   return (
     <button
@@ -31,6 +44,14 @@ export function TrackRow({ track, queue, index }: { track: Track; queue?: Track[
       </div>
 
       {playing && <PlayingBars />}
+
+      <button
+        className="p-1.5 flex-shrink-0 rounded-full hover:bg-white/6 opacity-0 group-hover:opacity-60 transition-opacity"
+        onClick={handleBlacklist}
+        aria-label="Never play again"
+      >
+        <ThumbDownIcon className="w-4 h-4" />
+      </button>
 
       <button
         className="p-1.5 flex-shrink-0 rounded-full hover:bg-white/6 opacity-60 group-hover:opacity-100 transition-opacity"

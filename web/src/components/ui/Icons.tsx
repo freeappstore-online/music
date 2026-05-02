@@ -36,6 +36,20 @@ export function HeartIcon({ filled, className = 'w-5 h-5' }: { filled: boolean; 
   )
 }
 
+export function ThumbDownIcon({ active, className = 'w-5 h-5' }: { active?: boolean; className?: string }) {
+  return (
+    <svg
+      className={`${className} ${active ? 'text-red-400' : 'text-muted'}`}
+      fill={active ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 15h2.25m8.024-9.75c.011.05.028.1.052.148.591 1.2.924 2.55.924 3.977a8.96 8.96 0 01-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398C20.613 14.547 19.833 15 19.145 15h-1.286c-.392 0-.651-.385-.575-.75M7.5 15H5.625c-.621 0-1.125-.504-1.125-1.125v-6.75c0-.621.504-1.125 1.125-1.125h1.5c.631 0 1.167.414 1.353 1.002M7.5 15l1.256-4.812A2.67 2.67 0 0111.36 8.25h1.436a1.5 1.5 0 001.342-.83l.58-1.161a1.5 1.5 0 011.342-.83h.146c.789 0 1.428.64 1.428 1.428v.003" />
+    </svg>
+  )
+}
+
 export function PlayingBars() {
   return (
     <div className="flex items-end gap-[2px] h-4">

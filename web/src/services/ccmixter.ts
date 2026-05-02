@@ -1,6 +1,6 @@
 import type { Track } from '../types'
 
-const BASE = 'http://ccmixter.org/api/query'
+const BASE = 'https://ccmixter.org/api/query'
 
 function parseDuration(ps?: string): number {
   if (!ps) return 0
