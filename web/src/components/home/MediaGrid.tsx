@@ -1,7 +1,7 @@
 import type { Track, RadioStation } from '../../types'
 import { player } from '../../services/player'
 import { getUserTags } from '../../services/usertags'
-import { Artwork } from '../ui/Artwork'
+import { RadioIcon } from '../ui/Icons'
 
 export function TrackGrid({ tracks, title, showPlayAll }: { tracks: Track[]; title: string; showPlayAll?: boolean }) {
   if (tracks.length === 0) return null
@@ -54,8 +54,14 @@ export function StationGrid({ stations, title }: { stations: RadioStation[]; tit
       <div className="flex gap-3 overflow-x-auto px-4 md:px-6 pb-3 snap-x md:grid md:grid-cols-5 lg:grid-cols-6 md:overflow-visible">
         {stations.map(s => (
           <button key={s.id} className="flex-shrink-0 w-28 md:w-auto snap-start text-center group" onClick={() => player.playStation(s)}>
-            <div className="w-28 h-28 md:w-full md:aspect-square rounded-xl overflow-hidden ring-1 ring-white/6 relative">
-              <Artwork src={s.favicon} alt={s.name} size={999} type="station" rounded="rounded-none" />
+            <div className="w-28 h-28 md:w-full md:aspect-square rounded-xl overflow-hidden ring-1 ring-white/6 relative bg-white/4">
+              {s.favicon ? (
+                <img src={s.favicon} alt={s.name} className="w-full h-full object-cover" loading="lazy" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <RadioIcon className="w-5 h-5 text-accent/40" />
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity hidden md:flex items-center justify-center">
                 <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-lg">
                   <svg className="w-4 h-4 text-black ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" /></svg>
