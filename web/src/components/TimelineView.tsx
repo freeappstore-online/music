@@ -141,38 +141,28 @@ function GenreTimeline({ eras, min, max, genre, yearMarkers }: {
               </div>
             </div>
 
-            {/* Artists positioned at their birth year */}
-            {era.artists.length > 0 && (
-              <div className="relative" style={{ height: `${Math.ceil(era.artists.length / 3) * 40 + 8}px` }}>
-                {era.artists.map((a, i) => {
-                  const left = ytp(a.birth)
-                  const row = Math.floor(i / 3)
-                  return (
-                    <button
-                      key={a.id}
-                      onClick={() => handleSelect(a.id)}
-                      className={`absolute flex items-center gap-1 rounded-lg text-left transition-all ${
-                        selected === a.id ? 'bg-accent/20 ring-1 ring-accent z-10 scale-105' : 'hover:bg-white/6 hover:z-10'
-                      }`}
-                      style={{ left: `${Math.min(left, 82)}%`, top: `${row * 40}px` }}
-                      title={`${a.name} (${a.birth}–${a.death || 'present'})`}
-                    >
-                      <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-white/15">
-                        {a.image ? (
-                          <img src={a.image} alt="" className="w-full h-full object-cover" loading="lazy" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[8px] bg-surface">{a.name[0]}</div>
-                        )}
-                      </div>
-                      <div className="pr-1">
-                        <div className="text-[9px] font-medium leading-tight whitespace-nowrap">{a.name}</div>
-                        <div className="text-[7px] text-text-dim">{a.birth}</div>
-                      </div>
-                    </button>
-                  )
-                })}
+            {/* Artists — one per line, positioned at birth year */}
+            {era.artists.map(a => (
+              <div key={a.id} className="relative h-8 mb-0.5">
+                <button
+                  onClick={() => handleSelect(a.id)}
+                  className={`absolute flex items-center gap-1.5 py-0.5 px-1 rounded-lg text-left transition-all ${
+                    selected === a.id ? 'bg-accent/20 ring-1 ring-accent' : 'hover:bg-white/6'
+                  }`}
+                  style={{ left: `${Math.min(ytp(a.birth), 75)}%` }}
+                >
+                  <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-white/15">
+                    {a.image ? (
+                      <img src={a.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[8px] bg-surface">{a.name[0]}</div>
+                    )}
+                  </div>
+                  <span className="text-[10px] font-medium whitespace-nowrap">{a.name}</span>
+                  <span className="text-[8px] text-text-dim whitespace-nowrap">{a.birth}</span>
+                </button>
               </div>
-            )}
+            ))}
           </div>
         ))}
       </div>
