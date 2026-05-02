@@ -2,6 +2,7 @@ import type { Track, RadioStation } from '../types'
 
 const TRACKS_KEY = 'fm-favorite-tracks'
 const STATIONS_KEY = 'fm-favorite-stations'
+const GENRE_KEY = 'fm-favorite-genre'
 
 export function getFavoriteTracks(): Track[] {
   try {
@@ -49,4 +50,12 @@ export function toggleStationFavorite(station: RadioStation): boolean {
     localStorage.setItem(STATIONS_KEY, JSON.stringify(stations))
     return true
   }
+}
+
+export function getFavoriteGenre(): string | null {
+  return localStorage.getItem(GENRE_KEY)
+}
+
+export function setFavoriteGenre(genre: string) {
+  localStorage.setItem(GENRE_KEY, genre)
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getTrending, getByGenre, isAvailable } from '../services/jamendo'
 import { getPopular as getCCPopular, getByTag } from '../services/ccmixter'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
+import { getFavoriteTracks, getFavoriteStations, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
@@ -9,28 +10,32 @@ import { StationRow } from './StationRow'
 
 const GENRES = ['pop', 'rock', 'electronic', 'jazz', 'classical', 'hiphop', 'ambient', 'metal', 'dance', 'oldies', '80s', 'blues']
 const GENRE_COLORS: Record<string, string> = {
-  pop: 'from-pink-500/70 to-pink-500/30',
-  rock: 'from-red-600/70 to-red-600/30',
-  electronic: 'from-blue-600/70 to-blue-600/30',
-  jazz: 'from-orange-500/70 to-orange-500/30',
-  classical: 'from-amber-700/70 to-amber-700/30',
-  hiphop: 'from-purple-600/70 to-purple-600/30',
-  ambient: 'from-teal-600/70 to-teal-600/30',
-  metal: 'from-gray-600/70 to-gray-600/30',
-  dance: 'from-violet-500/70 to-violet-500/30',
-  oldies: 'from-yellow-600/70 to-yellow-600/30',
-  '80s': 'from-fuchsia-500/70 to-fuchsia-500/30',
-  blues: 'from-indigo-600/70 to-indigo-600/30',
+  pop: 'from-pink-500/80 to-pink-500/20',
+  rock: 'from-red-600/80 to-red-600/20',
+  electronic: 'from-blue-500/80 to-blue-500/20',
+  jazz: 'from-orange-500/80 to-orange-500/20',
+  classical: 'from-amber-700/80 to-amber-700/20',
+  hiphop: 'from-purple-500/80 to-purple-500/20',
+  ambient: 'from-teal-500/80 to-teal-500/20',
+  metal: 'from-gray-500/80 to-gray-500/20',
+  dance: 'from-violet-500/80 to-violet-500/20',
+  oldies: 'from-yellow-600/80 to-yellow-600/20',
+  '80s': 'from-fuchsia-500/80 to-fuchsia-500/20',
+  blues: 'from-indigo-500/80 to-indigo-500/20',
 }
 
 export function HomeTab() {
   const [tracks, setTracks] = useState<Track[]>([])
   const [topStations, setTopStations] = useState<RadioStation[]>([])
-  const [genreStations, setGenreStations] = useState<RadioStation[]>([])
-  const [genreTracks, setGenreTracks] = useState<Track[]>([])
+  const [genreContent, setGenreContent] = useState<{ tracks: Track[]; stations: RadioStation[] }>({ tracks: [], stations: [] })
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showGenrePicker, setShowGenrePicker] = useState(false)
   const jamendoOk = isAvailable()
+
+  const favTracks = getFavoriteTracks()
+  const favStations = getFavoriteStations()
+  const favGenre = getFavoriteGenre()
 
   useEffect(() => {
     const load = async () => {
@@ -46,46 +51,154 @@ export function HomeTab() {
     load()
   }, [])
 
-  const handleGenre = async (genre: string) => {
-    if (selectedGenre === genre) { setSelectedGenre(null); setGenreStations([]); setGenreTracks([]); return }
+  // Quick play handlers
+  const playRadio = () => {
+    const stations = favStations.length > 0 ? favStations : topStations
+    if (stations.length > 0) player.playStation(stations[0])
+  }
+
+  const playPlaylist = () => {
+    if (favTracks.length > 0) {
+      player.playTrack(favTracks[0], favTracks, 0)
+    } else if (tracks.length > 0) {
+      player.playTrack(tracks[0], tracks, 0)
+    }
+  }
+
+  const playGenre = async (genre?: string) => {
+    const g = genre || favGenre || 'electronic'
+    if (genre) { setFavoriteGenre(genre); setShowGenrePicker(false) }
+    const [stations, jTracks, ccTracks] = await Promise.all([
+      getStationsByGenre(g, 10),
+      jamendoOk ? getByGenre(g, 10) : Promise.resolve([]),
+      getByTag(g, 10),
+    ])
+    const genreTracks = jTracks.length > 0 ? jTracks : ccTracks
+    if (genreTracks.length > 0) {
+      player.playTrack(genreTracks[0], genreTracks, 0)
+    } else if (stations.length > 0) {
+      player.playStation(stations[0])
+    }
+  }
+
+  const handleGenreBrowse = async (genre: string) => {
+    if (selectedGenre === genre) { setSelectedGenre(null); setGenreContent({ tracks: [], stations: [] }); return }
     setSelectedGenre(genre)
-    setGenreStations([])
-    setGenreTracks([])
+    setGenreContent({ tracks: [], stations: [] })
     const [stations, jTracks, ccTracks] = await Promise.all([
       getStationsByGenre(genre, 20),
       jamendoOk ? getByGenre(genre, 20) : Promise.resolve([]),
       getByTag(genre, 10),
     ])
-    setGenreStations(stations)
-    setGenreTracks(jTracks.length > 0 ? jTracks : ccTracks)
+    setGenreContent({
+      tracks: jTracks.length > 0 ? jTracks : ccTracks,
+      stations,
+    })
   }
+
+  const genreLabel = (g: string) => g === '80s' ? "80's" : g.charAt(0).toUpperCase() + g.slice(1)
 
   return (
     <div className="pb-4">
-      <h1 className="text-2xl font-bold px-4 pt-4 pb-3">FreeMusic</h1>
+      <h1 className="text-2xl font-bold px-4 pt-4 pb-1">FreeMusic</h1>
+      <p className="text-xs text-[var(--text-muted)] px-4 pb-4">One tap. Your music. Right now.</p>
 
-      {/* Trending tracks (Jamendo) */}
+      {/* ===== QUICK PLAY CARDS ===== */}
+      <div className="grid grid-cols-3 gap-2 px-4 mb-6">
+        {/* Radio */}
+        <button
+          onClick={playRadio}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600/60 to-emerald-900/30 border border-white/[0.06] p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
+        >
+          <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+          </div>
+          <svg className="w-6 h-6 mb-2 opacity-80" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
+          <div className="text-xs font-bold">Radio</div>
+          <div className="text-[10px] text-white/50 mt-0.5 leading-tight">
+            {favStations.length > 0 ? `${favStations.length} saved` : 'Top stations'}
+          </div>
+        </button>
+
+        {/* Playlist / Favorites */}
+        <button
+          onClick={playPlaylist}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600/60 to-violet-900/30 border border-white/[0.06] p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
+        >
+          <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+          </div>
+          <svg className="w-6 h-6 mb-2 opacity-80" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+          <div className="text-xs font-bold">My Tracks</div>
+          <div className="text-[10px] text-white/50 mt-0.5 leading-tight">
+            {favTracks.length > 0 ? `${favTracks.length} saved` : 'Popular mix'}
+          </div>
+        </button>
+
+        {/* Genre */}
+        <button
+          onClick={() => favGenre ? playGenre() : setShowGenrePicker(true)}
+          onContextMenu={(e) => { e.preventDefault(); setShowGenrePicker(true) }}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/60 to-amber-900/30 border border-white/[0.06] p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform"
+        >
+          <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+          </div>
+          <svg className="w-6 h-6 mb-2 opacity-80" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
+          <div className="text-xs font-bold">Genre</div>
+          <div className="text-[10px] text-white/50 mt-0.5 leading-tight">
+            {favGenre ? genreLabel(favGenre) : 'Pick genre'}
+          </div>
+        </button>
+      </div>
+
+      {/* Genre picker modal */}
+      {showGenrePicker && (
+        <div className="px-4 mb-4">
+          <div className="bg-[var(--surface)] border border-white/[0.06] rounded-2xl p-3">
+            <div className="text-xs font-semibold mb-2 text-[var(--text-muted)]">Pick your genre — one tap to play next time</div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {GENRES.map(g => (
+                <button
+                  key={g}
+                  onClick={() => playGenre(g)}
+                  className={`h-10 rounded-xl text-xs font-semibold bg-gradient-to-br ${GENRE_COLORS[g]} active:scale-95 transition-transform ${favGenre === g ? 'ring-2 ring-[var(--accent)]' : ''}`}
+                >
+                  {genreLabel(g)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== DISCOVER SECTION ===== */}
+
+      {/* Trending tracks */}
       {tracks.length > 0 && (
         <>
-          <h2 className="text-lg font-semibold px-4 mb-2">Trending Tracks</h2>
+          <div className="flex items-center justify-between px-4 mb-2 mt-2">
+            <h2 className="text-sm font-bold">Trending</h2>
+            <button onClick={() => { if (tracks.length > 0) player.playTrack(tracks[0], tracks, 0) }} className="text-[11px] text-[var(--accent)] font-semibold">Play All</button>
+          </div>
           <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x">
             {tracks.map((track, i) => (
               <button
                 key={track.id}
-                className="flex-shrink-0 w-36 snap-start text-left"
+                className="flex-shrink-0 w-32 snap-start text-left"
                 onClick={() => player.playTrack(track, tracks, i)}
               >
-                <div className="w-36 h-36 rounded-lg overflow-hidden bg-[var(--surface)] mb-1.5">
+                <div className="w-32 h-32 rounded-xl overflow-hidden bg-white/[0.04] mb-1.5 ring-1 ring-white/[0.06]">
                   {track.artworkUrl ? (
                     <img src={track.artworkUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[var(--accent)]">
-                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--accent)]/20 to-transparent">
+                      <svg className="w-8 h-8 text-[var(--accent)]/40" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
                     </div>
                   )}
                 </div>
-                <div className="text-xs font-medium truncate">{track.title}</div>
-                <div className="text-xs text-[var(--text-muted)] truncate">{track.artist}</div>
+                <div className="text-[11px] font-semibold truncate">{track.title}</div>
+                <div className="text-[10px] text-[var(--text-muted)] truncate">{track.artist}</div>
               </button>
             ))}
           </div>
@@ -93,63 +206,71 @@ export function HomeTab() {
       )}
 
       {/* Popular Stations */}
-      <h2 className="text-lg font-semibold px-4 mb-2 mt-1">Popular Stations</h2>
-      {loading ? (
-        <div className="flex items-center justify-center py-8">
+      {!loading && topStations.length > 0 && (
+        <>
+          <div className="flex items-center justify-between px-4 mb-2 mt-1">
+            <h2 className="text-sm font-bold">Live Radio</h2>
+          </div>
+          <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x">
+            {topStations.map(station => (
+              <button
+                key={station.id}
+                className="flex-shrink-0 w-24 snap-start text-center"
+                onClick={() => player.playStation(station)}
+              >
+                <div className="w-24 h-24 rounded-xl overflow-hidden bg-white/[0.04] mb-1.5 ring-1 ring-white/[0.06] flex items-center justify-center">
+                  {station.favicon ? (
+                    <img src={station.favicon} alt="" className="w-full h-full object-cover" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                  ) : (
+                    <svg className="w-7 h-7 text-[var(--accent)]/40" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
+                  )}
+                </div>
+                <div className="text-[10px] font-semibold truncate">{station.name}</div>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {loading && (
+        <div className="flex items-center justify-center py-12">
           <div className="w-6 h-6 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x">
-          {topStations.map(station => (
-            <button
-              key={station.id}
-              className="flex-shrink-0 w-28 snap-start text-center"
-              onClick={() => player.playStation(station)}
-            >
-              <div className="w-28 h-28 rounded-xl overflow-hidden bg-[var(--surface)] mb-1.5 flex items-center justify-center">
-                {station.favicon ? (
-                  <img src={station.favicon} alt="" className="w-full h-full object-cover" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                ) : (
-                  <svg className="w-8 h-8 text-[var(--accent)]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
-                )}
-              </div>
-              <div className="text-xs font-medium truncate">{station.name}</div>
-              <div className="text-[10px] text-[var(--text-muted)] truncate">{station.genre?.split(',')[0]}</div>
-            </button>
-          ))}
         </div>
       )}
 
-      {/* Genres */}
-      <h2 className="text-lg font-semibold px-4 mb-2 mt-2">Browse by Genre</h2>
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 px-4">
+      {/* Browse by Genre */}
+      <h2 className="text-sm font-bold px-4 mb-2 mt-2">Browse Genre</h2>
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 px-4">
         {GENRES.map(genre => (
           <button
             key={genre}
-            className={`h-12 rounded-xl font-semibold text-xs bg-gradient-to-br ${GENRE_COLORS[genre] || 'from-gray-500/70 to-gray-500/30'} ${selectedGenre === genre ? 'ring-2 ring-[var(--accent)]' : ''}`}
-            onClick={() => handleGenre(genre)}
+            className={`h-11 rounded-xl font-semibold text-[11px] bg-gradient-to-br ${GENRE_COLORS[genre]} ${selectedGenre === genre ? 'ring-2 ring-[var(--accent)]' : ''} active:scale-95 transition-transform`}
+            onClick={() => handleGenreBrowse(genre)}
           >
-            {genre === '80s' ? "80's" : genre.charAt(0).toUpperCase() + genre.slice(1)}
+            {genreLabel(genre)}
           </button>
         ))}
       </div>
 
       {/* Genre results */}
       {selectedGenre && (
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold px-4 mb-1">
-            {selectedGenre === '80s' ? "80's" : selectedGenre.charAt(0).toUpperCase() + selectedGenre.slice(1)} Stations
-          </h2>
-          {genreStations.length === 0 && genreTracks.length === 0 ? (
+        <div className="mt-3">
+          <div className="flex items-center justify-between px-4 mb-1">
+            <h2 className="text-sm font-bold">{genreLabel(selectedGenre)}</h2>
+            {genreContent.tracks.length > 0 && (
+              <button onClick={() => player.playTrack(genreContent.tracks[0], genreContent.tracks, 0)} className="text-[11px] text-[var(--accent)] font-semibold">Play All</button>
+            )}
+          </div>
+          {genreContent.tracks.length === 0 && genreContent.stations.length === 0 ? (
             <div className="flex items-center justify-center py-6">
               <div className="w-5 h-5 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
-              {genreTracks.map((track, i) => (
-                <TrackRow key={track.id} track={track} queue={genreTracks} index={i} />
+              {genreContent.tracks.map((track, i) => (
+                <TrackRow key={track.id} track={track} queue={genreContent.tracks} index={i} />
               ))}
-              {genreStations.map(station => (
+              {genreContent.stations.map(station => (
                 <StationRow key={station.id} station={station} />
               ))}
             </>
@@ -157,14 +278,9 @@ export function HomeTab() {
         </div>
       )}
 
-      {/* Sources */}
-      <div className="px-4 mt-6">
-        <p className="text-xs text-[var(--text-muted)] mb-2">All music is Creative Commons or public domain. Free forever, no ads.</p>
-        <div className="flex gap-2 flex-wrap">
-          {['Radio Browser', 'Internet Archive', 'Jamendo'].map(s => (
-            <span key={s} className="text-xs font-medium px-2.5 py-1 rounded-full bg-[var(--accent)]/15 text-[var(--accent)]">{s}</span>
-          ))}
-        </div>
+      {/* Footer */}
+      <div className="px-4 mt-6 pb-2">
+        <p className="text-[10px] text-[var(--text-muted)]/60">Creative Commons & public domain music. Free forever.</p>
       </div>
     </div>
   )
