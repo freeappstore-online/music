@@ -43,13 +43,6 @@ export function getFeatured(genre: string, limit = 8): Promise<Track[]> {
   return searchTracks(`subject:${genre} format:mp3`, limit)
 }
 
-export function getFreeMusicArchive(limit = 10): Promise<Track[]> {
-  return searchTracks(`collection:freemusicarchive format:mp3`, limit)
-}
-
-export function getNetlabels(limit = 10): Promise<Track[]> {
-  return searchTracks(`collection:netlabels format:mp3`, limit)
-}
 
 function parseDuration(length?: string): number {
   if (!length) return 0

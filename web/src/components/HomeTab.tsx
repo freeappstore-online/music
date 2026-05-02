@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { getTrending, getByGenre } from '../services/jamendo'
-import { getFeatured as getIAFeatured, getFreeMusicArchive } from '../services/archive'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
 import { getSomaFMChannels } from '../services/somafm'
 import { getFavoriteTracks, getFavoriteStations, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
+import { getHistory } from '../services/history'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
 import { Spinner } from './ui/Spinner'
@@ -11,11 +11,10 @@ import { QuickPlayCards } from './home/QuickPlayCards'
 import { TrackGrid, StationGrid } from './home/MediaGrid'
 import { GenreBrowser, GenrePicker } from './home/GenreBrowser'
 import { MoodGrid } from './home/MoodGrid'
+import { TrackRow } from './TrackRow'
 
 export function HomeTab() {
   const [tracks, setTracks] = useState<Track[]>([])
-  const [classical, setClassical] = useState<Track[]>([])
-  const [fma, setFma] = useState<Track[]>([])
   const [topStations, setTopStations] = useState<RadioStation[]>([])
   const [somaStations, setSomaStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(true)
@@ -24,24 +23,15 @@ export function HomeTab() {
   const favTracks = getFavoriteTracks()
   const favStations = getFavoriteStations()
   const favGenre = getFavoriteGenre()
+  const history = getHistory()
+  const recentTracks = history.filter(h => h.track).map(h => h.track!).slice(0, 5)
 
   useEffect(() => {
-    const load = async () => {
-      const [jamendo, stations, ia, fmaResult, soma] = await Promise.all([
-        getTrending(20),
-        getTopStations(12),
-        getIAFeatured('classical', 10),
-        getFreeMusicArchive(10),
-        getSomaFMChannels(),
-      ])
-      setTracks(jamendo)
-      setTopStations(stations)
-      setClassical(ia)
-      setFma(fmaResult)
-      setSomaStations(soma)
-      setLoading(false)
-    }
-    load()
+    // Fast: load Jamendo trending first (fastest API)
+    getTrending(20).then(t => { setTracks(t); setLoading(false) })
+    // Background: stations + SomaFM
+    getTopStations(10).then(setTopStations)
+    getSomaFMChannels().then(setSomaStations)
   }, [])
 
   const playGenre = async (genre?: string) => {
@@ -51,9 +41,8 @@ export function HomeTab() {
       getStationsByGenre(g, 10),
       getByGenre(g, 10),
     ])
-    const genreTracks = jTracks
-    if (genreTracks.length > 0) {
-      player.playTrack(genreTracks[0], genreTracks, 0)
+    if (jTracks.length > 0) {
+      player.playTrack(jTracks[0], jTracks, 0)
     } else if (stations.length > 0) {
       player.playStation(stations[0])
     }
@@ -66,6 +55,7 @@ export function HomeTab() {
         <p className="text-sm text-text-muted mt-1">One tap. Your music. Right now.</p>
       </div>
 
+      {/* Quick play */}
       <QuickPlayCards
         favTracks={favTracks}
         favStations={favStations}
@@ -80,22 +70,34 @@ export function HomeTab() {
         <GenrePicker favGenre={favGenre} onPick={(g) => playGenre(g)} />
       )}
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12"><Spinner /></div>
-      ) : (
-        <>
-          <TrackGrid tracks={tracks} title="Trending" showPlayAll />
-          <StationGrid stations={somaStations} title="SomaFM Curated Radio" />
-          <StationGrid stations={topStations} title="Popular Stations" />
-          <TrackGrid tracks={fma} title="Free Music Archive" showPlayAll />
-          <TrackGrid tracks={classical} title="Classical & Archive" showPlayAll />
-        </>
+      {/* Continue listening (if history exists) */}
+      {recentTracks.length > 0 && (
+        <section className="mb-2">
+          <div className="flex items-center justify-between px-4 md:px-6 mb-2 mt-4">
+            <h2 className="text-base font-bold">Continue Listening</h2>
+          </div>
+          {recentTracks.map((t, i) => <TrackRow key={`recent-${t.id}-${i}`} track={t} queue={recentTracks} index={i} />)}
+        </section>
       )}
 
+      {/* Moods & Occasions — high engagement, show early */}
       <MoodGrid />
 
+      {/* Trending */}
+      {loading ? (
+        <div className="flex items-center justify-center py-8"><Spinner /></div>
+      ) : (
+        <TrackGrid tracks={tracks} title="Trending" showPlayAll />
+      )}
+
+      {/* Radio */}
+      {somaStations.length > 0 && <StationGrid stations={somaStations} title="SomaFM · Ad-Free Radio" />}
+      {topStations.length > 0 && <StationGrid stations={topStations} title="Popular Stations" />}
+
+      {/* Genre browser */}
       <GenreBrowser />
 
+      {/* Footer */}
       <div className="px-4 md:px-6 mt-8 pb-4">
         <p className="text-[10px] text-text-muted/60">Creative Commons & public domain music. Free forever.</p>
         <div className="flex items-center gap-3 mt-2">
