@@ -30,6 +30,14 @@ const PORTRAITS: Record<string, string> = {
   'etta-james': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Etta_James04.JPG/330px-Etta_James04.JPG',
   'blind-lemon-jefferson': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Blindlemonjeffersoncirca1926.jpg/330px-Blindlemonjeffersoncirca1926.jpg',
   'albert-collins': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/AlbertCollins1990.jpg/330px-AlbertCollins1990.jpg',
+  'elmore-james': 'https://upload.wikimedia.org/wikipedia/en/0/01/Elmore_James.gif',
+  'buddy-guy': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Buddy_Guy_2008_%283x4_cropped%29.jpg/330px-Buddy_Guy_2008_%283x4_cropped%29.jpg',
+  'willie-dixon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Willie_Dixon.jpg/330px-Willie_Dixon.jpg',
+  'big-mama-thornton': 'https://upload.wikimedia.org/wikipedia/en/b/b3/Thornton_Big_Mama_01.jpg',
+  'sister-rosetta-tharpe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Sister_Rosetta_Tharpe_%281938_publicity_photo_-_headshot%29.jpg/330px-Sister_Rosetta_Tharpe_%281938_publicity_photo_-_headshot%29.jpg',
+  't-bone-walker': 'https://upload.wikimedia.org/wikipedia/en/0/04/T-Bone_Walker_in_1942.jpg',
+  'ma-rainey': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/MaRainey.jpg/330px-MaRainey.jpg',
+  'otis-rush': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Otis_Rush_at_Notodden_bluesfestival.jpg/330px-Otis_Rush_at_Notodden_bluesfestival.jpg',
 }
 
 function artist(id: string, label: string, icon: string, fullName: string, years: string): BluesCategory {
