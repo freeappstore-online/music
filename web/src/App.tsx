@@ -66,7 +66,7 @@ export default function App() {
 
       {/* ===== MAIN CONTENT ===== */}
       <main className={`flex-1 lg:ml-56 ${hasPlayer ? 'pb-28 lg:pb-20' : 'pb-14 lg:pb-0'}`}>
-        <div className="max-w-4xl lg:max-w-none lg:pr-6">
+        <div className="max-w-2xl mx-auto lg:max-w-none lg:mx-0 lg:px-8">
           {tab === 'home' && <HomeTab />}
           {tab === 'search' && <SearchTab />}
           {tab === 'radio' && <RadioTab />}

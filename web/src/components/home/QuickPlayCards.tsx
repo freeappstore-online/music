@@ -32,21 +32,21 @@ export function QuickPlayCards({ favTracks, favStations, topStations, tracks, fa
   return (
     <div className="grid grid-cols-3 gap-2 md:gap-3 px-4 md:px-6 mb-6 mt-4">
       <QuickCard
-        gradient="from-emerald-600/60 to-emerald-900/30"
+        gradient="from-emerald-500 to-emerald-900"
         icon={<RadioSvg />}
         label="Radio"
         subtitle={favStations.length > 0 ? `${favStations.length} saved` : 'Top stations'}
         onClick={playRadio}
       />
       <QuickCard
-        gradient="from-violet-600/60 to-violet-900/30"
+        gradient="from-violet-500 to-violet-900"
         icon={<HeartSvg />}
         label="My Tracks"
         subtitle={favTracks.length > 0 ? `${favTracks.length} saved` : 'Popular mix'}
         onClick={playPlaylist}
       />
       <QuickCard
-        gradient="from-amber-600/60 to-amber-900/30"
+        gradient="from-amber-500 to-amber-900"
         icon={<NoteSvg />}
         label="Genre"
         subtitle={genreLabel}
