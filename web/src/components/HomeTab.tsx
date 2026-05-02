@@ -86,6 +86,7 @@ export function HomeTab() {
 
       <div className="px-4 md:px-6 mt-8 pb-4">
         <p className="text-[10px] text-muted/60">Creative Commons & public domain music. Free forever.</p>
+        <p className="text-[9px] text-muted/30 mt-1">v{__APP_VERSION__} &middot; {__BUILD_TIME__.slice(0, 16).replace('T', ' ')}</p>
       </div>
     </div>
   )
