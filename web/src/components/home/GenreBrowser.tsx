@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import type { Track, RadioStation } from '../../types'
-import { isAvailable, getByGenre } from '../../services/jamendo'
-import { getByTag } from '../../services/ccmixter'
+import { getByGenre } from '../../services/jamendo'
 import { getFeatured as getIAFeatured } from '../../services/archive'
 import { getByGenre as getStationsByGenre } from '../../services/radio'
 import { player } from '../../services/player'
@@ -41,13 +40,12 @@ export function GenreBrowser() {
     setLoading(true)
     setContent({ tracks: [], stations: [] })
 
-    const [stations, jTracks, ccTracks, iaTracks] = await Promise.all([
+    const [stations, jTracks, iaTracks] = await Promise.all([
       getStationsByGenre(genre, 20),
-      isAvailable() ? getByGenre(genre, 20) : Promise.resolve([]),
-      getByTag(genre, 10),
+      getByGenre(genre, 20),
       getIAFeatured(genre, 8),
     ])
-    const allTracks = [...(jTracks.length > 0 ? jTracks : []), ...ccTracks, ...iaTracks]
+    const allTracks = [...jTracks, ...iaTracks]
 
     setContent({ tracks: allTracks, stations })
     setLoading(false)

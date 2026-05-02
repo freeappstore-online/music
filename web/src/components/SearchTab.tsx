@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { searchTracks as searchJamendo } from '../services/jamendo'
 import { searchTracks as searchArchive } from '../services/archive'
-import { searchTracks as searchCCMixter } from '../services/ccmixter'
 import { searchStations } from '../services/radio'
 import type { Track, RadioStation } from '../types'
 import { TrackRow } from './TrackRow'
@@ -45,13 +44,12 @@ export function SearchTab() {
     setHasSearched(true)
     addToHistory(term)
     setHistory(getHistory())
-    const [j, ia, cc, radio] = await Promise.all([
-      searchJamendo(term, 15),
+    const [j, ia, radio] = await Promise.all([
+      searchJamendo(term, 20),
       searchArchive(term, 10),
-      searchCCMixter(term, 10),
       searchStations(term, 10),
     ])
-    setTracks([...j, ...cc, ...ia])
+    setTracks([...j, ...ia])
     setStations(radio)
     setSearching(false)
   }

@@ -16,7 +16,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   const subtitle = ps.track?.artist ?? ''
   const artwork = ps.track?.artworkUrl ?? ps.station?.favicon
   const progress = ps.duration > 0 ? ps.currentTime / ps.duration : 0
-  const source = ps.track?.source === 'jamendo' ? 'Jamendo' : ps.track?.source === 'internetarchive' ? 'Internet Archive' : ps.track?.source === 'ccmixter' ? 'ccMixter' : ''
+  const source = ps.track?.source === 'jamendo' ? 'Jamendo' : ps.track?.source === 'internetarchive' ? 'Internet Archive' : ''
 
   return (
     <div className="fixed inset-0 z-50 bg-bg flex flex-col items-center animate-[slideUp_0.3s_ease-out]">

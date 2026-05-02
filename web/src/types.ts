@@ -6,7 +6,7 @@ export interface Track {
   duration: number
   streamUrl: string
   artworkUrl?: string
-  source: 'jamendo' | 'internetarchive' | 'ccmixter'
+  source: 'jamendo' | 'internetarchive'
 }
 
 export interface RadioStation {

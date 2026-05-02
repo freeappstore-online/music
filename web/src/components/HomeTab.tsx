@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react'
-import { getTrending, isAvailable } from '../services/jamendo'
-import { getPopular as getCCPopular } from '../services/ccmixter'
+import { getTrending, getByGenre } from '../services/jamendo'
 import { getFeatured as getIAFeatured } from '../services/archive'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
 import { getFavoriteTracks, getFavoriteStations, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
-import { getByGenre } from '../services/jamendo'
-import { getByTag } from '../services/ccmixter'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
 import { Spinner } from './ui/Spinner'
@@ -26,13 +23,12 @@ export function HomeTab() {
 
   useEffect(() => {
     const load = async () => {
-      const [jamendo, cc, stations, ia] = await Promise.all([
-        isAvailable() ? getTrending(20) : Promise.resolve([]),
-        getCCPopular(20),
+      const [jamendo, stations, ia] = await Promise.all([
+        getTrending(20),
         getTopStations(12),
         getIAFeatured('classical', 10),
       ])
-      setTracks(jamendo.length > 0 ? jamendo : cc)
+      setTracks(jamendo)
       setTopStations(stations)
       setClassical(ia)
       setLoading(false)
@@ -43,12 +39,11 @@ export function HomeTab() {
   const playGenre = async (genre?: string) => {
     const g = genre || favGenre || 'electronic'
     if (genre) { setFavoriteGenre(genre); setShowGenrePicker(false) }
-    const [stations, jTracks, ccTracks] = await Promise.all([
+    const [stations, jTracks] = await Promise.all([
       getStationsByGenre(g, 10),
-      isAvailable() ? getByGenre(g, 10) : Promise.resolve([]),
-      getByTag(g, 10),
+      getByGenre(g, 10),
     ])
-    const genreTracks = jTracks.length > 0 ? jTracks : ccTracks
+    const genreTracks = jTracks
     if (genreTracks.length > 0) {
       player.playTrack(genreTracks[0], genreTracks, 0)
     } else if (stations.length > 0) {

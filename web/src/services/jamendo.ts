@@ -29,10 +29,6 @@ export async function searchArtists(query: string, limit = 20): Promise<Track[]>
   return jamendoFetch(`${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&artist_name=${encodeURIComponent(query)}&order=popularity_week`)
 }
 
-export function isAvailable(): boolean {
-  return true
-}
-
 function mapTrack(t: any): Track {
   return {
     id: `jamendo-${t.id}`,
