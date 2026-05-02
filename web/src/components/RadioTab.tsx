@@ -5,18 +5,23 @@ import type { RadioStation } from '../types'
 import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-const GENRES: { tag: string; count: number; icon: string }[] = [
+type GenreItem = { tag: string; count: number; icon: string }
+type CountryItem = { name: string; flag: string }
+type LangItem = { code: string; flag: string }
+
+const GENRES: GenreItem[] = [
   { tag: 'pop', count: 5243, icon: '🎤' }, { tag: 'rock', count: 2804, icon: '🎸' }, { tag: 'news', count: 2604, icon: '📰' },
   { tag: 'classical', count: 1544, icon: '🎼' }, { tag: 'dance', count: 1389, icon: '💃' }, { tag: 'talk', count: 1351, icon: '🎙️' },
-  { tag: 'oldies', count: 1243, icon: '📻' }, { tag: '80s', count: 1110, icon: '🕺' }, { tag: 'jazz', count: 1068, icon: '🎷' },
+  { tag: 'oldies', count: 1243, icon: '📻' }, { tag: 'jazz', count: 1068, icon: '🎷' },
   { tag: 'christian', count: 881, icon: '✝️' }, { tag: 'electronic', count: 866, icon: '🎧' }, { tag: 'country', count: 645, icon: '🤠' },
   { tag: 'folk', count: 540, icon: '🪕' }, { tag: 'metal', count: 396, icon: '🤘' }, { tag: 'soul', count: 380, icon: '💜' },
   { tag: 'indie', count: 368, icon: '🎵' }, { tag: 'ambient', count: 314, icon: '🌊' }, { tag: 'sports', count: 313, icon: '⚽' },
   { tag: 'blues', count: 286, icon: '🎸' }, { tag: 'funk', count: 280, icon: '🪩' }, { tag: 'hiphop', count: 267, icon: '🎤' },
-  { tag: 'reggae', count: 216, icon: '🌴' }, { tag: 'r&b', count: 144, icon: '💜' }, { tag: 'punk', count: 142, icon: '⚡' },
-  { tag: 'latin', count: 134, icon: '💃' },
+  { tag: 'reggae', count: 216, icon: '🌴' }, { tag: 'punk', count: 142, icon: '⚡' }, { tag: 'latin', count: 134, icon: '💃' },
+  { tag: '80s', count: 1110, icon: '🕺' }, { tag: '90s', count: 876, icon: '📼' }, { tag: '70s', count: 527, icon: '🌈' },
+  { tag: '60s', count: 241, icon: '☮️' },
 ]
-const COUNTRIES: { name: string; flag: string }[] = [
+const COUNTRIES: CountryItem[] = [
   { name: 'United States', flag: '🇺🇸' }, { name: 'United Kingdom', flag: '🇬🇧' }, { name: 'Germany', flag: '🇩🇪' },
   { name: 'France', flag: '🇫🇷' }, { name: 'Brazil', flag: '🇧🇷' }, { name: 'Japan', flag: '🇯🇵' },
   { name: 'Spain', flag: '🇪🇸' }, { name: 'Italy', flag: '🇮🇹' }, { name: 'Canada', flag: '🇨🇦' },
@@ -25,7 +30,7 @@ const COUNTRIES: { name: string; flag: string }[] = [
   { name: 'Greece', flag: '🇬🇷' }, { name: 'China', flag: '🇨🇳' }, { name: 'Turkey', flag: '🇹🇷' },
   { name: 'Argentina', flag: '🇦🇷' }, { name: 'South Korea', flag: '🇰🇷' },
 ]
-const LANGUAGES: { code: string; flag: string }[] = [
+const LANGUAGES: LangItem[] = [
   { code: 'english', flag: '🇬🇧' }, { code: 'spanish', flag: '🇪🇸' }, { code: 'german', flag: '🇩🇪' },
   { code: 'french', flag: '🇫🇷' }, { code: 'russian', flag: '🇷🇺' }, { code: 'italian', flag: '🇮🇹' },
   { code: 'portuguese', flag: '🇧🇷' }, { code: 'chinese', flag: '🇨🇳' }, { code: 'japanese', flag: '🇯🇵' },
@@ -33,16 +38,12 @@ const LANGUAGES: { code: string; flag: string }[] = [
   { code: 'greek', flag: '🇬🇷' }, { code: 'turkish', flag: '🇹🇷' }, { code: 'korean', flag: '🇰🇷' },
   { code: 'hindi', flag: '🇮🇳' },
 ]
-const DECADES: { tag: string; count: number }[] = [
-  { tag: '80s', count: 1110 }, { tag: '90s', count: 876 }, { tag: '70s', count: 527 },
-  { tag: '60s', count: 241 }, { tag: '00s', count: 162 },
-]
 const SORT_OPTIONS = [
-  { id: 'clickcount', label: 'Most Popular' },
-  { id: 'votes', label: 'Most Voted' },
-  { id: 'clicktrend', label: 'Trending Now' },
-  { id: 'changetimestamp', label: 'Recently Updated' },
-  { id: 'random', label: 'Random' },
+  { id: 'clickcount', label: 'Popular', icon: '🔥' },
+  { id: 'votes', label: 'Top Voted', icon: '⭐' },
+  { id: 'clicktrend', label: 'Trending', icon: '📈' },
+  { id: 'changetimestamp', label: 'New', icon: '🆕' },
+  { id: 'random', label: 'Random', icon: '🎲' },
 ]
 
 export function RadioTab() {
@@ -53,17 +54,14 @@ export function RadioTab() {
   const [country, setCountry] = useState('')
   const [language, setLanguage] = useState('')
   const [sortBy, setSortBy] = useState('clickcount')
-  const [showFilters, setShowFilters] = useState(false)
-  const [activeSection, setActiveSection] = useState<'genre' | 'country' | 'language' | 'sort' | null>(null)
   const [taggingStation, setTaggingStation] = useState<string | null>(null)
   const [newTag, setNewTag] = useState('')
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const hasFilters = !!(genre || country || language || sortBy !== 'clickcount')
-  const filterCount = [genre, country, language, sortBy !== 'clickcount' ? 'x' : ''].filter(Boolean).length
+  const hasFilters = !!(genre || country || language)
 
   useEffect(() => {
-    getTopStations(50).then(s => { setStations(s); setLoading(false) })
+    getTopStations(60).then(s => { setStations(s); setLoading(false) })
   }, [])
 
   const doSearch = async () => {
@@ -74,110 +72,111 @@ export function RadioTab() {
     if (country) filters.country = country
     if (language) filters.language = language
     if (!filters.name && !filters.tag && !filters.country && !filters.language) {
-      setStations(await getTopStations(50))
+      setStations(await getTopStations(60))
     } else {
-      setStations(await advancedSearch(filters, 50))
+      setStations(await advancedSearch(filters, 60))
     }
     setLoading(false)
   }
 
-  const clearFilters = () => {
+  const clearAll = () => {
     setGenre(''); setCountry(''); setLanguage(''); setSortBy('clickcount'); setNameQuery('')
-    setActiveSection(null)
     setLoading(true)
-    getTopStations(50).then(s => { setStations(s); setLoading(false) })
+    getTopStations(60).then(s => { setStations(s); setLoading(false) })
   }
 
   useEffect(() => {
-    if (!loading) {
-      clearTimeout(timer.current)
-      timer.current = setTimeout(doSearch, 250)
-    }
+    clearTimeout(timer.current)
+    timer.current = setTimeout(doSearch, 300)
     return () => clearTimeout(timer.current)
-  }, [genre, country, language, sortBy])
-
-  const toggleSection = (s: typeof activeSection) => setActiveSection(activeSection === s ? null : s)
+  }, [genre, country, language])
 
   return (
     <div className="pb-4">
       <div className="px-4 md:px-6 pt-6 md:pt-10 pb-1">
         <h1 className="text-2xl md:text-3xl font-bold">Radio</h1>
-        <p className="text-sm text-text-muted mt-1">30,000+ stations from 237 countries</p>
+        <p className="text-sm text-text-muted mt-1">30,000+ stations · 237 countries · 620 languages</p>
       </div>
 
-      {/* Search */}
-      <form className="px-4 md:px-6 my-3" onSubmit={e => { e.preventDefault(); doSearch() }}>
-        <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-2.5">
-          <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-          <input type="search" placeholder="Search stations..." className="flex-1 bg-transparent outline-none text-sm placeholder-text-dim" value={nameQuery} onChange={e => setNameQuery(e.target.value)} />
-          <button type="button" onClick={() => setShowFilters(!showFilters)}
-            className={`p-1.5 rounded-lg transition-colors relative ${showFilters || hasFilters ? 'bg-accent/10 text-accent' : 'text-text-muted hover:text-text'}`}>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
-            {filterCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-base text-[9px] font-bold rounded-full flex items-center justify-center">{filterCount}</span>}
-          </button>
+      {/* Search + Sort */}
+      <div className="px-4 md:px-6 my-3 flex gap-2">
+        <form className="flex-1" onSubmit={e => { e.preventDefault(); doSearch() }}>
+          <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-2">
+            <svg className="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input type="search" placeholder="Station name..." className="flex-1 bg-transparent outline-none text-sm placeholder-text-dim" value={nameQuery} onChange={e => setNameQuery(e.target.value)} />
+          </div>
+        </form>
+        <div className="flex gap-1">
+          {SORT_OPTIONS.map(s => (
+            <button key={s.id} onClick={() => { setSortBy(s.id); doSearch() }} title={s.label}
+              className={`w-9 h-9 rounded-lg text-sm flex items-center justify-center transition-colors ${sortBy === s.id ? 'bg-accent/15 ring-1 ring-accent' : 'bg-surface hover:bg-surface-hover'}`}>
+              {s.icon}
+            </button>
+          ))}
         </div>
-      </form>
+      </div>
 
       {/* Active filters */}
       {hasFilters && (
         <div className="flex gap-1.5 px-4 md:px-6 mb-2 flex-wrap">
-          {genre && <Chip label={genre} onRemove={() => setGenre('')} />}
-          {country && <Chip label={country} onRemove={() => setCountry('')} />}
-          {language && <Chip label={language} onRemove={() => setLanguage('')} />}
-          {sortBy !== 'clickcount' && <Chip label={SORT_OPTIONS.find(s => s.id === sortBy)?.label || sortBy} onRemove={() => setSortBy('clickcount')} />}
-          <button onClick={clearFilters} className="text-[11px] text-text-muted hover:text-text px-2 py-1">Clear all</button>
+          {genre && <Chip label={`${GENRES.find(g => g.tag === genre)?.icon || ''} ${genre}`} onRemove={() => setGenre('')} />}
+          {country && <Chip label={`${COUNTRIES.find(c => c.name === country)?.flag || ''} ${country}`} onRemove={() => setCountry('')} />}
+          {language && <Chip label={`${LANGUAGES.find(l => l.code === language)?.flag || ''} ${language}`} onRemove={() => setLanguage('')} />}
+          <button onClick={clearAll} className="text-[11px] text-text-muted hover:text-text px-2 py-1">Clear</button>
         </div>
       )}
 
-      {/* Filter panel */}
-      {showFilters && (
-        <div className="mx-4 md:mx-6 mb-3 bg-surface border border-border rounded-xl overflow-hidden">
-          <div className="flex border-b border-border">
-            {([
-              { id: 'genre' as const, label: 'Genre' },
-              { id: 'country' as const, label: 'Country' },
-              { id: 'language' as const, label: 'Language' },
-              { id: 'sort' as const, label: 'Sort' },
-            ]).map(s => (
-              <button key={s.id} onClick={() => toggleSection(s.id)}
-                className={`flex-1 py-2.5 text-xs font-semibold transition-colors ${activeSection === s.id ? 'text-accent border-b-2 border-accent' : 'text-text-muted hover:text-text'}`}>
-                {s.label}
+      {/* Always-visible filters on desktop, scrollable on mobile */}
+      <div className="px-4 md:px-6 mb-3 space-y-2">
+        {/* Genre row */}
+        <div>
+          <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Genre</div>
+          <div className="flex gap-1 overflow-x-auto pb-1 snap-x md:flex-wrap md:overflow-visible">
+            {GENRES.map(g => (
+              <button key={g.tag} onClick={() => setGenre(genre === g.tag ? '' : g.tag)}
+                className={`flex-shrink-0 snap-start flex items-center gap-1 text-[11px] px-2 py-1 rounded-lg transition-colors whitespace-nowrap ${genre === g.tag ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+                <span>{g.icon}</span>{g.tag}<span className="text-text-dim text-[9px]">{g.count}</span>
               </button>
             ))}
           </div>
+        </div>
 
-          <div className="p-3">
-            {activeSection === 'genre' && (
-              <div className="flex gap-1.5 flex-wrap">{GENRES.map(g => <Pill key={g.tag} label={`${g.icon} ${g.tag} (${g.count})`} active={genre === g.tag} onClick={() => setGenre(genre === g.tag ? '' : g.tag)} />)}</div>
-            )}
-            {activeSection === 'country' && (
-              <div className="flex gap-1.5 flex-wrap">{COUNTRIES.map(c => <Pill key={c.name} label={`${c.flag} ${c.name}`} active={country === c.name} onClick={() => setCountry(country === c.name ? '' : c.name)} />)}</div>
-            )}
-            {activeSection === 'language' && (
-              <div className="flex gap-1.5 flex-wrap">{LANGUAGES.map(l => <Pill key={l.code} label={`${l.flag} ${l.code.charAt(0).toUpperCase() + l.code.slice(1)}`} active={language === l.code} onClick={() => setLanguage(language === l.code ? '' : l.code)} />)}</div>
-            )}
-            {activeSection === 'sort' && (
-              <div className="flex gap-1.5 flex-wrap">{SORT_OPTIONS.map(s => <Pill key={s.id} label={s.label} active={sortBy === s.id} onClick={() => setSortBy(s.id)} />)}</div>
-            )}
-            {activeSection === null && <p className="text-xs text-text-dim text-center py-2">Tap a category above to filter</p>}
-          </div>
-
-          <div className="px-3 pb-3 border-t border-border pt-2">
-            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1.5">Decade</div>
-            <div className="flex gap-1.5">{DECADES.map(d => <Pill key={d.tag} label={`${d.tag} (${d.count})`} active={genre === d.tag} onClick={() => setGenre(genre === d.tag ? '' : d.tag)} />)}</div>
+        {/* Country row */}
+        <div>
+          <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Country</div>
+          <div className="flex gap-1 overflow-x-auto pb-1 snap-x md:flex-wrap md:overflow-visible">
+            {COUNTRIES.map(c => (
+              <button key={c.name} onClick={() => setCountry(country === c.name ? '' : c.name)}
+                className={`flex-shrink-0 snap-start text-[11px] px-2 py-1 rounded-lg transition-colors whitespace-nowrap ${country === c.name ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+                {c.flag} {c.name.length > 12 ? c.name.slice(0, 10) + '…' : c.name}
+              </button>
+            ))}
           </div>
         </div>
-      )}
+
+        {/* Language row */}
+        <div>
+          <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Language</div>
+          <div className="flex gap-1 overflow-x-auto pb-1 snap-x md:flex-wrap md:overflow-visible">
+            {LANGUAGES.map(l => (
+              <button key={l.code} onClick={() => setLanguage(language === l.code ? '' : l.code)}
+                className={`flex-shrink-0 snap-start text-[11px] px-2 py-1 rounded-lg transition-colors whitespace-nowrap ${language === l.code ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+                {l.flag} {l.code.charAt(0).toUpperCase() + l.code.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Results */}
-      {!loading && <div className="px-4 md:px-6 mb-2"><span className="text-xs text-text-muted">{stations.length} stations</span></div>}
+      {!loading && <div className="px-4 md:px-6 mb-1"><span className="text-xs text-text-muted">{stations.length} stations found</span></div>}
 
       {loading ? (
         <div className="flex items-center justify-center py-12"><Spinner /></div>
       ) : stations.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-text-muted gap-2">
-          <span className="text-sm">No stations found</span>
-          {hasFilters && <button onClick={clearFilters} className="text-xs text-accent hover:underline">Clear filters</button>}
+          <span className="text-sm">No stations match your filters</span>
+          <button onClick={clearAll} className="text-xs text-accent hover:underline">Clear all filters</button>
         </div>
       ) : (
         stations.map(station => (
@@ -202,15 +201,6 @@ export function RadioTab() {
         ))
       )}
     </div>
-  )
-}
-
-function Pill({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button onClick={onClick}
-      className={`text-[11px] px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap ${active ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
-      {label}
-    </button>
   )
 }
 
