@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Billie Holiday — Life, Works & Music | FreeMusic</title>
-  <meta name="description" content="Lady Day: The Voice of Jazz. Listen to Billie Holiday (1915–1959) for free. One of the most influential jazz vocalists in history, Holiday's deeply personal singing style and emotional depth revolutionized vocal jazz. Her recording of Strange Fruit remains one of the most powerful protest songs ever recorded.">
+  <meta name="description" content="Lady Day: The Voice of Jazz. Listen to Billie Holiday (1915–1959) for free. Billie Holiday, born Eleanora Fagan, was one of the most influential jazz vocalists of all time. Her singular phrasing, ">
   <meta property="og:title" content="Billie Holiday — Life, Works & Free Music">
   <meta property="og:description" content="Lady Day: The Voice of Jazz">
   <meta name="theme-color" content="#111113">
@@ -32,6 +32,8 @@
     p{font-size:15px;color:#c0c0cc;margin-bottom:16px}
     .cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:14px 28px;border-radius:12px;font-weight:600;font-size:15px;margin:8px 0 0}
     .cta:hover{background:#5cb888;text-decoration:none}
+
+    /* Timeline */
     .timeline{position:relative;padding-left:40px;margin:24px 0}
     .timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:#2e2e35}
     .tl-item{position:relative;margin-bottom:24px}
@@ -39,17 +41,24 @@
     .tl-year{font-size:12px;color:#6ECE9E;font-weight:600;margin-bottom:2px}
     .tl-title{font-size:14px;font-weight:600;color:#f0f0f2}
     .tl-desc{font-size:13px;color:#9090a0}
+
+    /* Works */
     .works-grid{display:flex;flex-direction:column;gap:8px;margin:16px 0}
     .work-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a1e;border-radius:10px;border:1px solid #2e2e35}
     .work-year{font-size:12px;color:#6ECE9E;font-weight:600;min-width:36px}
     .work-title{flex:1;font-size:14px;font-weight:500;color:#f0f0f2}
     .work-type{font-size:11px;color:#9090a0;background:#ffffff08;padding:2px 8px;border-radius:99px}
+
+    /* Fun fact */
     .fact{background:#6ECE9E10;border-left:3px solid #6ECE9E;padding:16px 20px;border-radius:0 12px 12px 0;margin:24px 0}
     .fact-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#6ECE9E;font-weight:600;margin-bottom:4px}
     .fact p{color:#c0c0cc;margin:0;font-size:14px;font-style:italic}
+
+    /* Related */
     .related{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
     .related-link{font-size:13px;padding:6px 14px;background:#1a1a1e;border:1px solid #2e2e35;border-radius:10px;color:#f0f0f2;font-weight:500}
     .related-link:hover{border-color:#6ECE9E;text-decoration:none}
+
     .footer{margin-top:48px;font-size:12px;color:#60606e;text-align:center}
     .footer a{color:#6ECE9E}
   </style>
@@ -57,10 +66,11 @@
 <body>
 <div class="c">
   <a href="/" class="back">&larr; Back to FreeMusic</a>
+
   <div class="hero">
-    <div class="badge">Vocal Jazz &middot; American</div>
+    <div class="badge">Vocal Jazz · American</div>
     <h1>Billie Holiday</h1>
-    <div class="sub">1915&ndash;1959</div>
+    <div class="sub">1915–1959</div>
     <div class="meta">
       <span>American Musician</span>
       <span>Vocal Jazz</span>
@@ -81,124 +91,145 @@
   <h2>Life Timeline</h2>
   <div class="timeline">
     <div class="tl-item">
-      <div class="tl-dot">&#x1F476;</div>
-      <div class="tl-year">1915</div>
-      <div class="tl-title">Born in Philadelphia</div>
-      <div class="tl-desc">Born Eleanora Fagan on April 7; raised in Baltimore</div>
+      <div class="tl-dot">👶</div>
+      <div class="tl-content">
+        <div class="tl-year">1915</div>
+        <div class="tl-title">Born in Philadelphia</div>
+        <div class="tl-desc">Born Eleanora Fagan on April 7; raised in Baltimore</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3D9;&#xFE0F;</div>
-      <div class="tl-year">1929</div>
-      <div class="tl-title">Moves to Harlem</div>
-      <div class="tl-desc">Begins singing in nightclubs in New York City</div>
+      <div class="tl-dot">🏙️</div>
+      <div class="tl-content">
+        <div class="tl-year">1929</div>
+        <div class="tl-title">Moves to Harlem</div>
+        <div class="tl-desc">Begins singing in nightclubs in New York City</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3B5;</div>
-      <div class="tl-year">1933</div>
-      <div class="tl-title">Discovered by John Hammond</div>
-      <div class="tl-desc">Producer John Hammond hears her in a Harlem club and arranges her first recording session</div>
+      <div class="tl-dot">🎵</div>
+      <div class="tl-content">
+        <div class="tl-year">1933</div>
+        <div class="tl-title">Discovered by John Hammond</div>
+        <div class="tl-desc">Producer John Hammond hears her in a Harlem club and arranges her first recording session</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3B5;</div>
-      <div class="tl-year">1935</div>
-      <div class="tl-title">Recording Sessions with Teddy Wilson</div>
-      <div class="tl-desc">Begins a legendary series of recordings with pianist Teddy Wilson and members of Count Basie's band</div>
+      <div class="tl-dot">🎵</div>
+      <div class="tl-content">
+        <div class="tl-year">1935</div>
+        <div class="tl-title">Recording Sessions with Teddy Wilson</div>
+        <div class="tl-desc">Begins a legendary series of recordings with pianist Teddy Wilson and members of Count Basie's band</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3B5;</div>
-      <div class="tl-year">1937</div>
-      <div class="tl-title">Joins Count Basie &amp; Artie Shaw</div>
-      <div class="tl-desc">Tours with Basie's orchestra, then becomes one of the first Black women to tour with a white band under Artie Shaw</div>
+      <div class="tl-dot">🎵</div>
+      <div class="tl-content">
+        <div class="tl-year">1937</div>
+        <div class="tl-title">Joins Count Basie & Artie Shaw</div>
+        <div class="tl-desc">Tours with Basie's orchestra, then becomes one of the first Black women to tour with a white band under Artie Shaw</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3A4;</div>
-      <div class="tl-year">1939</div>
-      <div class="tl-title">Strange Fruit</div>
-      <div class="tl-desc">Records the anti-lynching protest song at Caf&eacute; Society; it becomes her signature and a landmark in music history</div>
+      <div class="tl-dot">🎤</div>
+      <div class="tl-content">
+        <div class="tl-year">1939</div>
+        <div class="tl-title">Strange Fruit</div>
+        <div class="tl-desc">Records the anti-lynching protest song at Café Society; it becomes her signature and a landmark in music history</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3B5;</div>
-      <div class="tl-year">1944</div>
-      <div class="tl-title">Signs with Decca Records</div>
-      <div class="tl-desc">Records Lover Man and other classics during a prolific period</div>
+      <div class="tl-dot">🎵</div>
+      <div class="tl-content">
+        <div class="tl-year">1944</div>
+        <div class="tl-title">Signs with Decca Records</div>
+        <div class="tl-desc">Records Lover Man and other classics during a prolific period</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3B5;</div>
-      <div class="tl-year">1952</div>
-      <div class="tl-title">Signs with Verve Records</div>
-      <div class="tl-desc">Begins a productive late-career partnership with producer Norman Granz</div>
+      <div class="tl-dot">🎵</div>
+      <div class="tl-content">
+        <div class="tl-year">1952</div>
+        <div class="tl-title">Signs with Verve Records</div>
+        <div class="tl-desc">Begins a productive late-career partnership with producer Norman Granz</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F3B5;</div>
-      <div class="tl-year">1956</div>
-      <div class="tl-title">Lady Sings the Blues (Autobiography)</div>
-      <div class="tl-desc">Publishes her autobiography and records the landmark album of the same name</div>
+      <div class="tl-dot">🎵</div>
+      <div class="tl-content">
+        <div class="tl-year">1956</div>
+        <div class="tl-title">Lady Sings the Blues (Autobiography)</div>
+        <div class="tl-desc">Publishes her autobiography and records the landmark album of the same name</div>
+      </div>
     </div>
     <div class="tl-item">
-      <div class="tl-dot">&#x1F56F;&#xFE0F;</div>
-      <div class="tl-year">1959</div>
-      <div class="tl-title">Dies in New York City</div>
-      <div class="tl-desc">Passes away on July 17 at age 44; leaves behind a body of work that defines jazz singing</div>
+      <div class="tl-dot">🕯️</div>
+      <div class="tl-content">
+        <div class="tl-year">1959</div>
+        <div class="tl-title">Dies in New York City</div>
+        <div class="tl-desc">Passes away on July 17 at age 44; leaves behind a body of work that defines jazz singing</div>
+      </div>
     </div>
   </div>
 
-  <h2>Career &amp; Music</h2>
+  <h2>Career & Music</h2>
   <p>Holiday's career spanned nearly three decades, from Harlem nightclubs to Carnegie Hall. Her collaborations with Lester Young, Teddy Wilson, and other swing-era giants produced some of the most emotionally resonant recordings in jazz. She had an uncanny ability to bend melodies, delay phrases, and infuse lyrics with raw feeling. Her voice, while not technically powerful, conveyed a depth of emotion that few could match. Songs like God Bless the Child and Strange Fruit showcased her range from tender vulnerability to fierce social commentary.</p>
 
   <h2>Key Works</h2>
   <div class="works-grid">
     <div class="work-item">
-      <div class="work-year">1939</div>
-      <div class="work-title">Strange Fruit</div>
-      <div class="work-type">Recording</div>
+      <span class="work-year">1939</span>
+      <span class="work-title">Strange Fruit</span>
+      <span class="work-type">Recording</span>
     </div>
     <div class="work-item">
-      <div class="work-year">1941</div>
-      <div class="work-title">God Bless the Child</div>
-      <div class="work-type">Recording</div>
+      <span class="work-year">1941</span>
+      <span class="work-title">God Bless the Child</span>
+      <span class="work-type">Recording</span>
     </div>
     <div class="work-item">
-      <div class="work-year">1944</div>
-      <div class="work-title">Lover Man</div>
-      <div class="work-type">Recording</div>
+      <span class="work-year">1944</span>
+      <span class="work-title">Lover Man</span>
+      <span class="work-type">Recording</span>
     </div>
     <div class="work-item">
-      <div class="work-year">1954</div>
-      <div class="work-title">Billie Holiday at JATP</div>
-      <div class="work-type">Album</div>
+      <span class="work-year">1954</span>
+      <span class="work-title">Billie Holiday at JATP</span>
+      <span class="work-type">Album</span>
     </div>
     <div class="work-item">
-      <div class="work-year">1956</div>
-      <div class="work-title">Lady Sings the Blues</div>
-      <div class="work-type">Album</div>
+      <span class="work-year">1956</span>
+      <span class="work-title">Lady Sings the Blues</span>
+      <span class="work-type">Album</span>
     </div>
     <div class="work-item">
-      <div class="work-year">1958</div>
-      <div class="work-title">Lady in Satin</div>
-      <div class="work-type">Album</div>
+      <span class="work-year">1958</span>
+      <span class="work-title">Lady in Satin</span>
+      <span class="work-type">Album</span>
     </div>
   </div>
 
   <div class="fact">
     <div class="fact-label">Did you know?</div>
-    <p>Billie Holiday's trademark white gardenia in her hair began as a practical solution &mdash; she used the flower to cover a burn mark from a curling iron before a performance, and it became her signature look for the rest of her career.</p>
+    <p>Billie Holiday's trademark white gardenia in her hair began as a practical solution — she used the flower to cover a burn mark from a curling iron before a performance, and it became her signature look for the rest of her career.</p>
   </div>
 
   <h2>Legacy</h2>
   <p>Billie Holiday's influence on vocal music is immeasurable. She transformed jazz singing from mere interpretation into deeply personal storytelling. Her phrasing influenced Frank Sinatra, who called her "the greatest single musical influence on me." She was posthumously inducted into the Grammy Hall of Fame multiple times and received the Grammy Lifetime Achievement Award in 1987. Time magazine named Strange Fruit the "song of the century" in 1999. Today, Holiday remains the gold standard for emotional authenticity in vocal performance.</p>
 
-  <h3>Related Artists</h3>
-  <div class="related">
-    <a href="/artist/ella-fitzgerald.html" class="related-link">Ella Fitzgerald</a>
-    <a href="/artist/louis-armstrong.html" class="related-link">Louis Armstrong</a>
-    <a href="/artist/nina-simone.html" class="related-link">Nina Simone</a>
-  </div>
+  <h3>Related Composers</h3><div class="related"><a href="/artist/ella-fitzgerald.html" class="related-link">Ella Fitzgerald</a><a href="/artist/louis-armstrong.html" class="related-link">Louis Armstrong</a><a href="/artist/nina-simone.html" class="related-link">Nina Simone</a></div>
 
   <h2>Listen Free</h2>
   <p>Stream Billie Holiday's music for free on FreeMusic. No ads, no subscription, no account required. All music is Creative Commons licensed or public domain.</p>
-  <a href="/" class="cta"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/></svg>Play on FreeMusic</a>
+  <a href="/" class="cta">
+    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/></svg>
+    Play on FreeMusic
+  </a>
 
-  <div class="footer"><a href="/legal/privacy.html">Privacy</a> &middot; <a href="/legal/terms.html">Terms</a> &middot; <a href="https://github.com/FreeMusicApp/freemusic">GitHub</a><p style="margin-top:8px">&copy; 2026 FreeMusic. Open source, open music.</p></div>
+  <div class="footer">
+    <a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a> · <a href="https://github.com/FreeMusicApp/freemusic">GitHub</a>
+    <p style="margin-top:8px">&copy; 2026 FreeMusic. Open source, open music.</p>
+  </div>
 </div>
 </body>
 </html>
