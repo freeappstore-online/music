@@ -70,7 +70,7 @@ class AudioPlayerService {
     document.addEventListener('keydown', (e) => {
       // Don't capture when typing in inputs
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
-      if (!this.state.track && !this.state.station && e.key !== ' ') return
+      if (!this.state.track && !this.state.station) return
 
       switch (e.key) {
         case ' ':
