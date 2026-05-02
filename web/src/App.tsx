@@ -2,17 +2,19 @@ import { useState } from 'react'
 import { HomeTab } from './components/HomeTab'
 import { SearchTab } from './components/SearchTab'
 import { DiscoverTab } from './components/DiscoverTab'
+import { ClassicalTab } from './components/ClassicalTab'
 import { RadioTab } from './components/RadioTab'
 import { LibraryTab } from './components/LibraryTab'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
-type Tab = 'home' | 'search' | 'radio' | 'discover' | 'library'
+type Tab = 'home' | 'search' | 'discover' | 'classical' | 'radio' | 'library'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'home', label: 'Home', icon: 'home' },
   { id: 'search', label: 'Search', icon: 'search' },
   { id: 'discover', label: 'Discover', icon: 'discover' },
+  { id: 'classical', label: 'Classical', icon: 'classical' },
   { id: 'radio', label: 'Radio', icon: 'radio' },
   { id: 'library', label: 'Library', icon: 'library' },
 ]
@@ -61,6 +63,7 @@ export default function App() {
           <div className={tab === 'home' ? '' : 'hidden'}><HomeTab /></div>
           <div className={tab === 'search' ? '' : 'hidden'}><SearchTab /></div>
           <div className={tab === 'discover' ? '' : 'hidden'}><DiscoverTab /></div>
+          <div className={tab === 'classical' ? '' : 'hidden'}><ClassicalTab /></div>
           <div className={tab === 'radio' ? '' : 'hidden'}><RadioTab /></div>
           <div className={tab === 'library' ? '' : 'hidden'}><LibraryTab /></div>
         </div>
@@ -71,18 +74,18 @@ export default function App() {
 
       {/* ===== MOBILE TAB BAR (hidden on desktop) ===== */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-base/90 backdrop-blur-xl border-t border-white/6 pb-[env(safe-area-inset-bottom)]">
-        <div className="flex">
+        <div className="flex overflow-x-auto">
           {TABS.map(t => (
             <button
               key={t.id}
-              className={`flex-1 flex flex-col items-center py-2.5 gap-0.5 relative ${
+              className={`flex-1 min-w-[60px] flex flex-col items-center py-2 gap-0.5 relative ${
                 tab === t.id ? 'text-accent' : 'text-text-muted'
               }`}
               onClick={() => setTab(t.id)}
             >
-              {tab === t.id && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-accent" />}
-              <TabIcon name={t.icon} size={20} />
-              <span className="text-[9px] font-medium">{t.label}</span>
+              {tab === t.id && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full bg-accent" />}
+              <TabIcon name={t.icon} size={18} />
+              <span className="text-[8px] font-medium">{t.label}</span>
             </button>
           ))}
         </div>
@@ -103,6 +106,8 @@ function TabIcon({ name, size = 24 }: { name: string; size?: number }) {
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
     case 'discover':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" /></svg>
+    case 'classical':
+      return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
     case 'library':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
     default:
