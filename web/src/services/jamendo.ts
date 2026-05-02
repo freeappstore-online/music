@@ -19,6 +19,8 @@ export type TrackFilters = {
   speed?: 'low' | 'medium' | 'high' | 'veryhigh'
   vocalinstrumental?: 'vocal' | 'instrumental'
   acousticelectric?: 'acoustic' | 'electric'
+  lang?: string
+  gender?: 'male' | 'female'
 }
 
 export function searchTracks(query: string, limit = 20): Promise<Track[]> {
@@ -30,12 +32,15 @@ export function advancedSearch(filters: TrackFilters, limit = 30): Promise<Track
   params.set('client_id', CLIENT_ID)
   params.set('format', 'json')
   params.set('limit', String(limit))
+  params.set('include', 'musicinfo+stats')
   params.set('order', 'popularity_week')
   if (filters.search) params.set('search', filters.search)
   if (filters.tags) params.set('tags', filters.tags)
   if (filters.speed) params.set('speed', filters.speed)
   if (filters.vocalinstrumental) params.set('vocalinstrumental', filters.vocalinstrumental)
   if (filters.acousticelectric) params.set('acousticelectric', filters.acousticelectric)
+  if (filters.lang) params.set('lang', filters.lang)
+  if (filters.gender) params.set('gender', filters.gender)
   return jamendoFetch(`${BASE}/tracks/?${params}`)
 }
 
@@ -52,6 +57,8 @@ export async function searchArtists(query: string, limit = 20): Promise<Track[]>
 }
 
 function mapTrack(t: any): Track {
+  const mi = t.musicinfo
+  const st = t.stats
   return {
     id: `jamendo-${t.id}`,
     title: t.name,
@@ -61,5 +68,17 @@ function mapTrack(t: any): Track {
     streamUrl: t.audio,
     artworkUrl: t.album_image || t.image,
     source: 'jamendo',
+    lang: mi?.lang || undefined,
+    gender: mi?.gender || undefined,
+    speed: mi?.speed || undefined,
+    vocalinstrumental: mi?.vocalinstrumental || undefined,
+    acousticelectric: mi?.acousticelectric || undefined,
+    genres: mi?.tags?.genres?.length ? mi.tags.genres : undefined,
+    instruments: mi?.tags?.instruments?.length ? mi.tags.instruments : undefined,
+    vartags: mi?.tags?.vartags?.length ? mi.tags.vartags : undefined,
+    releasedate: t.releasedate || undefined,
+    license: t.license_ccurl || undefined,
+    downloads: st?.rate_downloads_total || undefined,
+    listens: st?.rate_listened_total || undefined,
   }
 }

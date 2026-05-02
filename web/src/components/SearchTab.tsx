@@ -30,6 +30,20 @@ const ACOUSTIC = [
   { id: 'acoustic', label: 'Acoustic', icon: '🪕' },
   { id: 'electric', label: 'Electric', icon: '🔌' },
 ]
+const LANGUAGES = [
+  { id: 'en', label: 'English', flag: '🇬🇧' }, { id: 'es', label: 'Spanish', flag: '🇪🇸' },
+  { id: 'fr', label: 'French', flag: '🇫🇷' }, { id: 'de', label: 'German', flag: '🇩🇪' },
+  { id: 'it', label: 'Italian', flag: '🇮🇹' }, { id: 'pt', label: 'Portuguese', flag: '🇧🇷' },
+  { id: 'ru', label: 'Russian', flag: '🇷🇺' }, { id: 'ja', label: 'Japanese', flag: '🇯🇵' },
+  { id: 'ko', label: 'Korean', flag: '🇰🇷' }, { id: 'zh', label: 'Chinese', flag: '🇨🇳' },
+  { id: 'ar', label: 'Arabic', flag: '🇸🇦' }, { id: 'nl', label: 'Dutch', flag: '🇳🇱' },
+  { id: 'pl', label: 'Polish', flag: '🇵🇱' }, { id: 'tr', label: 'Turkish', flag: '🇹🇷' },
+  { id: 'sv', label: 'Swedish', flag: '🇸🇪' }, { id: 'hi', label: 'Hindi', flag: '🇮🇳' },
+]
+const GENDERS = [
+  { id: 'male', label: 'Male Vocals', icon: '👨' },
+  { id: 'female', label: 'Female Vocals', icon: '👩' },
+]
 const SORT_OPTIONS = [
   { id: 'popularity_week', label: 'Popular' },
   { id: 'releasedate_desc', label: 'Newest' },
@@ -68,10 +82,12 @@ export function SearchTab() {
   const [speed, setSpeed] = useState('')
   const [vocal, setVocal] = useState('')
   const [acoustic, setAcoustic] = useState('')
+  const [lang, setLang] = useState('')
+  const [gender, setGender] = useState('')
   const [sortBy, setSortBy] = useState('popularity_week')
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const hasFilters = !!(genre || speed || vocal || acoustic)
+  const hasFilters = !!(genre || speed || vocal || acoustic || lang || gender)
 
   const doSearch = async (q?: string) => {
     const term = (q ?? query).trim()
@@ -86,6 +102,8 @@ export function SearchTab() {
     if (speed) filters.speed = speed as TrackFilters['speed']
     if (vocal) filters.vocalinstrumental = vocal as TrackFilters['vocalinstrumental']
     if (acoustic) filters.acousticelectric = acoustic as TrackFilters['acousticelectric']
+    if (lang) filters.lang = lang
+    if (gender) filters.gender = gender as TrackFilters['gender']
 
     const [j, ia, radio] = await Promise.all([
       advancedSearch(filters, 30),
@@ -98,7 +116,7 @@ export function SearchTab() {
   }
 
   const clearAll = () => {
-    setGenre(''); setSpeed(''); setVocal(''); setAcoustic('')
+    setGenre(''); setSpeed(''); setVocal(''); setAcoustic(''); setLang(''); setGender('')
     setSortBy('popularity_week')
   }
 
@@ -108,7 +126,7 @@ export function SearchTab() {
     clearTimeout(timer.current)
     timer.current = setTimeout(() => doSearch(), 300)
     return () => clearTimeout(timer.current)
-  }, [genre, speed, vocal, acoustic])
+  }, [genre, speed, vocal, acoustic, lang, gender])
 
   const hasResults = tracks.length > 0 || stations.length > 0
 
@@ -204,6 +222,32 @@ export function SearchTab() {
         </div>
       </div>
 
+      {/* Language */}
+      <div className="px-4 md:px-6 mb-2">
+        <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Language</div>
+        <div className="flex gap-1 overflow-x-auto pb-1 snap-x md:flex-wrap md:overflow-visible">
+          {LANGUAGES.map(l => (
+            <button key={l.id} onClick={() => setLang(lang === l.id ? '' : l.id)}
+              className={`flex-shrink-0 snap-start text-[11px] px-2 py-1 rounded-lg transition-colors whitespace-nowrap ${lang === l.id ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+              {l.flag} {l.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Gender */}
+      <div className="px-4 md:px-6 mb-2">
+        <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Vocals</div>
+        <div className="flex gap-1">
+          {GENDERS.map(g => (
+            <button key={g.id} onClick={() => setGender(gender === g.id ? '' : g.id)}
+              className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-lg transition-colors whitespace-nowrap ${gender === g.id ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+              <span>{g.icon}</span>{g.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Active filter chips */}
       {hasFilters && (
         <div className="flex gap-1.5 px-4 md:px-6 mb-2 flex-wrap">
@@ -211,6 +255,8 @@ export function SearchTab() {
           {speed && <Chip label={`${SPEEDS.find(s => s.id === speed)?.icon || ''} ${SPEEDS.find(s => s.id === speed)?.label || speed}`} onRemove={() => setSpeed('')} />}
           {vocal && <Chip label={VOCAL.find(v => v.id === vocal)?.label || vocal} onRemove={() => setVocal('')} />}
           {acoustic && <Chip label={ACOUSTIC.find(a => a.id === acoustic)?.label || acoustic} onRemove={() => setAcoustic('')} />}
+          {lang && <Chip label={`${LANGUAGES.find(l => l.id === lang)?.flag || ''} ${LANGUAGES.find(l => l.id === lang)?.label || lang}`} onRemove={() => setLang('')} />}
+          {gender && <Chip label={GENDERS.find(g => g.id === gender)?.label || gender} onRemove={() => setGender('')} />}
           <button onClick={() => { clearAll(); if (hasSearched) doSearch() }} className="text-[11px] text-text-muted hover:text-text px-2 py-1">Clear</button>
         </div>
       )}

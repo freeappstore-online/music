@@ -7,6 +7,12 @@ import { formatDuration } from '../lib/format'
 import { Artwork } from './ui/Artwork'
 import { HeartIcon, DislikeIcon, PlayingBars } from './ui/Icons'
 
+const LANG_FLAGS: Record<string, string> = {
+  en: '🇬🇧', es: '🇪🇸', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇧🇷', ru: '🇷🇺',
+  ja: '🇯🇵', ko: '🇰🇷', zh: '🇨🇳', ar: '🇸🇦', nl: '🇳🇱', pl: '🇵🇱', tr: '🇹🇷',
+  sv: '🇸🇪', hi: '🇮🇳', el: '🇬🇷', he: '🇮🇱', fi: '🇫🇮', da: '🇩🇰',
+}
+
 export function TrackRow({ track, queue, index, onBlacklist }: { track: Track; queue?: Track[]; index?: number; onBlacklist?: () => void }) {
   const ps = usePlayer()
   const [fav, setFav] = useState(() => isTrackFavorite(track.id))
@@ -39,8 +45,15 @@ export function TrackRow({ track, queue, index, onBlacklist }: { track: Track; q
           {track.title}
         </div>
         <div className="text-[11px] text-text-muted truncate mt-0.5">
-          {track.artist}{dur ? ` · ${dur}` : ''}
+          {track.artist}{dur ? ` · ${dur}` : ''}{track.lang ? ` · ${LANG_FLAGS[track.lang] || '🌐'} ${track.lang.toUpperCase()}` : ''}{track.releasedate ? ` · ${track.releasedate.slice(0, 4)}` : ''}
         </div>
+        {(track.genres || track.vartags) && (
+          <div className="flex gap-1 mt-0.5 overflow-hidden">
+            {track.genres?.slice(0, 2).map(g => <span key={g} className="text-[9px] px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">{g}</span>)}
+            {track.vartags?.slice(0, 2).map(t => <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-text-dim">{t}</span>)}
+            {track.vocalinstrumental === 'instrumental' && <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-text-dim">instrumental</span>}
+          </div>
+        )}
       </div>
 
       {playing && <PlayingBars />}
