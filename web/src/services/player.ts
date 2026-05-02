@@ -7,6 +7,7 @@ export type PlayerState = {
   queueIndex: number
   isPlaying: boolean
   isLoading: boolean
+  error: boolean
   currentTime: number
   duration: number
 }
@@ -23,6 +24,7 @@ class AudioPlayerService {
     queueIndex: 0,
     isPlaying: false,
     isLoading: false,
+    error: false,
     currentTime: 0,
     duration: 0,
   }
@@ -36,6 +38,7 @@ class AudioPlayerService {
     this.audio.addEventListener('playing', () => {
       this.state.isPlaying = true
       this.state.isLoading = false
+      this.state.error = false
       this.notify()
       this.updateMediaSession()
     })
@@ -47,12 +50,11 @@ class AudioPlayerService {
       this.state.isLoading = true
       this.notify()
     })
-    this.audio.addEventListener('ended', () => {
-      this.next()
-    })
+    this.audio.addEventListener('ended', () => this.next())
     this.audio.addEventListener('error', () => {
       this.state.isLoading = false
       this.state.isPlaying = false
+      this.state.error = true
       this.notify()
     })
 
@@ -70,13 +72,17 @@ class AudioPlayerService {
   }
 
   private notify() {
-    const snapshot = { ...this.state }
+    const snapshot: PlayerState = {
+      ...this.state,
+      queue: this.state.queue, // read-only reference is fine for rendering
+    }
     this.listeners.forEach(fn => fn(snapshot))
   }
 
   playTrack(track: Track, queue?: Track[], index?: number) {
     this.state.track = track
     this.state.station = null
+    this.state.error = false
     if (queue) { this.state.queue = queue; this.state.queueIndex = index ?? 0 }
     this.startPlayback(track.streamUrl)
   }
@@ -85,6 +91,7 @@ class AudioPlayerService {
     this.state.track = null
     this.state.station = station
     this.state.queue = []
+    this.state.error = false
     this.startPlayback(station.streamUrl)
   }
 
@@ -101,6 +108,7 @@ class AudioPlayerService {
     this.state.queueIndex = (this.state.queueIndex + 1) % this.state.queue.length
     const track = this.state.queue[this.state.queueIndex]
     this.state.track = track
+    this.state.error = false
     this.startPlayback(track.streamUrl)
   }
 
@@ -113,6 +121,7 @@ class AudioPlayerService {
     this.state.queueIndex = (this.state.queueIndex - 1 + this.state.queue.length) % this.state.queue.length
     const track = this.state.queue[this.state.queueIndex]
     this.state.track = track
+    this.state.error = false
     this.startPlayback(track.streamUrl)
   }
 
@@ -123,26 +132,28 @@ class AudioPlayerService {
   }
 
   private startPlayback(url: string) {
+    this.audio.pause()
     this.state.isLoading = true
     this.state.currentTime = 0
     this.state.duration = 0
+    this.state.error = false
     this.notify()
     this.audio.src = url
     this.audio.play().catch(() => {
       this.state.isLoading = false
+      this.state.error = true
       this.notify()
     })
   }
 
   private updateMediaSession() {
     if (!('mediaSession' in navigator)) return
-    const title = this.state.track?.title ?? this.state.station?.name ?? ''
-    const artist = this.state.track?.artist ?? ''
-    const artwork = this.state.track?.artworkUrl ?? this.state.station?.favicon
     navigator.mediaSession.metadata = new MediaMetadata({
-      title,
-      artist,
-      artwork: artwork ? [{ src: artwork, sizes: '512x512' }] : [],
+      title: this.state.track?.title ?? this.state.station?.name ?? '',
+      artist: this.state.track?.artist ?? '',
+      artwork: (this.state.track?.artworkUrl ?? this.state.station?.favicon)
+        ? [{ src: (this.state.track?.artworkUrl ?? this.state.station?.favicon)!, sizes: '512x512' }]
+        : [],
     })
   }
 }
