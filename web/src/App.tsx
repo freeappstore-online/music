@@ -2,18 +2,20 @@ import { useState } from 'react'
 import { HomeTab } from './components/HomeTab'
 import { SearchTab } from './components/SearchTab'
 import { ExploreTab } from './components/ExploreTab'
+import { MusicTab } from './components/MusicTab'
 import { RadioTab } from './components/RadioTab'
 import { LibraryTab } from './components/LibraryTab'
 import { SettingsModal } from './components/SettingsModal'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
-type Tab = 'home' | 'search' | 'explore' | 'radio' | 'library'
+type Tab = 'home' | 'search' | 'artists' | 'music' | 'radio' | 'library'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'home', label: 'Home', icon: 'home' },
   { id: 'search', label: 'Search', icon: 'search' },
-  { id: 'explore', label: 'Explore', icon: 'discover' },
+  { id: 'artists', label: 'Artists', icon: 'artists' },
+  { id: 'music', label: 'Music', icon: 'music' },
   { id: 'radio', label: 'Radio', icon: 'radio' },
   { id: 'library', label: 'Library', icon: 'library' },
 ]
@@ -65,7 +67,8 @@ export default function App() {
         <div className="max-w-5xl mx-auto">
           <div className={tab === 'home' ? '' : 'hidden'}><HomeTab /></div>
           <div className={tab === 'search' ? '' : 'hidden'}><SearchTab /></div>
-          <div className={tab === 'explore' ? '' : 'hidden'}><ExploreTab /></div>
+          <div className={tab === 'artists' ? '' : 'hidden'}><ExploreTab /></div>
+          <div className={tab === 'music' ? '' : 'hidden'}><MusicTab /></div>
           <div className={tab === 'radio' ? '' : 'hidden'}><RadioTab /></div>
           <div className={tab === 'library' ? '' : 'hidden'}><LibraryTab /></div>
         </div>
@@ -108,8 +111,10 @@ function TabIcon({ name, size = 24 }: { name: string; size?: number }) {
       return <svg style={s} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
     case 'radio':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
-    case 'discover':
-      return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" /></svg>
+    case 'artists':
+      return <svg style={s} fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M8.25 6.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM15.75 9.75a3 3 0 116 0 3 3 0 01-6 0zM2.25 9.75a3 3 0 116 0 3 3 0 01-6 0zM6.31 15.117A6.745 6.745 0 0112 12a6.745 6.745 0 016.709 7.498.75.75 0 01-.372.568A12.696 12.696 0 0112 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 01-.372-.568 6.787 6.787 0 011.019-4.38z" clipRule="evenodd" /><path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" /></svg>
+    case 'music':
+      return <svg style={s} fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M19.952 1.651a.75.75 0 01.298.599V16.303a3 3 0 01-2.176 2.884l-1.32.377a2.553 2.553 0 11-1.403-4.909l2.311-.66a1.5 1.5 0 001.088-1.442V6.994l-9 2.572v9.737a3 3 0 01-2.176 2.884l-1.32.377a2.553 2.553 0 11-1.402-4.909l2.31-.66a1.5 1.5 0 001.088-1.442V5.25a.75.75 0 01.544-.721l10.5-3a.75.75 0 01.706.122z" clipRule="evenodd" /></svg>
     case 'library':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
     default:
