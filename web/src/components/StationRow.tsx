@@ -20,7 +20,6 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
   const [blocked, setBlocked] = useState(() => isStationBlacklisted(station.id))
   const [expanded, setExpanded] = useState(false)
   const playing = ps.station?.id === station.id && ps.isPlaying
-  const mainGenre = station.genre?.split(',')[0] || ''
   const adFree = isAdFree(station)
 
   if (blocked) return null
