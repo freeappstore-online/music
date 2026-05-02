@@ -58,8 +58,8 @@ export function HomeTab() {
 
   return (
     <div className="pb-4">
-      <div className="px-4 md:px-6 pt-4 md:pt-8 pb-1">
-        <h1 className="text-2xl md:text-3xl font-bold">FreeMusic</h1>
+      <div className="px-4 md:px-6 pt-4 lg:pt-8 pb-1">
+        <h1 className="text-2xl lg:text-3xl font-bold lg:hidden">FreeMusic</h1>
         <p className="text-xs md:text-sm text-muted mt-1">One tap. Your music. Right now.</p>
       </div>
 
