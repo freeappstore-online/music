@@ -81,8 +81,8 @@ export default function App() {
               onClick={() => setTab(t.id)}
             >
               {tab === t.id && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] rounded-full bg-accent" />}
-              <TabIcon name={t.icon} size={22} />
-              <span className="text-[10px] font-medium tracking-wide">{t.label}</span>
+              <TabIcon name={t.icon} size={20} />
+              <span className="text-[9px] font-medium">{t.label}</span>
             </button>
           ))}
         </div>
