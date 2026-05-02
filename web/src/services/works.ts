@@ -1,3 +1,4 @@
+import { lower } from '../lib/format'
 import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
 import type { Track } from '../types'
@@ -121,9 +122,9 @@ export async function searchWork(work: Work, limit = 15): Promise<Track[]> {
   // Filter results: keep only tracks that mention the composer name
   const composerLower = work.composer.toLowerCase()
   const filtered = [...jamendo, ...ia].filter(t =>
-    t.artist.toLowerCase().includes(composerLower) ||
-    t.title.toLowerCase().includes(composerLower) ||
-    t.album?.toLowerCase().includes(composerLower)
+    lower(t.artist).includes(composerLower) ||
+    lower(t.title).includes(composerLower) ||
+    lower(t.album).includes(composerLower)
   )
 
   // Fall back to unfiltered if nothing matches (some tracks have performer names, not composer)

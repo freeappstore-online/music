@@ -22,7 +22,7 @@ export async function searchTracks(query: string, limit = 10): Promise<Track[]> 
           results.push({
             id: `ia-${item.identifier}-${file.name}`,
             title: file.title || file.name?.replace('.mp3', '') || item.title,
-            artist: item.creator || 'Unknown Artist',
+            artist: Array.isArray(item.creator) ? item.creator.join(', ') : (item.creator || 'Unknown Artist'),
             album: item.title,
             duration: parseDuration(file.length),
             streamUrl: `${BASE}/download/${item.identifier}/${encodeURIComponent(file.name)}`,

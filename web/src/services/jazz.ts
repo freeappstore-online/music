@@ -1,3 +1,4 @@
+import { lower } from '../lib/format'
 import type { Track, RadioStation } from '../types'
 import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
@@ -169,9 +170,9 @@ export async function getJazzTracks(category: JazzCategory, limit = 50, onMore?:
     ])
     const artistLower = (category.jamendoSearch || '').toLowerCase()
     const verifiedIA = ia.filter(t =>
-      t.artist.toLowerCase().includes(artistLower) ||
-      t.title.toLowerCase().includes(artistLower) ||
-      t.album?.toLowerCase().includes(artistLower)
+      lower(t.artist).includes(artistLower) ||
+      lower(t.title).includes(artistLower) ||
+      lower(t.album).includes(artistLower)
     )
     return [...jamendo, ...(verifiedIA.length > 0 ? verifiedIA : ia)].slice(0, limit)
   }

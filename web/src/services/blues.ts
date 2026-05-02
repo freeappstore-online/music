@@ -1,3 +1,4 @@
+import { lower } from '../lib/format'
 import type { Track, RadioStation } from '../types'
 import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
@@ -135,9 +136,9 @@ export async function getBluesTracks(category: BluesCategory, limit = 50, onMore
     // Filter IA results to only include tracks that mention the artist
     const artistLower = (category.jamendoSearch || '').toLowerCase()
     const verified = ia.filter(t =>
-      t.artist.toLowerCase().includes(artistLower) ||
-      t.title.toLowerCase().includes(artistLower) ||
-      t.album?.toLowerCase().includes(artistLower)
+      lower(t.artist).includes(artistLower) ||
+      lower(t.title).includes(artistLower) ||
+      lower(t.album).includes(artistLower)
     )
     const results = verified.length > 0 ? verified : ia
 

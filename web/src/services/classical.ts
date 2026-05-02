@@ -1,3 +1,4 @@
+import { lower } from '../lib/format'
 import type { Track, RadioStation } from '../types'
 import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
@@ -195,9 +196,9 @@ export async function getClassicalTracks(category: ClassicalCategory, limit = 50
     // Filter to verify composer name matches
     const composerLower = (category.jamendoSearch || '').toLowerCase()
     const verifiedIA = ia.filter(t =>
-      t.artist.toLowerCase().includes(composerLower) ||
-      t.title.toLowerCase().includes(composerLower) ||
-      t.album?.toLowerCase().includes(composerLower)
+      lower(t.artist).includes(composerLower) ||
+      lower(t.title).includes(composerLower) ||
+      lower(t.album).includes(composerLower)
     )
     // Combine: Jamendo CC tracks + verified IA recordings
     const results = [...jamendo, ...(verifiedIA.length > 0 ? verifiedIA : ia)]

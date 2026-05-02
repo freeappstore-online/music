@@ -14,3 +14,11 @@ export function formatVotes(n: number): string {
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`
   return String(n)
 }
+
+/** Safe lowercase — handles arrays, nulls, numbers */
+export function lower(v: unknown): string {
+  if (!v) return ''
+  if (typeof v === 'string') return v.toLowerCase()
+  if (Array.isArray(v)) return v.join(', ').toLowerCase()
+  return String(v).toLowerCase()
+}
