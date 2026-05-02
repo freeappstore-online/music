@@ -183,19 +183,34 @@ export const MOODS: ClassicalCategory[] = [
 
 // ===== Data fetching =====
 
-// Returns Jamendo results fast, then appends IA results via callback
 export async function getClassicalTracks(category: ClassicalCategory, limit = 50, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
-  const jamendo = await advancedSearch({
-    tags: category.jamendoTags,
-    search: category.jamendoSearch,
-  }, limit)
+  const isComposerSearch = !!category.jamendoSearch && !!category.years
 
+  if (isComposerSearch) {
+    // For specific composers: fetch both in parallel, IA has real recordings
+    const [jamendo, ia] = await Promise.all([
+      advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit),
+      searchIA(category.iaQuery, 20),
+    ])
+    // Filter to verify composer name matches
+    const composerLower = (category.jamendoSearch || '').toLowerCase()
+    const verifiedIA = ia.filter(t =>
+      t.artist.toLowerCase().includes(composerLower) ||
+      t.title.toLowerCase().includes(composerLower) ||
+      t.album?.toLowerCase().includes(composerLower)
+    )
+    // Combine: Jamendo CC tracks + verified IA recordings
+    const results = [...jamendo, ...(verifiedIA.length > 0 ? verifiedIA : ia)]
+    return results.slice(0, limit)
+  }
+
+  // For style/mood/instrument: Jamendo first
+  const jamendo = await advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit)
   if (onMore) {
     searchIA(category.iaQuery, 20).then(ia => {
       if (ia.length > 0) onMore([...jamendo, ...ia])
     })
   }
-
   return jamendo
 }
 

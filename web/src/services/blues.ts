@@ -127,6 +127,29 @@ export const ERAS: BluesCategory[] = [
 ]
 
 export async function getBluesTracks(category: BluesCategory, limit = 50, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
+  const isArtistSearch = !!category.jamendoSearch && !!category.years
+
+  if (isArtistSearch) {
+    // For specific artists: IA first (has real recordings), then Jamendo as bonus
+    const ia = await searchIA(category.iaQuery, 20)
+    // Filter IA results to only include tracks that mention the artist
+    const artistLower = (category.jamendoSearch || '').toLowerCase()
+    const verified = ia.filter(t =>
+      t.artist.toLowerCase().includes(artistLower) ||
+      t.title.toLowerCase().includes(artistLower) ||
+      t.album?.toLowerCase().includes(artistLower)
+    )
+    const results = verified.length > 0 ? verified : ia
+
+    if (onMore) {
+      advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit).then(jamendo => {
+        if (jamendo.length > 0) onMore([...results, ...jamendo])
+      })
+    }
+    return results
+  }
+
+  // For style/mood/instrument: Jamendo first (better for tags)
   const jamendo = await advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit)
   if (onMore) {
     searchIA(category.iaQuery, 20).then(ia => {

@@ -159,14 +159,30 @@ export const ERAS: JazzCategory[] = [
 // ===== Data fetching =====
 
 export async function getJazzTracks(category: JazzCategory, limit = 50, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
-  const jamendo = await advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit)
+  const isArtistSearch = !!category.jamendoSearch && !!category.years
 
+  if (isArtistSearch) {
+    // For specific artists: IA has real recordings of famous jazz artists
+    const [jamendo, ia] = await Promise.all([
+      advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit),
+      searchIA(category.iaQuery, 20),
+    ])
+    const artistLower = (category.jamendoSearch || '').toLowerCase()
+    const verifiedIA = ia.filter(t =>
+      t.artist.toLowerCase().includes(artistLower) ||
+      t.title.toLowerCase().includes(artistLower) ||
+      t.album?.toLowerCase().includes(artistLower)
+    )
+    return [...jamendo, ...(verifiedIA.length > 0 ? verifiedIA : ia)].slice(0, limit)
+  }
+
+  // For style/mood/instrument: Jamendo first
+  const jamendo = await advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit)
   if (onMore) {
     searchIA(category.iaQuery, 20).then(ia => {
       if (ia.length > 0) onMore([...jamendo, ...ia])
     })
   }
-
   return jamendo
 }
 
