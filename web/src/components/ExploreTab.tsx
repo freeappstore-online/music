@@ -22,12 +22,12 @@ export function ExploreTab() {
 
   return (
     <div>
-      <div className="flex gap-2 px-4 md:px-6 pt-6 md:pt-10 pb-2">
+      <div className="flex gap-2 overflow-x-auto px-4 md:px-6 pt-6 md:pt-10 pb-2 snap-x md:overflow-visible">
         {GENRES.map(g => (
           <button
             key={g.id}
             onClick={() => setGenre(g.id)}
-            className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+            className={`flex-shrink-0 md:flex-1 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all snap-start ${
               genre === g.id
                 ? `bg-gradient-to-r ${g.color} text-white shadow-lg`
                 : 'bg-surface text-text-muted hover:text-text'
