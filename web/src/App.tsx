@@ -29,7 +29,7 @@ export default function App() {
       {/* ===== DESKTOP TOP NAV (hidden on mobile) ===== */}
       <header className="hidden md:block border-b border-white/6 flex-shrink-0">
         <div className="flex items-center justify-between gap-4 max-w-5xl mx-auto px-6 h-14">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setTab('home')}>
             <svg className="w-6 h-6" viewBox="0 0 512 512" fill="none">
               <rect width="512" height="512" rx="112" fill="#1a1a2e"/>
               <circle cx="256" cy="256" r="140" stroke="#6ECE9E" strokeWidth="8" opacity="0.3"/>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { SettingsModal } from './SettingsModal'
 import { getTrending, getByGenre } from '../services/jamendo'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
 import { getSomaFMChannels } from '../services/somafm'
@@ -19,6 +20,7 @@ export function HomeTab() {
   const [somaStations, setSomaStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(true)
   const [showGenrePicker, setShowGenrePicker] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   const favTracks = getFavoriteTracks()
   const favStations = getFavoriteStations()
@@ -51,9 +53,16 @@ export function HomeTab() {
   return (
     <div className="pb-4">
       <div className="px-4 md:px-6 pt-6 md:pt-10 pb-1">
-        <h1 className="text-2xl md:text-3xl font-bold md:hidden">FreeMusic</h1>
+        <div className="flex items-center justify-between md:hidden">
+          <h1 className="text-2xl font-bold">FreeMusic</h1>
+          <button onClick={() => setShowSettings(true)} className="p-2 rounded-lg text-text-muted hover:text-text hover:bg-white/4" aria-label="Settings">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+          </button>
+        </div>
         <p className="text-sm text-text-muted mt-1">One tap. Your music. Right now.</p>
       </div>
+
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
 
       {/* Quick play */}
       <QuickPlayCards
