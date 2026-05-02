@@ -4,7 +4,6 @@ import { SearchTab } from './components/SearchTab'
 import { DiscoverTab } from './components/DiscoverTab'
 import { RadioTab } from './components/RadioTab'
 import { LibraryTab } from './components/LibraryTab'
-import { AboutTab } from './components/AboutTab'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
@@ -20,7 +19,6 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home')
-  const [showAbout, setShowAbout] = useState(false)
   const ps = usePlayer()
   const hasPlayer = ps.track !== null || ps.station !== null
 
@@ -90,20 +88,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* ===== ABOUT MODAL ===== */}
-      {showAbout && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowAbout(false)}>
-          <div className="bg-surface border border-border rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold">About FreeMusic</h2>
-              <button onClick={() => setShowAbout(false)} className="p-1 rounded-lg hover:bg-white/6 text-text-muted">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-            </div>
-            <AboutTab />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
