@@ -174,7 +174,7 @@ export function JazzTab() {
           ) : selected && tracks.length > 0 ? (
             <div>
               <div className="flex items-center justify-between px-4 md:px-6 mb-2">
-                <h2 className="text-sm font-bold">{selected.icon} {selected.label}</h2>
+                <div className="flex items-center gap-2"><h2 className="text-sm font-bold">{selected.icon} {selected.label}</h2><a href={`/artist/${selected.id}.html`} target="_blank" className="text-[10px] text-text-dim hover:text-accent transition-colors">About</a></div>
                 <button onClick={() => player.playTrack(tracks[0], tracks, 0)} className="text-xs text-accent font-semibold hover:underline">Play All</button>
               </div>
               {tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)}
