@@ -183,13 +183,7 @@ export function ClassicalTab() {
             <div className="flex items-center justify-center py-8"><Spinner /></div>
           ) : selected && tracks.length > 0 ? (
             <div>
-              <div className="flex items-center justify-between px-4 md:px-6 mb-2">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-sm font-bold">{selected.icon} {selected.label}</h2>
-                  <a href={`/artist/${selected.id}.html`} target="_blank" className="text-[10px] text-text-dim hover:text-accent transition-colors">About</a>
-                </div>
-                <button onClick={() => player.playTrack(tracks[0], tracks, 0)} className="text-xs text-accent font-semibold hover:underline">Play All</button>
-              </div>
+              <ArtistHeader cat={selected} onPlayAll={() => player.playTrack(tracks[0], tracks, 0)} />
               {tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)}
             </div>
           ) : selected && !loading ? (
@@ -205,6 +199,26 @@ export function ClassicalTab() {
           )}
         </>
       )}
+    </div>
+  )
+}
+
+function ArtistHeader({ cat, onPlayAll }: { cat: ClassicalCategory; onPlayAll: () => void }) {
+  return (
+    <div className="px-4 md:px-6 mb-3">
+      <div className="flex items-center gap-3 mb-2">
+        {cat.image && (
+          <img src={cat.image} alt={cat.label} className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10" />
+        )}
+        <div className="flex-1 min-w-0">
+          <h2 className="text-base font-bold">{cat.label}</h2>
+          {cat.years && <p className="text-xs text-text-muted">{cat.years}</p>}
+        </div>
+        <div className="flex items-center gap-2">
+          <a href={`/artist/${cat.id}.html`} target="_blank" className="text-xs px-3 py-1.5 rounded-lg bg-surface hover:bg-surface-hover text-text-muted hover:text-text transition-colors">About</a>
+          <button onClick={onPlayAll} className="text-xs px-3 py-1.5 rounded-lg bg-accent text-base font-semibold">Play All</button>
+        </div>
+      </div>
     </div>
   )
 }
