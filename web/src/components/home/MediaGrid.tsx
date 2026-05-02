@@ -27,14 +27,14 @@ export function TrackGrid({ tracks, title, showPlayAll }: TrackGridProps) {
       </div>
 
       {/* Mobile: horizontal scroll */}
-      <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x md:hidden">
+      <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x lg:hidden">
         {tracks.map((track, i) => (
           <TrackCard key={track.id} track={track} onClick={() => player.playTrack(track, tracks, i)} />
         ))}
       </div>
 
       {/* Desktop: grid */}
-      <div className="hidden md:grid grid-cols-4 lg:grid-cols-5 gap-4 px-6">
+      <div className="hidden lg:grid grid-cols-4 lg:grid-cols-5 gap-4 px-6">
         {tracks.slice(0, 10).map((track, i) => (
           <TrackCard key={track.id} track={track} onClick={() => player.playTrack(track, tracks, i)} desktop />
         ))}
@@ -57,13 +57,13 @@ export function StationGrid({ stations, title }: StationGridProps) {
         <h2 className="text-sm md:text-base font-bold">{title}</h2>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x md:hidden">
+      <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x lg:hidden">
         {stations.map(s => (
           <StationCard key={s.id} station={s} onClick={() => player.playStation(s)} />
         ))}
       </div>
 
-      <div className="hidden md:grid grid-cols-5 lg:grid-cols-6 gap-4 px-6">
+      <div className="hidden lg:grid grid-cols-5 lg:grid-cols-6 gap-4 px-6">
         {stations.map(s => (
           <StationCard key={s.id} station={s} onClick={() => player.playStation(s)} desktop />
         ))}

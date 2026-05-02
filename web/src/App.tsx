@@ -25,9 +25,9 @@ export default function App() {
   return (
     <div className="flex min-h-[100dvh]">
       {/* ===== DESKTOP SIDEBAR (hidden on mobile) ===== */}
-      <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-white/4 bg-surface/50 fixed top-0 left-0 bottom-0 z-20">
+      <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-white/6 bg-bg fixed top-0 left-0 bottom-0 z-20">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/4">
+        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-white/6">
           <svg className="w-7 h-7" viewBox="0 0 512 512" fill="none">
             <rect width="512" height="512" rx="112" fill="#1a1a2e"/>
             <circle cx="256" cy="256" r="140" stroke="#6ECE9E" strokeWidth="8" opacity="0.3"/>
@@ -57,7 +57,7 @@ export default function App() {
         </nav>
 
         {/* Sidebar footer */}
-        <div className="px-5 py-4 border-t border-white/4">
+        <div className="px-5 py-4 border-t border-white/6">
           <p className="text-[10px] text-muted/50 leading-relaxed">
             Creative Commons &<br/>public domain music.<br/>Free forever.
           </p>
@@ -79,7 +79,7 @@ export default function App() {
       <MiniPlayer />
 
       {/* ===== MOBILE TAB BAR (hidden on desktop) ===== */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-bg/90 backdrop-blur-xl border-t border-white/4 pb-[env(safe-area-inset-bottom)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-bg/90 backdrop-blur-xl border-t border-white/6 pb-[env(safe-area-inset-bottom)]">
         <div className="flex">
           {TABS.map(t => (
             <button
