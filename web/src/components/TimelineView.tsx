@@ -96,13 +96,30 @@ const ERA_COLORS: Record<string, string> = {
 const MIN_YEAR = 1550
 const MAX_YEAR = 2030
 
-// Non-linear scale: earlier centuries compressed, recent decades expanded
-// This gives ~15% to 1550-1750 (Baroque), ~20% to 1750-1850, ~30% to 1850-1950, ~35% to 1950-2030
+// Non-linear scale: compress early centuries, expand recent decades
+// t^2 means: 1550-1790 (half the range) gets only 25% of width
+// while 1790-2030 gets 75%. More room for the crowded modern era.
 function yearToPercent(year: number): number {
-  const t = (year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR) // 0..1 linear
-  // Power curve: raise to 0.6 to compress early years, expand recent
-  return Math.pow(t, 0.55) * 100
+  const t = (year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)
+  return Math.pow(t, 2) * 100
 }
+
+// Musical era definitions for horizontal bars
+const ERA_BANDS: { label: string; start: number; end: number; color: string }[] = [
+  { label: 'Renaissance', start: 1550, end: 1600, color: 'bg-stone-700/40' },
+  { label: 'Baroque', start: 1600, end: 1750, color: 'bg-amber-800/40' },
+  { label: 'Classical', start: 1730, end: 1820, color: 'bg-yellow-700/40' },
+  { label: 'Romantic', start: 1800, end: 1910, color: 'bg-rose-800/40' },
+  { label: 'Impressionist', start: 1875, end: 1925, color: 'bg-sky-800/40' },
+  { label: 'Modern', start: 1900, end: 1975, color: 'bg-violet-800/40' },
+  { label: 'Contemporary', start: 1950, end: 2030, color: 'bg-indigo-800/40' },
+  { label: 'Early Jazz', start: 1895, end: 1930, color: 'bg-amber-600/30' },
+  { label: 'Swing', start: 1925, end: 1945, color: 'bg-orange-700/30' },
+  { label: 'Bebop', start: 1940, end: 1960, color: 'bg-red-800/30' },
+  { label: 'Cool/Hard Bop', start: 1950, end: 1970, color: 'bg-blue-800/30' },
+  { label: 'Free/Fusion', start: 1960, end: 1985, color: 'bg-purple-800/30' },
+  { label: 'Modern Jazz', start: 1980, end: 2030, color: 'bg-teal-800/30' },
+]
 
 type Filter = 'all' | 'classical' | 'jazz'
 
@@ -152,18 +169,41 @@ export function TimelineView() {
 
       {view === 'timeline' ? (
         /* ===== TIMELINE VIEW ===== */
-        <div className="px-4 md:px-6">
+        <div className="px-4 md:px-6 overflow-x-auto">
+          {/* Era bars — overlapping horizontal bands */}
+          <div className="relative mb-2" style={{ minHeight: `${(filter === 'jazz' ? 6 : filter === 'classical' ? 7 : 13) * 18 + 8}px` }}>
+            {ERA_BANDS
+              .filter(era => {
+                if (filter === 'classical') return !['Early Jazz','Swing','Bebop','Cool/Hard Bop','Free/Fusion','Modern Jazz'].includes(era.label)
+                if (filter === 'jazz') return ['Early Jazz','Swing','Bebop','Cool/Hard Bop','Free/Fusion','Modern Jazz'].includes(era.label)
+                return true
+              })
+              .map((era, i) => (
+              <div
+                key={era.label}
+                className={`absolute h-4 rounded-full ${era.color} flex items-center overflow-hidden`}
+                style={{
+                  left: `${yearToPercent(era.start)}%`,
+                  width: `${yearToPercent(era.end) - yearToPercent(era.start)}%`,
+                  top: `${i * 18}px`,
+                }}
+              >
+                <span className="text-[8px] font-medium text-white/70 px-2 whitespace-nowrap">{era.label}</span>
+              </div>
+            ))}
+          </div>
+
           {/* Year axis */}
-          <div className="relative h-8 mb-2">
+          <div className="relative h-6 mb-1">
             {[1600, 1700, 1800, 1850, 1900, 1920, 1940, 1960, 1980, 2000].map(year => (
-              <div key={year} className="absolute text-[9px] text-text-dim -translate-x-1/2" style={{ left: `${yearToPercent(year)}%` }}>
+              <div key={year} className="absolute text-[8px] text-text-dim -translate-x-1/2" style={{ left: `${yearToPercent(year)}%` }}>
                 {year}
               </div>
             ))}
           </div>
 
           {/* Timeline bar */}
-          <div className="relative bg-white/4 rounded-full h-2 mb-6">
+          <div className="relative bg-white/4 rounded-full h-1.5 mb-4">
             {[1600, 1700, 1800, 1850, 1900, 1920, 1940, 1960, 1980, 2000].map(year => (
               <div key={year} className="absolute top-0 bottom-0 w-px bg-white/10" style={{ left: `${yearToPercent(year)}%` }} />
             ))}
@@ -200,15 +240,6 @@ export function TimelineView() {
             })}
           </div>
 
-          {/* Era legend */}
-          <div className="flex gap-2 flex-wrap mt-6">
-            {Object.entries(ERA_COLORS).map(([era, color]) => (
-              <span key={era} className="flex items-center gap-1 text-[9px] text-text-dim">
-                <div className={`w-2 h-2 rounded-full ${color}`} />
-                {era}
-              </span>
-            ))}
-          </div>
         </div>
       ) : (
         /* ===== INFLUENCE GRAPH ===== */
