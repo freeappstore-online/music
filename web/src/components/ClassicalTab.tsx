@@ -137,9 +137,8 @@ export function ClassicalTab() {
           {section === 'composers' && (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 px-4 md:px-6 mb-4">
               {items.map(cat => (
-                <button
+                <div
                   key={cat.id}
-                  onClick={() => handleSelect(cat)}
                   className={`flex flex-col items-center gap-1.5 py-3 rounded-xl transition-colors ${
                     selected?.id === cat.id ? 'bg-accent/15 ring-1 ring-accent' : 'hover:bg-surface-hover'
                   }`}
@@ -153,7 +152,17 @@ export function ClassicalTab() {
                   </div>
                   <span className="text-xs font-semibold">{cat.label}</span>
                   {cat.years && <span className="text-[9px] text-text-dim">{cat.years}</span>}
-                </button>
+                  <div className="flex gap-1.5 mt-0.5">
+                    <button onClick={() => handleSelect(cat)} className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md bg-accent text-base hover:bg-accent-hover transition-colors" title="Play">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd"/></svg>
+                      Play
+                    </button>
+                    <a href={`/artist/${cat.id}.html`} target="_blank" className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md bg-surface text-text-muted hover:text-text hover:bg-surface-hover transition-colors border border-border" title="Read about">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/></svg>
+                      Read
+                    </a>
+                  </div>
+                </div>
               ))}
             </div>
           )}
