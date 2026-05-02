@@ -18,7 +18,7 @@ export function StationRow({ station }: { station: RadioStation }) {
 
   return (
     <button
-      className="flex items-center gap-3 w-full px-4 py-2 hover:bg-white/[0.03] active:bg-white/[0.06] transition-colors text-left group"
+      className="flex items-center gap-3 w-full px-4 md:px-6 py-2 hover:bg-white/[0.03] active:bg-white/[0.06] transition-colors text-left group"
       onClick={() => player.playStation(station)}
     >
       {/* Icon */}

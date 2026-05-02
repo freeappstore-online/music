@@ -49,10 +49,10 @@ export function RadioTab() {
 
   return (
     <div className="pb-4">
-      <h1 className="text-2xl font-bold px-4 pt-4 pb-3">Radio</h1>
+      <h1 className="text-2xl md:text-3xl font-bold px-4 md:px-6 pt-4 md:pt-8 pb-3">Radio</h1>
 
       {/* Search */}
-      <form className="px-4 mb-3" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
+      <form className="px-4 md:px-6 mb-3" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
         <div className="flex items-center gap-2 bg-[var(--surface)] rounded-xl px-3 py-2.5 border border-[var(--border)]">
           <svg className="w-5 h-5 text-[var(--text-muted)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
@@ -66,7 +66,7 @@ export function RadioTab() {
       </form>
 
       {/* Browse filters */}
-      <div className="px-4 mb-1">
+      <div className="px-4 md:px-6 mb-1">
         <div className="flex gap-2 mb-2">
           <button onClick={loadTop} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'top' && !selected ? 'bg-[var(--accent)] text-[var(--bg)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>Top</button>
           <button onClick={() => setMode(mode === 'genre' ? 'top' : 'genre')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'genre' ? 'bg-[var(--accent)] text-[var(--bg)]' : 'bg-[var(--surface)] text-[var(--text-muted)]'}`}>Genre</button>
