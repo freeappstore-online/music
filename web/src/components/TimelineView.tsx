@@ -96,6 +96,14 @@ const ERA_COLORS: Record<string, string> = {
 const MIN_YEAR = 1550
 const MAX_YEAR = 2030
 
+// Non-linear scale: earlier centuries compressed, recent decades expanded
+// This gives ~15% to 1550-1750 (Baroque), ~20% to 1750-1850, ~30% to 1850-1950, ~35% to 1950-2030
+function yearToPercent(year: number): number {
+  const t = (year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR) // 0..1 linear
+  // Power curve: raise to 0.6 to compress early years, expand recent
+  return Math.pow(t, 0.55) * 100
+}
+
 type Filter = 'all' | 'classical' | 'jazz'
 
 export function TimelineView() {
@@ -124,7 +132,6 @@ export function TimelineView() {
     setLoading(false)
   }
 
-  const yearToPercent = (year: number) => ((year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100
 
   return (
     <div className="pb-4">
@@ -148,7 +155,7 @@ export function TimelineView() {
         <div className="px-4 md:px-6">
           {/* Year axis */}
           <div className="relative h-8 mb-2">
-            {[1600, 1700, 1750, 1800, 1850, 1900, 1950, 2000].map(year => (
+            {[1600, 1700, 1800, 1850, 1900, 1920, 1940, 1960, 1980, 2000].map(year => (
               <div key={year} className="absolute text-[9px] text-text-dim -translate-x-1/2" style={{ left: `${yearToPercent(year)}%` }}>
                 {year}
               </div>
@@ -157,7 +164,7 @@ export function TimelineView() {
 
           {/* Timeline bar */}
           <div className="relative bg-white/4 rounded-full h-2 mb-6">
-            {[1600, 1700, 1750, 1800, 1850, 1900, 1950, 2000].map(year => (
+            {[1600, 1700, 1800, 1850, 1900, 1920, 1940, 1960, 1980, 2000].map(year => (
               <div key={year} className="absolute top-0 bottom-0 w-px bg-white/10" style={{ left: `${yearToPercent(year)}%` }} />
             ))}
           </div>
