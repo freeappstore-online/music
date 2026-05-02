@@ -21,14 +21,27 @@ const GENRES: GenreItem[] = [
   { tag: '80s', count: 1110, icon: '🕺' }, { tag: '90s', count: 876, icon: '📼' }, { tag: '70s', count: 527, icon: '🌈' },
   { tag: '60s', count: 241, icon: '☮️' },
 ]
-const COUNTRIES: CountryItem[] = [
-  { name: 'United States', flag: '🇺🇸' }, { name: 'United Kingdom', flag: '🇬🇧' }, { name: 'Germany', flag: '🇩🇪' },
-  { name: 'France', flag: '🇫🇷' }, { name: 'Brazil', flag: '🇧🇷' }, { name: 'Japan', flag: '🇯🇵' },
-  { name: 'Spain', flag: '🇪🇸' }, { name: 'Italy', flag: '🇮🇹' }, { name: 'Canada', flag: '🇨🇦' },
-  { name: 'Australia', flag: '🇦🇺' }, { name: 'Russia', flag: '🇷🇺' }, { name: 'Mexico', flag: '🇲🇽' },
-  { name: 'India', flag: '🇮🇳' }, { name: 'Netherlands', flag: '🇳🇱' }, { name: 'Poland', flag: '🇵🇱' },
-  { name: 'Greece', flag: '🇬🇷' }, { name: 'China', flag: '🇨🇳' }, { name: 'Turkey', flag: '🇹🇷' },
-  { name: 'Argentina', flag: '🇦🇷' }, { name: 'South Korea', flag: '🇰🇷' },
+const COUNTRIES: (CountryItem & { label: string })[] = [
+  { name: 'The United States Of America', label: 'USA', flag: '🇺🇸' },
+  { name: 'Germany', label: 'Germany', flag: '🇩🇪' },
+  { name: 'The Russian Federation', label: 'Russia', flag: '🇷🇺' },
+  { name: 'France', label: 'France', flag: '🇫🇷' },
+  { name: 'Mexico', label: 'Mexico', flag: '🇲🇽' },
+  { name: 'Greece', label: 'Greece', flag: '🇬🇷' },
+  { name: 'The United Kingdom Of Great Britain And Northern Ireland', label: 'UK', flag: '🇬🇧' },
+  { name: 'Australia', label: 'Australia', flag: '🇦🇺' },
+  { name: 'China', label: 'China', flag: '🇨🇳' },
+  { name: 'Italy', label: 'Italy', flag: '🇮🇹' },
+  { name: 'Canada', label: 'Canada', flag: '🇨🇦' },
+  { name: 'Brazil', label: 'Brazil', flag: '🇧🇷' },
+  { name: 'Spain', label: 'Spain', flag: '🇪🇸' },
+  { name: 'The Netherlands', label: 'Netherlands', flag: '🇳🇱' },
+  { name: 'India', label: 'India', flag: '🇮🇳' },
+  { name: 'Poland', label: 'Poland', flag: '🇵🇱' },
+  { name: 'Argentina', label: 'Argentina', flag: '🇦🇷' },
+  { name: 'Japan', label: 'Japan', flag: '🇯🇵' },
+  { name: 'The Republic Of Korea', label: 'S. Korea', flag: '🇰🇷' },
+  { name: 'Colombia', label: 'Colombia', flag: '🇨🇴' },
 ]
 const LANGUAGES: LangItem[] = [
   { code: 'english', flag: '🇬🇧' }, { code: 'spanish', flag: '🇪🇸' }, { code: 'german', flag: '🇩🇪' },
@@ -143,7 +156,7 @@ export function RadioTab() {
       {hasFilters && (
         <div className="flex gap-1.5 px-4 md:px-6 mb-2 flex-wrap">
           {genre && <Chip label={`${GENRES.find(g => g.tag === genre)?.icon || ''} ${genre}`} onRemove={() => setGenre('')} />}
-          {country && <Chip label={`${COUNTRIES.find(c => c.name === country)?.flag || ''} ${country}`} onRemove={() => setCountry('')} />}
+          {country && <Chip label={`${COUNTRIES.find(c => c.name === country)?.flag || ''} ${COUNTRIES.find(c => c.name === country)?.label || country}`} onRemove={() => setCountry('')} />}
           {language && <Chip label={`${LANGUAGES.find(l => l.code === language)?.flag || ''} ${language}`} onRemove={() => setLanguage('')} />}
           {minBitrate && <Chip label={`${minBitrate}+ kbps`} onRemove={() => setMinBitrate('')} />}
           <button onClick={clearAll} className="text-[11px] text-text-muted hover:text-text px-2 py-1">Clear</button>
@@ -172,7 +185,7 @@ export function RadioTab() {
             {COUNTRIES.map(c => (
               <button key={c.name} onClick={() => setCountry(country === c.name ? '' : c.name)}
                 className={`flex-shrink-0 snap-start text-[11px] px-2 py-1 rounded-lg transition-colors whitespace-nowrap ${country === c.name ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
-                {c.flag} {c.name.length > 12 ? c.name.slice(0, 10) + '…' : c.name}
+                {c.flag} {c.label}
               </button>
             ))}
           </div>
