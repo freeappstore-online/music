@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { AboutTab } from './AboutTab'
 import { getFavoriteTracks, getFavoriteStations, getBlacklistedTrackIds, getBlacklistedStationIds, unblacklist, getBlacklistCount } from '../services/favorites'
 import { getHistory, clearHistory, type HistoryEntry } from '../services/history'
 import { getPlaylists, createPlaylist, deletePlaylist, type Playlist } from '../services/playlists'
@@ -18,6 +19,7 @@ export function LibraryTab() {
   const [blacklistCount, setBlacklistCount] = useState(0)
   const [newPlaylistName, setNewPlaylistName] = useState('')
   const [expandedPlaylist, setExpandedPlaylist] = useState<string | null>(null)
+  const [showAbout, setShowAbout] = useState(false)
 
   const reload = useCallback(() => {
     setFavTracks(getFavoriteTracks())
@@ -180,6 +182,15 @@ export function LibraryTab() {
           </>
         )
       )}
+
+      {/* About (mobile) */}
+      <div className="md:hidden px-4 mt-8 pb-4">
+        <button onClick={() => setShowAbout(!showAbout)} className="text-xs text-text-muted hover:text-text flex items-center gap-1.5">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          About FreeMusic
+        </button>
+        {showAbout && <div className="mt-3 bg-surface border border-border rounded-xl p-4"><AboutTab /></div>}
+      </div>
     </div>
   )
 }
