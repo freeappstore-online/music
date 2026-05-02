@@ -5,19 +5,34 @@ import type { RadioStation } from '../types'
 import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-const GENRES: { tag: string; count: number }[] = [
-  { tag: 'pop', count: 5243 }, { tag: 'rock', count: 2804 }, { tag: 'news', count: 2604 },
-  { tag: 'classical', count: 1544 }, { tag: 'dance', count: 1389 }, { tag: 'talk', count: 1351 },
-  { tag: 'oldies', count: 1243 }, { tag: '80s', count: 1110 }, { tag: 'jazz', count: 1068 },
-  { tag: 'electronic', count: 866 }, { tag: 'christian', count: 881 }, { tag: 'country', count: 645 },
-  { tag: 'folk', count: 540 }, { tag: 'metal', count: 396 }, { tag: 'soul', count: 380 },
-  { tag: 'indie', count: 368 }, { tag: 'ambient', count: 314 }, { tag: 'sports', count: 313 },
-  { tag: 'blues', count: 286 }, { tag: 'funk', count: 280 }, { tag: 'hiphop', count: 267 },
-  { tag: 'reggae', count: 216 }, { tag: 'r&b', count: 144 }, { tag: 'punk', count: 142 },
-  { tag: 'latin', count: 134 },
+const GENRES: { tag: string; count: number; icon: string }[] = [
+  { tag: 'pop', count: 5243, icon: '🎤' }, { tag: 'rock', count: 2804, icon: '🎸' }, { tag: 'news', count: 2604, icon: '📰' },
+  { tag: 'classical', count: 1544, icon: '🎼' }, { tag: 'dance', count: 1389, icon: '💃' }, { tag: 'talk', count: 1351, icon: '🎙️' },
+  { tag: 'oldies', count: 1243, icon: '📻' }, { tag: '80s', count: 1110, icon: '🕺' }, { tag: 'jazz', count: 1068, icon: '🎷' },
+  { tag: 'christian', count: 881, icon: '✝️' }, { tag: 'electronic', count: 866, icon: '🎧' }, { tag: 'country', count: 645, icon: '🤠' },
+  { tag: 'folk', count: 540, icon: '🪕' }, { tag: 'metal', count: 396, icon: '🤘' }, { tag: 'soul', count: 380, icon: '💜' },
+  { tag: 'indie', count: 368, icon: '🎵' }, { tag: 'ambient', count: 314, icon: '🌊' }, { tag: 'sports', count: 313, icon: '⚽' },
+  { tag: 'blues', count: 286, icon: '🎸' }, { tag: 'funk', count: 280, icon: '🪩' }, { tag: 'hiphop', count: 267, icon: '🎤' },
+  { tag: 'reggae', count: 216, icon: '🌴' }, { tag: 'r&b', count: 144, icon: '💜' }, { tag: 'punk', count: 142, icon: '⚡' },
+  { tag: 'latin', count: 134, icon: '💃' },
 ]
-const COUNTRIES = ['United States', 'United Kingdom', 'Germany', 'France', 'Brazil', 'Japan', 'Spain', 'Italy', 'Canada', 'Australia', 'Russia', 'Mexico', 'India', 'Netherlands', 'Poland', 'Greece', 'China', 'Turkey', 'Argentina', 'South Korea']
-const LANGUAGES = ['english', 'spanish', 'german', 'french', 'russian', 'italian', 'portuguese', 'chinese', 'japanese', 'arabic', 'dutch', 'polish', 'greek', 'turkish', 'korean', 'hindi']
+const COUNTRIES: { name: string; flag: string }[] = [
+  { name: 'United States', flag: '🇺🇸' }, { name: 'United Kingdom', flag: '🇬🇧' }, { name: 'Germany', flag: '🇩🇪' },
+  { name: 'France', flag: '🇫🇷' }, { name: 'Brazil', flag: '🇧🇷' }, { name: 'Japan', flag: '🇯🇵' },
+  { name: 'Spain', flag: '🇪🇸' }, { name: 'Italy', flag: '🇮🇹' }, { name: 'Canada', flag: '🇨🇦' },
+  { name: 'Australia', flag: '🇦🇺' }, { name: 'Russia', flag: '🇷🇺' }, { name: 'Mexico', flag: '🇲🇽' },
+  { name: 'India', flag: '🇮🇳' }, { name: 'Netherlands', flag: '🇳🇱' }, { name: 'Poland', flag: '🇵🇱' },
+  { name: 'Greece', flag: '🇬🇷' }, { name: 'China', flag: '🇨🇳' }, { name: 'Turkey', flag: '🇹🇷' },
+  { name: 'Argentina', flag: '🇦🇷' }, { name: 'South Korea', flag: '🇰🇷' },
+]
+const LANGUAGES: { code: string; flag: string }[] = [
+  { code: 'english', flag: '🇬🇧' }, { code: 'spanish', flag: '🇪🇸' }, { code: 'german', flag: '🇩🇪' },
+  { code: 'french', flag: '🇫🇷' }, { code: 'russian', flag: '🇷🇺' }, { code: 'italian', flag: '🇮🇹' },
+  { code: 'portuguese', flag: '🇧🇷' }, { code: 'chinese', flag: '🇨🇳' }, { code: 'japanese', flag: '🇯🇵' },
+  { code: 'arabic', flag: '🇸🇦' }, { code: 'dutch', flag: '🇳🇱' }, { code: 'polish', flag: '🇵🇱' },
+  { code: 'greek', flag: '🇬🇷' }, { code: 'turkish', flag: '🇹🇷' }, { code: 'korean', flag: '🇰🇷' },
+  { code: 'hindi', flag: '🇮🇳' },
+]
 const DECADES: { tag: string; count: number }[] = [
   { tag: '80s', count: 1110 }, { tag: '90s', count: 876 }, { tag: '70s', count: 527 },
   { tag: '60s', count: 241 }, { tag: '00s', count: 162 },
@@ -133,13 +148,13 @@ export function RadioTab() {
 
           <div className="p-3">
             {activeSection === 'genre' && (
-              <div className="flex gap-1.5 flex-wrap">{GENRES.map(g => <Pill key={g.tag} label={`${g.tag} (${g.count})`} active={genre === g.tag} onClick={() => setGenre(genre === g.tag ? '' : g.tag)} />)}</div>
+              <div className="flex gap-1.5 flex-wrap">{GENRES.map(g => <Pill key={g.tag} label={`${g.icon} ${g.tag} (${g.count})`} active={genre === g.tag} onClick={() => setGenre(genre === g.tag ? '' : g.tag)} />)}</div>
             )}
             {activeSection === 'country' && (
-              <div className="flex gap-1.5 flex-wrap">{COUNTRIES.map(c => <Pill key={c} label={c} active={country === c} onClick={() => setCountry(country === c ? '' : c)} />)}</div>
+              <div className="flex gap-1.5 flex-wrap">{COUNTRIES.map(c => <Pill key={c.name} label={`${c.flag} ${c.name}`} active={country === c.name} onClick={() => setCountry(country === c.name ? '' : c.name)} />)}</div>
             )}
             {activeSection === 'language' && (
-              <div className="flex gap-1.5 flex-wrap">{LANGUAGES.map(l => <Pill key={l} label={l.charAt(0).toUpperCase() + l.slice(1)} active={language === l} onClick={() => setLanguage(language === l ? '' : l)} />)}</div>
+              <div className="flex gap-1.5 flex-wrap">{LANGUAGES.map(l => <Pill key={l.code} label={`${l.flag} ${l.code.charAt(0).toUpperCase() + l.code.slice(1)}`} active={language === l.code} onClick={() => setLanguage(language === l.code ? '' : l.code)} />)}</div>
             )}
             {activeSection === 'sort' && (
               <div className="flex gap-1.5 flex-wrap">{SORT_OPTIONS.map(s => <Pill key={s.id} label={s.label} active={sortBy === s.id} onClick={() => setSortBy(s.id)} />)}</div>

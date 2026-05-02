@@ -25,9 +25,13 @@ export function setFontSize(size: number) {
 
 export function getFontSize(): number { return load().fontSize }
 
-const FONT_SCALE = ['0.85', '1', '1.15', '1.3']
+const FONT_SCALE = [0.88, 1, 1.12, 1.25]
 
 export function applyFontSize(size?: number) {
   const s = size ?? load().fontSize
-  document.documentElement.style.fontSize = `${parseFloat(FONT_SCALE[s]) * 16}px`
+  const scale = FONT_SCALE[s]
+  // Use zoom to scale everything (including px values)
+  document.documentElement.style.zoom = String(scale)
+  // Fallback for Firefox which doesn't support zoom
+  document.documentElement.style.fontSize = `${scale * 16}px`
 }

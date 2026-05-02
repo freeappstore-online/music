@@ -2,13 +2,12 @@ import { useState, useEffect, useCallback } from 'react'
 import { getFavoriteTracks, getFavoriteStations, getBlacklistedTrackIds, getBlacklistedStationIds, unblacklist, getBlacklistCount } from '../services/favorites'
 import { getHistory, clearHistory, type HistoryEntry } from '../services/history'
 import { getPlaylists, createPlaylist, deletePlaylist, type Playlist } from '../services/playlists'
-import { getFontSize, setFontSize, applyFontSize } from '../services/settings'
 import { player } from '../services/player'
 import type { Track, RadioStation } from '../types'
 import { TrackRow } from './TrackRow'
 import { StationRow } from './StationRow'
 
-type Section = 'favorites' | 'playlists' | 'history' | 'blacklist' | 'settings'
+type Section = 'favorites' | 'playlists' | 'history' | 'blacklist'
 
 export function LibraryTab() {
   const [section, setSection] = useState<Section>('favorites')
@@ -59,7 +58,6 @@ export function LibraryTab() {
           ['playlists', 'Playlists'],
           ['history', 'Last Played'],
           ['blacklist', `Blocked (${blacklistCount})`],
-          ['settings', 'Settings'],
         ] as [Section, string][]).map(([id, label]) => (
           <button
             key={id}
@@ -183,41 +181,6 @@ export function LibraryTab() {
         )
       )}
 
-      {/* Settings */}
-      {section === 'settings' && (
-        <div className="px-4 md:px-6">
-          <h2 className="text-sm font-bold mb-3">Font Size</h2>
-          <div className="flex gap-2 mb-6">
-            {[
-              { size: 0, label: 'S' },
-              { size: 1, label: 'M' },
-              { size: 2, label: 'L' },
-              { size: 3, label: 'XL' },
-            ].map(opt => (
-              <button
-                key={opt.size}
-                onClick={() => { setFontSize(opt.size); applyFontSize(opt.size) }}
-                className={`w-12 h-12 rounded-xl font-bold transition-colors ${
-                  getFontSize() === opt.size ? 'bg-accent text-base' : 'bg-surface text-text-muted hover:text-text'
-                }`}
-                style={{ fontSize: `${[12, 14, 17, 20][opt.size]}px` }}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="border-t border-border pt-4">
-            <h2 className="text-sm font-bold mb-2">About</h2>
-            <p className="text-xs text-text-muted mb-3">FreeMusic — free music for everyone. No ads, no subscription, no tracking.</p>
-            <div className="flex gap-3">
-              <a href="legal/privacy.html" target="_blank" className="text-xs text-text-dim hover:text-accent">Privacy</a>
-              <a href="legal/terms.html" target="_blank" className="text-xs text-text-dim hover:text-accent">Terms</a>
-              <a href="https://github.com/FreeMusicApp/freemusic" target="_blank" className="text-xs text-text-dim hover:text-accent">GitHub</a>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   )
