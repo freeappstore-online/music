@@ -43,10 +43,11 @@ export function ClassicalTab() {
     setSelected(cat)
     setLoading(true)
     setSearchResults([])
-    const t = await getClassicalTracks(cat, 20)
+    const t = await getClassicalTracks(cat, 20, (more) => setTracks(more))
     setTracks(t)
     setLoading(false)
     if (t.length > 0) player.playTrack(t[0], t, 0)
+    // IA results will trickle in via onMore callback
   }
 
   const handleRadio = async () => {

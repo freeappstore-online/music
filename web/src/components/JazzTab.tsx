@@ -43,7 +43,7 @@ export function JazzTab() {
     setSelected(cat)
     setLoading(true)
     setSearchResults([])
-    const t = await getJazzTracks(cat, 20)
+    const t = await getJazzTracks(cat, 20, (more) => setTracks(more))
     setTracks(t)
     setLoading(false)
     if (t.length > 0) player.playTrack(t[0], t, 0)

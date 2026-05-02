@@ -44,6 +44,21 @@ const PORTRAITS: Record<string, string> = {
   wagner: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/RichardWagner.jpg/330px-RichardWagner.jpg',
   grieg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Edvard_Grieg_portrait_%28cropped%29.jpg/330px-Edvard_Grieg_portrait_%28cropped%29.jpg',
   'saint-saens': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saint-Sa%C3%ABns-circa-1880.jpg/330px-Saint-Sa%C3%ABns-circa-1880.jpg',
+  prokofiev: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Sergei_Prokofiev_circa_1918_over_Chair_Bain.jpg/330px-Sergei_Prokofiev_circa_1918_over_Chair_Bain.jpg',
+  stravinsky: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Igor_Stravinsky_LOC_32392u.jpg/330px-Igor_Stravinsky_LOC_32392u.jpg',
+  sibelius: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Jean_Sibelius_circa_1898-1900_%283x4_cropped%29.jpg/330px-Jean_Sibelius_circa_1898-1900_%283x4_cropped%29.jpg',
+  bartok: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Bart%C3%B3k_B%C3%A9la_1927.jpg/330px-Bart%C3%B3k_B%C3%A9la_1927.jpg',
+  monteverdi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Bernardo_Strozzi_-_Claudio_Monteverdi_%28c.1630%29.jpg/330px-Bernardo_Strozzi_-_Claudio_Monteverdi_%28c.1630%29.jpg',
+  telemann: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Telemann.jpg/330px-Telemann.jpg',
+  purcell: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Henry_Purcell_Closterman.jpg/330px-Henry_Purcell_Closterman.jpg',
+  paganini: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Paganini.jpeg/330px-Paganini.jpeg',
+  schumann: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Robert_Schumann_1839.jpg/330px-Robert_Schumann_1839.jpg',
+  berlioz: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Hector-Berlioz-1845.png/330px-Hector-Berlioz-1845.png',
+  satie: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Ericsatie.jpg/330px-Ericsatie.jpg',
+  'rimsky-korsakov': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Walentin_Alexandrowitsch_Serow_004_%28cropped_3x4%29.jpg/330px-Walentin_Alexandrowitsch_Serow_004_%28cropped_3x4%29.jpg',
+  borodin: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Borodin.jpg/330px-Borodin.jpg',
+  copland: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Aaron_Copland_1970.JPG/330px-Aaron_Copland_1970.JPG',
+  glass: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg/330px-Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg',
 }
 
 function composer(id: string, label: string, icon: string, fullName: string, years: string): ClassicalCategory {
@@ -100,6 +115,21 @@ export const COMPOSERS: ClassicalCategory[] = [
   composer('wagner', 'Wagner', '🎭', 'Richard Wagner', '1813–1883'),
   composer('grieg', 'Grieg', '🏔️', 'Edvard Grieg', '1843–1907'),
   composer('saint-saens', 'Saint-Saëns', '🎵', 'Camille Saint-Saëns', '1835–1921'),
+  composer('prokofiev', 'Prokofiev', '🎵', 'Sergei Prokofiev', '1891–1953'),
+  composer('stravinsky', 'Stravinsky', '🔥', 'Igor Stravinsky', '1882–1971'),
+  composer('sibelius', 'Sibelius', '🌲', 'Jean Sibelius', '1865–1957'),
+  composer('bartok', 'Bartók', '🎵', 'Béla Bartók', '1881–1945'),
+  composer('monteverdi', 'Monteverdi', '🏛️', 'Claudio Monteverdi', '1567–1643'),
+  composer('telemann', 'Telemann', '🎵', 'Georg Philipp Telemann', '1681–1767'),
+  composer('purcell', 'Purcell', '👑', 'Henry Purcell', '1659–1695'),
+  composer('paganini', 'Paganini', '🎻', 'Niccolò Paganini', '1782–1840'),
+  composer('schumann', 'Schumann', '🎹', 'Robert Schumann', '1810–1856'),
+  composer('berlioz', 'Berlioz', '🎼', 'Hector Berlioz', '1803–1869'),
+  composer('satie', 'Satie', '🌙', 'Erik Satie', '1866–1925'),
+  composer('rimsky-korsakov', 'Rimsky-Korsakov', '🐝', 'Nikolai Rimsky-Korsakov', '1844–1908'),
+  composer('borodin', 'Borodin', '🎵', 'Alexander Borodin', '1833–1887'),
+  composer('copland', 'Copland', '🇺🇸', 'Aaron Copland', '1900–1990'),
+  composer('glass', 'Philip Glass', '◻️', 'Philip Glass', '1937–'),
 ]
 
 export const INSTRUMENTS: ClassicalCategory[] = [
@@ -145,17 +175,22 @@ export const MOODS: ClassicalCategory[] = [
 
 // ===== Data fetching =====
 
-export async function getClassicalTracks(category: ClassicalCategory, limit = 20): Promise<Track[]> {
-  const [jamendo, ia] = await Promise.all([
-    // Jamendo: always filter by classical tags + optional search
-    advancedSearch({
-      tags: category.jamendoTags,
-      search: category.jamendoSearch,
-    }, limit),
-    // Internet Archive: use precise query with subject:classical
-    searchIA(category.iaQuery, Math.min(limit, 8)),
-  ])
-  return [...jamendo, ...ia].slice(0, limit)
+// Returns Jamendo results fast, then appends IA results via callback
+export async function getClassicalTracks(category: ClassicalCategory, limit = 20, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
+  // Fast: get Jamendo first (faster API)
+  const jamendo = await advancedSearch({
+    tags: category.jamendoTags,
+    search: category.jamendoSearch,
+  }, limit)
+
+  // Background: fetch IA and merge
+  if (onMore) {
+    searchIA(category.iaQuery, Math.min(limit, 8)).then(ia => {
+      if (ia.length > 0) onMore([...jamendo, ...ia].slice(0, limit))
+    })
+  }
+
+  return jamendo
 }
 
 export async function getClassicalRadio(limit = 10): Promise<RadioStation[]> {

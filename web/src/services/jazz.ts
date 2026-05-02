@@ -31,6 +31,11 @@ const PORTRAITS: Record<string, string> = {
   'nina-simone': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Nina_Simone_-1969.jpg/330px-Nina_Simone_-1969.jpg',
   'wes-montgomery': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Wes_Montgomery_%281967_Gibson_portrait%29.jpg/330px-Wes_Montgomery_%281967_Gibson_portrait%29.jpg',
   'django-reinhardt': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Django_Reinhardt_%28Gottlieb_07301%29.jpg/330px-Django_Reinhardt_%28Gottlieb_07301%29.jpg',
+  'ornette-coleman': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Ornette-Coleman-2008-Heidelberg-schindelbeck.jpg/330px-Ornette-Coleman-2008-Heidelberg-schindelbeck.jpg',
+  'benny-goodman': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Benny_Goodman_1942.jpg/330px-Benny_Goodman_1942.jpg',
+  'mccoy-tyner': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Mccoy_Tyner_1973_gh_%28cropped%29.jpg/330px-Mccoy_Tyner_1973_gh_%28cropped%29.jpg',
+  'keith-jarrett': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Keith_Jarrett.jpg/330px-Keith_Jarrett.jpg',
+  'pharoah-sanders': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Pharoah_Sanders_photo.jpg/330px-Pharoah_Sanders_photo.jpg',
 }
 
 function artist(id: string, label: string, icon: string, fullName: string, years: string): JazzCategory {
@@ -77,6 +82,18 @@ export const ARTISTS: JazzCategory[] = [
   artist('coleman-hawkins', 'Coleman Hawkins', '🎷', 'Coleman Hawkins', '1904–1969'),
   artist('sonny-rollins', 'Sonny Rollins', '🎷', 'Sonny Rollins', '1930–'),
   artist('wynton-marsalis', 'Wynton Marsalis', '🎺', 'Wynton Marsalis', '1961–'),
+  artist('ornette-coleman', 'Ornette Coleman', '🎷', 'Ornette Coleman', '1930–2015'),
+  artist('benny-goodman', 'Benny Goodman', '🎵', 'Benny Goodman', '1909–1986'),
+  artist('sarah-vaughan', 'Sarah Vaughan', '🎤', 'Sarah Vaughan', '1924–1990'),
+  artist('cannonball-adderley', 'Cannonball Adderley', '🎷', 'Cannonball Adderley', '1928–1975'),
+  artist('dexter-gordon', 'Dexter Gordon', '🎷', 'Dexter Gordon', '1923–1990'),
+  artist('mccoy-tyner', 'McCoy Tyner', '🎹', 'McCoy Tyner', '1938–2020'),
+  artist('chick-corea', 'Chick Corea', '🎹', 'Chick Corea', '1941–2021'),
+  artist('pat-metheny', 'Pat Metheny', '🎸', 'Pat Metheny', '1954–'),
+  artist('keith-jarrett', 'Keith Jarrett', '🎹', 'Keith Jarrett', '1945–'),
+  artist('wayne-shorter', 'Wayne Shorter', '🎷', 'Wayne Shorter', '1933–2023'),
+  artist('max-roach', 'Max Roach', '🥁', 'Max Roach', '1924–2007'),
+  artist('pharoah-sanders', 'Pharoah Sanders', '🎷', 'Pharoah Sanders', '1940–2022'),
 ]
 
 export const STYLES: JazzCategory[] = [
@@ -130,12 +147,16 @@ export const ERAS: JazzCategory[] = [
 
 // ===== Data fetching =====
 
-export async function getJazzTracks(category: JazzCategory, limit = 20): Promise<Track[]> {
-  const [jamendo, ia] = await Promise.all([
-    advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit),
-    searchIA(category.iaQuery, Math.min(limit, 8)),
-  ])
-  return [...jamendo, ...ia].slice(0, limit)
+export async function getJazzTracks(category: JazzCategory, limit = 20, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
+  const jamendo = await advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit)
+
+  if (onMore) {
+    searchIA(category.iaQuery, Math.min(limit, 8)).then(ia => {
+      if (ia.length > 0) onMore([...jamendo, ...ia].slice(0, limit))
+    })
+  }
+
+  return jamendo
 }
 
 export async function getJazzRadio(limit = 10): Promise<RadioStation[]> {
