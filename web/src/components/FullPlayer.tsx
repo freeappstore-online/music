@@ -86,9 +86,9 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
                 else if (ps.station) { blacklistStation(ps.station); onClose() }
               }}
               aria-label="Never play again"
-              className="p-2 rounded-full hover:bg-white/6"
+              className="p-3 rounded-full hover:bg-red-500/10 active:bg-red-500/20 transition-colors"
             >
-              <ThumbDownIcon className="w-6 h-6" />
+              <ThumbDownIcon className="w-7 h-7" />
             </button>
             <button
               onClick={() => {
@@ -96,7 +96,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
                 else if (ps.station) setFav(toggleStationFavorite(ps.station))
               }}
               aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
-              className="p-2 rounded-full hover:bg-white/6"
+              className="p-3 rounded-full hover:bg-accent/10 active:bg-accent/20 transition-colors"
             >
               <HeartIcon filled={fav} className="w-7 h-7" />
             </button>

@@ -101,11 +101,9 @@ class AudioPlayerService {
   }
 
   private notify() {
-    const snapshot: PlayerState = {
-      ...this.state,
-      queue: this.state.queue, // read-only reference is fine for rendering
-    }
-    this.listeners.forEach(fn => fn(snapshot))
+    // Create a new object so useSyncExternalStore detects the change
+    this.state = { ...this.state }
+    this.listeners.forEach(fn => fn(this.state))
   }
 
   playTrack(track: Track, queue?: Track[], index?: number) {
