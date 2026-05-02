@@ -109,9 +109,23 @@ export const WORKS = [
 ].sort((a, b) => a.year - b.year) as Work[]
 
 export async function searchWork(work: Work, limit = 15): Promise<Track[]> {
+  // Use composer name + work title for precise matching
+  const jamendoQuery = `${work.composer} ${work.searchQuery}`
+  const iaQuery = `"${work.searchQuery}" creator:(${work.composer.toLowerCase()}) subject:classical mediatype:audio`
+
   const [jamendo, ia] = await Promise.all([
-    advancedSearch({ search: work.searchQuery, tags: 'classical' }, limit),
-    searchIA(`${work.searchQuery} subject:classical mediatype:audio`, 8),
+    advancedSearch({ search: jamendoQuery, tags: 'classical' }, limit),
+    searchIA(iaQuery, 10),
   ])
-  return [...jamendo, ...ia].slice(0, limit)
+
+  // Filter results: keep only tracks that mention the composer name
+  const composerLower = work.composer.toLowerCase()
+  const filtered = [...jamendo, ...ia].filter(t =>
+    t.artist.toLowerCase().includes(composerLower) ||
+    t.title.toLowerCase().includes(composerLower) ||
+    t.album?.toLowerCase().includes(composerLower)
+  )
+
+  // Fall back to unfiltered if nothing matches (some tracks have performer names, not composer)
+  return filtered.length > 0 ? filtered.slice(0, limit) : [...jamendo, ...ia].slice(0, limit)
 }
