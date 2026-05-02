@@ -3,8 +3,10 @@ import { player } from '../services/player'
 import { usePlayer } from '../hooks'
 import { formatTime } from '../lib/format'
 import { Artwork } from './ui/Artwork'
+import { HeartIcon, ThumbDownIcon } from './ui/Icons'
 import { Spinner } from './ui/Spinner'
 import { FullPlayer } from './FullPlayer'
+import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite, blacklistTrack, blacklistStation } from '../services/favorites'
 
 export function MiniPlayer() {
   const ps = usePlayer()
@@ -75,7 +77,9 @@ export function MiniPlayer() {
               </div>
             )}
           </div>
-          <div className="w-72 flex-shrink-0" />
+          <div className="w-72 flex-shrink-0 flex items-center justify-end gap-2">
+            <DesktopRatingBtns />
+          </div>
         </div>
       </div>
 
@@ -99,4 +103,34 @@ function NextIcon() {
 }
 function PrevIcon() {
   return <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" /></svg>
+}
+
+function DesktopRatingBtns() {
+  const ps = usePlayer()
+  const fav = ps.track ? isTrackFavorite(ps.track.id) : ps.station ? isStationFavorite(ps.station.id) : false
+
+  return (
+    <>
+      <button
+        className="p-2 rounded-full hover:bg-white/6 text-muted hover:text-txt transition-colors"
+        onClick={() => {
+          if (ps.track) { blacklistTrack(ps.track); player.next() }
+          else if (ps.station) { blacklistStation(ps.station) }
+        }}
+        aria-label="Never play again"
+      >
+        <ThumbDownIcon className="w-[18px] h-[18px]" />
+      </button>
+      <button
+        className="p-2 rounded-full hover:bg-white/6 transition-colors"
+        onClick={() => {
+          if (ps.track) toggleTrackFavorite(ps.track)
+          else if (ps.station) toggleStationFavorite(ps.station)
+        }}
+        aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
+      >
+        <HeartIcon filled={fav} className="w-[18px] h-[18px]" />
+      </button>
+    </>
+  )
 }

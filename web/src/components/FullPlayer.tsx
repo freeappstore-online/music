@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { player } from '../services/player'
 import { usePlayer } from '../hooks'
 import { formatTime } from '../lib/format'
-import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite } from '../services/favorites'
+import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite, blacklistTrack, blacklistStation } from '../services/favorites'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon } from './ui/Icons'
+import { HeartIcon, ThumbDownIcon } from './ui/Icons'
 
 export function FullPlayer({ onClose }: { onClose: () => void }) {
   const ps = usePlayer()
@@ -78,16 +78,29 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             )}
           </div>
 
-          {/* Favorite */}
-          <button
-            onClick={() => {
-              if (ps.track) setFav(toggleTrackFavorite(ps.track))
-              else if (ps.station) setFav(toggleStationFavorite(ps.station))
-            }}
-            aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
-          >
-            <HeartIcon filled={fav} className="w-7 h-7" />
-          </button>
+          {/* Like / Dislike */}
+          <div className="flex items-center gap-8">
+            <button
+              onClick={() => {
+                if (ps.track) { blacklistTrack(ps.track); player.next() }
+                else if (ps.station) { blacklistStation(ps.station); onClose() }
+              }}
+              aria-label="Never play again"
+              className="p-2 rounded-full hover:bg-white/6"
+            >
+              <ThumbDownIcon className="w-6 h-6" />
+            </button>
+            <button
+              onClick={() => {
+                if (ps.track) setFav(toggleTrackFavorite(ps.track))
+                else if (ps.station) setFav(toggleStationFavorite(ps.station))
+              }}
+              aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
+              className="p-2 rounded-full hover:bg-white/6"
+            >
+              <HeartIcon filled={fav} className="w-7 h-7" />
+            </button>
+          </div>
         </div>
       </div>
 
