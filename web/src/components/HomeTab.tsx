@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getTrending, getByGenre } from '../services/jamendo'
-import { getFeatured as getIAFeatured } from '../services/archive'
+import { getFeatured as getIAFeatured, getFreeMusicArchive } from '../services/archive'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
+import { getSomaFMChannels } from '../services/somafm'
 import { getFavoriteTracks, getFavoriteStations, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
@@ -14,7 +15,9 @@ import { MoodGrid } from './home/MoodGrid'
 export function HomeTab() {
   const [tracks, setTracks] = useState<Track[]>([])
   const [classical, setClassical] = useState<Track[]>([])
+  const [fma, setFma] = useState<Track[]>([])
   const [topStations, setTopStations] = useState<RadioStation[]>([])
+  const [somaStations, setSomaStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(true)
   const [showGenrePicker, setShowGenrePicker] = useState(false)
 
@@ -24,14 +27,18 @@ export function HomeTab() {
 
   useEffect(() => {
     const load = async () => {
-      const [jamendo, stations, ia] = await Promise.all([
+      const [jamendo, stations, ia, fmaResult, soma] = await Promise.all([
         getTrending(20),
         getTopStations(12),
         getIAFeatured('classical', 10),
+        getFreeMusicArchive(10),
+        getSomaFMChannels(),
       ])
       setTracks(jamendo)
       setTopStations(stations)
       setClassical(ia)
+      setFma(fmaResult)
+      setSomaStations(soma)
       setLoading(false)
     }
     load()
@@ -78,7 +85,9 @@ export function HomeTab() {
       ) : (
         <>
           <TrackGrid tracks={tracks} title="Trending" showPlayAll />
-          <StationGrid stations={topStations} title="Live Radio" />
+          <StationGrid stations={somaStations} title="SomaFM Curated Radio" />
+          <StationGrid stations={topStations} title="Popular Stations" />
+          <TrackGrid tracks={fma} title="Free Music Archive" showPlayAll />
           <TrackGrid tracks={classical} title="Classical & Archive" showPlayAll />
         </>
       )}

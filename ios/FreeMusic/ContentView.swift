@@ -26,13 +26,13 @@ struct ContentView: View {
                     .tabItem {
                         Label("Radio", systemImage: "radio.fill")
                     }
+                MoodsTab()
+                    .tabItem {
+                        Label("Moods", systemImage: "face.smiling.fill")
+                    }
                 FavoritesTab()
                     .tabItem {
                         Label("Favorites", systemImage: "heart.fill")
-                    }
-                AboutTab()
-                    .tabItem {
-                        Label("About", systemImage: "info.circle")
                     }
             }
             .tint(Color.accentColor)
