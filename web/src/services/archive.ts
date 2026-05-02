@@ -39,6 +39,10 @@ export async function searchTracks(query: string, limit = 10): Promise<Track[]> 
   }
 }
 
+export function getFeatured(genre: string, limit = 8): Promise<Track[]> {
+  return searchTracks(`subject:${genre} format:mp3`, limit)
+}
+
 function parseDuration(length?: string): number {
   if (!length) return 0
   const parts = length.split(':')

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getTrending, getByGenre, isAvailable } from '../services/jamendo'
 import { getPopular as getCCPopular, getByTag } from '../services/ccmixter'
+import { getFeatured as getIAFeatured } from '../services/archive'
 import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
 import { getFavoriteTracks, getFavoriteStations, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
 import type { Track, RadioStation } from '../types'
@@ -26,6 +27,7 @@ const GENRE_COLORS: Record<string, string> = {
 
 export function HomeTab() {
   const [tracks, setTracks] = useState<Track[]>([])
+  const [classical, setClassical] = useState<Track[]>([])
   const [topStations, setTopStations] = useState<RadioStation[]>([])
   const [genreContent, setGenreContent] = useState<{ tracks: Track[]; stations: RadioStation[] }>({ tracks: [], stations: [] })
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
@@ -39,13 +41,15 @@ export function HomeTab() {
 
   useEffect(() => {
     const load = async () => {
-      const [jamendo, cc, s] = await Promise.all([
+      const [jamendo, cc, s, ia] = await Promise.all([
         jamendoOk ? getTrending(20) : Promise.resolve([]),
         getCCPopular(20),
-        getTopStations(10),
+        getTopStations(12),
+        getIAFeatured('classical', 10),
       ])
       setTracks(jamendo.length > 0 ? jamendo : cc)
       setTopStations(s)
+      setClassical(ia)
       setLoading(false)
     }
     load()
@@ -85,13 +89,15 @@ export function HomeTab() {
     if (selectedGenre === genre) { setSelectedGenre(null); setGenreContent({ tracks: [], stations: [] }); return }
     setSelectedGenre(genre)
     setGenreContent({ tracks: [], stations: [] })
-    const [stations, jTracks, ccTracks] = await Promise.all([
+    const [stations, jTracks, ccTracks, iaTracks] = await Promise.all([
       getStationsByGenre(genre, 20),
       jamendoOk ? getByGenre(genre, 20) : Promise.resolve([]),
       getByTag(genre, 10),
+      getIAFeatured(genre, 8),
     ])
+    const allTracks = [...(jTracks.length > 0 ? jTracks : []), ...ccTracks, ...iaTracks]
     setGenreContent({
-      tracks: jTracks.length > 0 ? jTracks : ccTracks,
+      tracks: allTracks.length > 0 ? allTracks : ccTracks,
       stations,
     })
   }
@@ -224,6 +230,26 @@ export function HomeTab() {
       )}
 
       {/* Browse by Genre */}
+      {/* Classical / Internet Archive */}
+      {classical.length > 0 && (
+        <>
+          <div className="flex items-center justify-between px-4 md:px-6 mb-3 mt-4">
+            <h2 className="text-sm md:text-base font-bold">Classical &amp; Archive</h2>
+            <button onClick={() => { if (classical.length > 0) player.playTrack(classical[0], classical, 0) }} className="text-[11px] md:text-xs text-accent font-semibold hover:underline">Play All</button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto px-4 pb-3 snap-x md:hidden">
+            {classical.map((track, i) => (
+              <ArtworkCard key={track.id} track={track} onClick={() => player.playTrack(track, classical, i)} />
+            ))}
+          </div>
+          <div className="hidden md:grid grid-cols-4 lg:grid-cols-5 gap-4 px-6">
+            {classical.slice(0, 10).map((track, i) => (
+              <ArtworkCard key={track.id} track={track} onClick={() => player.playTrack(track, classical, i)} desktop />
+            ))}
+          </div>
+        </>
+      )}
+
       <h2 className="text-sm md:text-base font-bold px-4 md:px-6 mb-2 mt-4">Browse Genre</h2>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-1.5 md:gap-2 px-4 md:px-6">
         {GENRES.map(genre => (
