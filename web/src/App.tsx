@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import { HomeTab } from './components/HomeTab'
 import { SearchTab } from './components/SearchTab'
+import { DiscoverTab } from './components/DiscoverTab'
 import { RadioTab } from './components/RadioTab'
 import { LibraryTab } from './components/LibraryTab'
 import { AboutTab } from './components/AboutTab'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
-type Tab = 'home' | 'search' | 'radio' | 'library'
+type Tab = 'home' | 'search' | 'radio' | 'discover' | 'library'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'home', label: 'Home', icon: 'home' },
   { id: 'search', label: 'Search', icon: 'search' },
+  { id: 'discover', label: 'Discover', icon: 'discover' },
   { id: 'radio', label: 'Radio', icon: 'radio' },
   { id: 'library', label: 'Library', icon: 'library' },
 ]
@@ -51,7 +53,6 @@ export default function App() {
                 {t.label}
               </button>
             ))}
-            <button onClick={() => setShowAbout(true)} className="px-3 py-1.5 rounded-lg text-sm font-medium text-text-muted hover:text-text hover:bg-white/4 transition-colors">About</button>
           </nav>
         </div>
       </header>
@@ -61,6 +62,7 @@ export default function App() {
         <div className="max-w-5xl mx-auto">
           <div className={tab === 'home' ? '' : 'hidden'}><HomeTab /></div>
           <div className={tab === 'search' ? '' : 'hidden'}><SearchTab /></div>
+          <div className={tab === 'discover' ? '' : 'hidden'}><DiscoverTab /></div>
           <div className={tab === 'radio' ? '' : 'hidden'}><RadioTab /></div>
           <div className={tab === 'library' ? '' : 'hidden'}><LibraryTab /></div>
         </div>
@@ -115,6 +117,8 @@ function TabIcon({ name, size = 24 }: { name: string; size?: number }) {
       return <svg style={s} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
     case 'radio':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
+    case 'discover':
+      return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" /></svg>
     case 'library':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
     default:
