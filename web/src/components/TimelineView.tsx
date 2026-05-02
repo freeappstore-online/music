@@ -86,12 +86,6 @@ const INFLUENCES: [string, string][] = [
   ['debussy', 'duke-ellington'], ['stravinsky', 'charlie-parker'],
 ]
 
-const ERA_COLORS: Record<string, string> = {
-  'Renaissance': 'bg-stone-600', 'Baroque': 'bg-amber-700', 'Classical': 'bg-yellow-600',
-  'Romantic': 'bg-rose-600', 'Modern': 'bg-violet-600',
-  'Early Jazz': 'bg-amber-600', 'Swing Era': 'bg-orange-600', 'Bebop': 'bg-red-600',
-  'Hard Bop': 'bg-blue-600',
-}
 
 const MIN_YEAR = 1550
 const MAX_YEAR = 2030
