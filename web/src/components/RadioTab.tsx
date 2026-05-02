@@ -1,113 +1,189 @@
-import { useEffect, useState } from 'react'
-import { getTopStations, searchStations, getByGenre, getByCountry } from '../services/radio'
+import { useEffect, useState, useRef } from 'react'
+import { getTopStations, advancedSearch, type RadioFilters } from '../services/radio'
+import { getUserTags, addUserTag, removeUserTag } from '../services/usertags'
 import type { RadioStation } from '../types'
 import { StationRow } from './StationRow'
+import { Spinner } from './ui/Spinner'
 
-const GENRES = ['pop', 'rock', 'jazz', 'classical', 'electronic', 'dance', 'hiphop', 'blues', 'oldies', '80s', 'country', 'reggae']
-const COUNTRIES = ['United States', 'United Kingdom', 'Germany', 'France', 'Brazil', 'Japan', 'Spain', 'Italy', 'Canada', 'Australia']
-
-type BrowseMode = 'top' | 'genre' | 'country'
+const GENRES = ['pop', 'rock', 'jazz', 'classical', 'electronic', 'dance', 'hiphop', 'blues', 'oldies', '80s', 'country', 'reggae', 'metal', 'ambient', 'folk', 'latin']
+const COUNTRIES = ['United States', 'United Kingdom', 'Germany', 'France', 'Brazil', 'Japan', 'Spain', 'Italy', 'Canada', 'Australia', 'Russia', 'Mexico', 'India', 'Netherlands']
+const LANGUAGES = ['english', 'spanish', 'german', 'french', 'russian', 'italian', 'portuguese', 'chinese', 'japanese', 'arabic']
 
 export function RadioTab() {
   const [stations, setStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(true)
-  const [query, setQuery] = useState('')
-  const [mode, setMode] = useState<BrowseMode>('top')
-  const [selected, setSelected] = useState<string | null>(null)
+  const [nameQuery, setNameQuery] = useState('')
+  const [genre, setGenre] = useState('')
+  const [country, setCountry] = useState('')
+  const [language, setLanguage] = useState('')
+  const [showFilters, setShowFilters] = useState(false)
+  const [taggingStation, setTaggingStation] = useState<string | null>(null)
+  const [newTag, setNewTag] = useState('')
+  const searchTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  const hasFilters = !!(genre || country || language)
 
   useEffect(() => {
     getTopStations(40).then(s => { setStations(s); setLoading(false) })
   }, [])
 
   const doSearch = async () => {
-    const q = query.trim()
-    if (!q) { loadTop(); return }
     setLoading(true)
-    setSelected(null)
-    const s = await searchStations(q, 40)
-    setStations(s)
+    const filters: RadioFilters = {}
+    if (nameQuery.trim()) filters.name = nameQuery.trim()
+    if (genre) filters.tag = genre
+    if (country) filters.country = country
+    if (language) filters.language = language
+
+    if (!filters.name && !filters.tag && !filters.country && !filters.language) {
+      setStations(await getTopStations(40))
+    } else {
+      setStations(await advancedSearch(filters, 40))
+    }
     setLoading(false)
   }
 
-  const loadTop = async () => {
-    setMode('top'); setSelected(null); setLoading(true)
-    setStations(await getTopStations(40))
-    setLoading(false)
+  const clearFilters = () => {
+    setGenre(''); setCountry(''); setLanguage(''); setNameQuery('')
+    setLoading(true)
+    getTopStations(40).then(s => { setStations(s); setLoading(false) })
   }
 
-  const loadGenre = async (genre: string) => {
-    setMode('genre'); setSelected(genre); setLoading(true); setQuery('')
-    setStations(await getByGenre(genre, 40))
-    setLoading(false)
-  }
+  // Debounced search on filter change
+  useEffect(() => {
+    clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(doSearch, 200)
+    return () => clearTimeout(searchTimer.current)
+  }, [genre, country, language])
 
-  const loadCountry = async (country: string) => {
-    setMode('country'); setSelected(country); setLoading(true); setQuery('')
-    setStations(await getByCountry(country, 40))
-    setLoading(false)
+  const handleAddTag = (stationId: string) => {
+    if (newTag.trim()) {
+      addUserTag(stationId, newTag.trim().toLowerCase())
+      setNewTag('')
+      setTaggingStation(null)
+    }
   }
 
   return (
     <div className="pb-4">
-      <h1 className="text-2xl md:text-3xl font-bold px-4 md:px-6 pt-4 md:pt-8 pb-3">Radio</h1>
+      <h1 className="text-2xl md:text-3xl font-bold px-4 md:px-6 pt-4 md:pt-8 pb-1">Radio</h1>
+      <p className="text-xs text-muted px-4 md:px-6 pb-3">30,000+ stations worldwide</p>
 
-      {/* Search */}
-      <form className="px-4 md:px-6 mb-3" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
+      {/* Search bar */}
+      <form className="px-4 md:px-6 mb-2" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
         <div className="flex items-center gap-2 bg-surface rounded-xl px-3 py-2.5 border border-border">
           <svg className="w-5 h-5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
             type="search"
-            placeholder="Search stations..."
+            placeholder="Search by name..."
             className="flex-1 bg-transparent outline-none text-sm"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={nameQuery}
+            onChange={(e) => setNameQuery(e.target.value)}
+            aria-label="Search stations by name"
           />
+          <button
+            type="button"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`p-1.5 rounded-lg transition-colors ${showFilters || hasFilters ? 'bg-accent/15 text-accent' : 'text-muted hover:text-txt'}`}
+            aria-label="Toggle filters"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+          </button>
         </div>
       </form>
 
-      {/* Browse filters */}
-      <div className="px-4 md:px-6 mb-1">
-        <div className="flex gap-2 mb-2">
-          <button onClick={loadTop} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'top' && !selected ? 'bg-accent text-bg' : 'bg-surface text-muted'}`}>Top</button>
-          <button onClick={() => setMode(mode === 'genre' ? 'top' : 'genre')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'genre' ? 'bg-accent text-bg' : 'bg-surface text-muted'}`}>Genre</button>
-          <button onClick={() => setMode(mode === 'country' ? 'top' : 'country')} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${mode === 'country' ? 'bg-accent text-bg' : 'bg-surface text-muted'}`}>Country</button>
+      {/* Active filter chips */}
+      {hasFilters && (
+        <div className="flex gap-1.5 px-4 md:px-6 mb-2 flex-wrap">
+          {genre && <FilterChip label={genre} onRemove={() => setGenre('')} />}
+          {country && <FilterChip label={country} onRemove={() => setCountry('')} />}
+          {language && <FilterChip label={language} onRemove={() => setLanguage('')} />}
+          <button onClick={clearFilters} className="text-[11px] text-muted hover:text-txt px-2 py-1">Clear all</button>
         </div>
+      )}
 
-        {mode === 'genre' && (
-          <div className="flex gap-1.5 overflow-x-auto pb-2 snap-x">
-            {GENRES.map(g => (
-              <button key={g} onClick={() => loadGenre(g)}
-                className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full snap-start transition-colors ${selected === g ? 'bg-accent/20 text-accent ring-1 ring-accent' : 'bg-surface text-muted'}`}>
-                {g === '80s' ? "80's" : g.charAt(0).toUpperCase() + g.slice(1)}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {mode === 'country' && (
-          <div className="flex gap-1.5 overflow-x-auto pb-2 snap-x">
-            {COUNTRIES.map(c => (
-              <button key={c} onClick={() => loadCountry(c)}
-                className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full snap-start whitespace-nowrap transition-colors ${selected === c ? 'bg-accent/20 text-accent ring-1 ring-accent' : 'bg-surface text-muted'}`}>
-                {c}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Filter panel */}
+      {showFilters && (
+        <div className="mx-4 md:mx-6 mb-3 bg-surface border border-border rounded-2xl p-3 space-y-3">
+          <FilterSection label="Genre" items={GENRES} selected={genre} onSelect={(g) => setGenre(genre === g ? '' : g)} />
+          <FilterSection label="Country" items={COUNTRIES} selected={country} onSelect={(c) => setCountry(country === c ? '' : c)} />
+          <FilterSection label="Language" items={LANGUAGES} selected={language} onSelect={(l) => setLanguage(language === l ? '' : l)} capitalize />
+        </div>
+      )}
 
       {/* Results */}
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-        </div>
+        <div className="flex items-center justify-center py-12"><Spinner /></div>
       ) : stations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-muted">
+        <div className="flex flex-col items-center justify-center py-16 text-muted gap-2">
           <span className="text-sm">No stations found</span>
+          {hasFilters && <button onClick={clearFilters} className="text-xs text-accent hover:underline">Clear filters</button>}
         </div>
       ) : (
-        stations.map(station => <StationRow key={station.id} station={station} />)
+        stations.map(station => (
+          <div key={station.id}>
+            <StationRow station={station} />
+            {/* User tags */}
+            <div className="px-4 md:px-6 -mt-1 mb-1 flex items-center gap-1 flex-wrap">
+              {getUserTags(station.id).map(tag => (
+                <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent inline-flex items-center gap-1">
+                  {tag}
+                  <button onClick={() => removeUserTag(station.id, tag)} className="opacity-60 hover:opacity-100">&times;</button>
+                </span>
+              ))}
+              {taggingStation === station.id ? (
+                <form onSubmit={(e) => { e.preventDefault(); handleAddTag(station.id) }} className="inline-flex">
+                  <input
+                    autoFocus
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onBlur={() => { if (!newTag) setTaggingStation(null) }}
+                    placeholder="e.g. ad-free"
+                    className="text-[10px] w-20 bg-white/4 rounded-full px-2 py-0.5 outline-none border border-border"
+                  />
+                </form>
+              ) : (
+                <button
+                  onClick={() => setTaggingStation(station.id)}
+                  className="text-[10px] px-1.5 py-0.5 rounded-full text-muted hover:text-txt hover:bg-white/4 transition-colors"
+                >
+                  + tag
+                </button>
+              )}
+            </div>
+          </div>
+        ))
       )}
     </div>
+  )
+}
+
+function FilterSection({ label, items, selected, onSelect, capitalize }: {
+  label: string; items: string[]; selected: string; onSelect: (v: string) => void; capitalize?: boolean
+}) {
+  return (
+    <div>
+      <label className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-1.5 block">{label}</label>
+      <div className="flex gap-1.5 flex-wrap">
+        {items.map(item => (
+          <button
+            key={item}
+            onClick={() => onSelect(item)}
+            className={`text-[11px] px-2.5 py-1 rounded-full transition-colors whitespace-nowrap ${selected === item ? 'bg-accent text-bg font-semibold' : 'bg-white/4 text-muted hover:text-txt'}`}
+          >
+            {capitalize ? item.charAt(0).toUpperCase() + item.slice(1) : item}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+  return (
+    <span className="text-[11px] px-2.5 py-1 rounded-full bg-accent/15 text-accent font-medium inline-flex items-center gap-1">
+      {label}
+      <button onClick={onRemove} className="opacity-60 hover:opacity-100">&times;</button>
+    </span>
   )
 }

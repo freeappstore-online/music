@@ -15,6 +15,9 @@ export interface RadioStation {
   streamUrl: string
   genre?: string
   country?: string
+  language?: string
+  bitrate?: number
   favicon?: string
   votes?: number
+  userTags?: string[]
 }
