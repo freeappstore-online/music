@@ -59,6 +59,10 @@ const PORTRAITS: Record<string, string> = {
   borodin: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Borodin.jpg/330px-Borodin.jpg',
   copland: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Aaron_Copland_1970.JPG/330px-Aaron_Copland_1970.JPG',
   glass: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg/330px-Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg',
+  bizet: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Georges_bizet.jpg/330px-Georges_bizet.jpg',
+  rossini: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Rossini_young-circa-1815.jpg',
+  smetana: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Smetana_LCCN2014716851_%28cropped%29.jpg/330px-Smetana_LCCN2014716851_%28cropped%29.jpg',
+  holst: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Gustav-Holst-1921.jpg/330px-Gustav-Holst-1921.jpg',
 }
 
 function composer(id: string, label: string, icon: string, fullName: string, years: string): ClassicalCategory {
@@ -130,6 +134,10 @@ export const COMPOSERS: ClassicalCategory[] = [
   composer('borodin', 'Borodin', '🎵', 'Alexander Borodin', '1833–1887'),
   composer('copland', 'Copland', '🇺🇸', 'Aaron Copland', '1900–1990'),
   composer('glass', 'Philip Glass', '◻️', 'Philip Glass', '1937–'),
+  composer('bizet', 'Bizet', '🎭', 'Georges Bizet', '1838–1875'),
+  composer('rossini', 'Rossini', '🎭', 'Gioachino Rossini', '1792–1868'),
+  composer('smetana', 'Smetana', '🎵', 'Bedřich Smetana', '1824–1884'),
+  composer('holst', 'Holst', '🪐', 'Gustav Holst', '1874–1934'),
 ]
 
 export const INSTRUMENTS: ClassicalCategory[] = [

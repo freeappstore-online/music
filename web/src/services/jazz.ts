@@ -36,6 +36,17 @@ const PORTRAITS: Record<string, string> = {
   'mccoy-tyner': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Mccoy_Tyner_1973_gh_%28cropped%29.jpg/330px-Mccoy_Tyner_1973_gh_%28cropped%29.jpg',
   'keith-jarrett': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Keith_Jarrett.jpg/330px-Keith_Jarrett.jpg',
   'pharoah-sanders': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Pharoah_Sanders_photo.jpg/330px-Pharoah_Sanders_photo.jpg',
+  'herbie-hancock': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Herbie_Hancock_2023.jpg/330px-Herbie_Hancock_2023.jpg',
+  'charles-mingus': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Charles_Mingus_1976_cropped.jpg/330px-Charles_Mingus_1976_cropped.jpg',
+  'art-blakey': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Art_blakey_studio_portrait.jpg/330px-Art_blakey_studio_portrait.jpg',
+  'stan-getz': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Stan_Getz%2C_tenor_saxophonist_at_Kastrup_Airport_CPH%2C_Copenhagen_%28cropped%29.jpg/330px-Stan_Getz%2C_tenor_saxophonist_at_Kastrup_Airport_CPH%2C_Copenhagen_%28cropped%29.jpg',
+  'count-basie': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Count_Basie_%281955_Kriegsmann_portrait_-_square_crop%29.jpg/330px-Count_Basie_%281955_Kriegsmann_portrait_-_square_crop%29.jpg',
+  'sonny-rollins': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sonny_Rollins_2011.jpg/330px-Sonny_Rollins_2011.jpg',
+  'coleman-hawkins': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Coleman_Hawkins.jpg/330px-Coleman_Hawkins.jpg',
+  'wynton-marsalis': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Wynton_Marsalis_2009_09_13.jpg/330px-Wynton_Marsalis_2009_09_13.jpg',
+  'sarah-vaughan': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Sarah_Vaughan_-_William_P._Gottlieb_-_No._1.jpg/330px-Sarah_Vaughan_-_William_P._Gottlieb_-_No._1.jpg',
+  'dexter-gordon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Dexter_Gordon1.jpg/330px-Dexter_Gordon1.jpg',
+  'pat-metheny': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Pat_metheny_orch2.jpg/330px-Pat_metheny_orch2.jpg',
 }
 
 function artist(id: string, label: string, icon: string, fullName: string, years: string): JazzCategory {
