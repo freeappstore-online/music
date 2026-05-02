@@ -176,17 +176,15 @@ export const MOODS: ClassicalCategory[] = [
 // ===== Data fetching =====
 
 // Returns Jamendo results fast, then appends IA results via callback
-export async function getClassicalTracks(category: ClassicalCategory, limit = 20, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
-  // Fast: get Jamendo first (faster API)
+export async function getClassicalTracks(category: ClassicalCategory, limit = 50, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
   const jamendo = await advancedSearch({
     tags: category.jamendoTags,
     search: category.jamendoSearch,
   }, limit)
 
-  // Background: fetch IA and merge
   if (onMore) {
-    searchIA(category.iaQuery, Math.min(limit, 8)).then(ia => {
-      if (ia.length > 0) onMore([...jamendo, ...ia].slice(0, limit))
+    searchIA(category.iaQuery, 20).then(ia => {
+      if (ia.length > 0) onMore([...jamendo, ...ia])
     })
   }
 

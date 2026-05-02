@@ -1,14 +1,7 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main]
-    paths: [web/**]
   workflow_dispatch:
-
-concurrency:
-  group: deploy
-  cancel-in-progress: true
 
 jobs:
   deploy:

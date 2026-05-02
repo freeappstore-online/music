@@ -147,12 +147,12 @@ export const ERAS: JazzCategory[] = [
 
 // ===== Data fetching =====
 
-export async function getJazzTracks(category: JazzCategory, limit = 20, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
+export async function getJazzTracks(category: JazzCategory, limit = 50, onMore?: (tracks: Track[]) => void): Promise<Track[]> {
   const jamendo = await advancedSearch({ tags: category.jamendoTags, search: category.jamendoSearch }, limit)
 
   if (onMore) {
-    searchIA(category.iaQuery, Math.min(limit, 8)).then(ia => {
-      if (ia.length > 0) onMore([...jamendo, ...ia].slice(0, limit))
+    searchIA(category.iaQuery, 20).then(ia => {
+      if (ia.length > 0) onMore([...jamendo, ...ia])
     })
   }
 
