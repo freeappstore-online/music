@@ -67,12 +67,12 @@ export function RadioTab() {
   return (
     <div className="pb-4">
       <h1 className="text-2xl font-bold px-4 pt-4 pb-1">Radio</h1>
-      <p className="text-xs text-muted px-4 pb-3">30,000+ stations worldwide</p>
+      <p className="text-xs text-text-muted px-4 pb-3">30,000+ stations worldwide</p>
 
       {/* Search bar */}
       <form className="px-4 mb-2" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
         <div className="flex items-center gap-2 bg-surface rounded-xl px-3 py-2.5 border border-border">
-          <svg className="w-5 h-5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
             type="search"
             placeholder="Search by name..."
@@ -84,7 +84,7 @@ export function RadioTab() {
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
-            className={`p-1.5 rounded-lg transition-colors ${showFilters || hasFilters ? 'bg-accent/15 text-accent' : 'text-muted hover:text-txt'}`}
+            className={`p-1.5 rounded-lg transition-colors ${showFilters || hasFilters ? 'bg-accent/15 text-accent' : 'text-text-muted hover:text-text'}`}
             aria-label="Toggle filters"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
@@ -98,7 +98,7 @@ export function RadioTab() {
           {genre && <FilterChip label={genre} onRemove={() => setGenre('')} />}
           {country && <FilterChip label={country} onRemove={() => setCountry('')} />}
           {language && <FilterChip label={language} onRemove={() => setLanguage('')} />}
-          <button onClick={clearFilters} className="text-[11px] text-muted hover:text-txt px-2 py-1">Clear all</button>
+          <button onClick={clearFilters} className="text-[11px] text-text-muted hover:text-text px-2 py-1">Clear all</button>
         </div>
       )}
 
@@ -115,7 +115,7 @@ export function RadioTab() {
       {loading ? (
         <div className="flex items-center justify-center py-12"><Spinner /></div>
       ) : stations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-muted gap-2">
+        <div className="flex flex-col items-center justify-center py-16 text-text-muted gap-2">
           <span className="text-sm">No stations found</span>
           {hasFilters && <button onClick={clearFilters} className="text-xs text-accent hover:underline">Clear filters</button>}
         </div>
@@ -145,7 +145,7 @@ export function RadioTab() {
               ) : (
                 <button
                   onClick={() => setTaggingStation(station.id)}
-                  className="text-[10px] px-1.5 py-0.5 rounded-full text-muted hover:text-txt hover:bg-white/4 transition-colors"
+                  className="text-[10px] px-1.5 py-0.5 rounded-full text-text-muted hover:text-text hover:bg-white/4 transition-colors"
                 >
                   + tag
                 </button>
@@ -163,13 +163,13 @@ function FilterSection({ label, items, selected, onSelect, capitalize }: {
 }) {
   return (
     <div>
-      <label className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-1.5 block">{label}</label>
+      <label className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-1.5 block">{label}</label>
       <div className="flex gap-1.5 flex-wrap">
         {items.map(item => (
           <button
             key={item}
             onClick={() => onSelect(item)}
-            className={`text-[11px] px-2.5 py-1 rounded-full transition-colors whitespace-nowrap ${selected === item ? 'bg-accent text-bg font-semibold' : 'bg-white/4 text-muted hover:text-txt'}`}
+            className={`text-[11px] px-2.5 py-1 rounded-full transition-colors whitespace-nowrap ${selected === item ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}
           >
             {capitalize ? item.charAt(0).toUpperCase() + item.slice(1) : item}
           </button>

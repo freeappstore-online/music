@@ -36,7 +36,7 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
         <div className={`text-[13px] font-semibold truncate ${playing ? 'text-accent' : ''}`}>
           {station.name}
         </div>
-        <div className="text-[11px] text-muted truncate mt-0.5">
+        <div className="text-[11px] text-text-muted truncate mt-0.5">
           {genre}{station.country ? ` · ${station.country}` : ''}{station.votes ? ` · ${formatVotes(station.votes)} votes` : ''}
         </div>
       </div>

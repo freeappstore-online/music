@@ -38,7 +38,7 @@ export function TrackRow({ track, queue, index, onBlacklist }: { track: Track; q
         <div className={`text-[13px] font-semibold truncate ${playing ? 'text-accent' : ''}`}>
           {track.title}
         </div>
-        <div className="text-[11px] text-muted truncate mt-0.5">
+        <div className="text-[11px] text-text-muted truncate mt-0.5">
           {track.artist}{dur ? ` · ${dur}` : ''}
         </div>
       </div>

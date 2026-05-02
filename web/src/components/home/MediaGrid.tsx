@@ -35,7 +35,7 @@ export function TrackGrid({ tracks, title, showPlayAll }: { tracks: Track[]; tit
               </div>
             </div>
             <div className="text-xs font-semibold truncate">{track.title}</div>
-            <div className="text-[11px] text-muted truncate">{track.artist}</div>
+            <div className="text-[11px] text-text-muted truncate">{track.artist}</div>
           </button>
         ))}
       </div>

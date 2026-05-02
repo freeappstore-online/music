@@ -83,7 +83,7 @@ export function GenreBrowser() {
           {loading ? (
             <div className="flex items-center justify-center py-6"><Spinner /></div>
           ) : content.tracks.length === 0 && content.stations.length === 0 ? (
-            <p className="text-sm text-muted text-center py-6">No results for this genre</p>
+            <p className="text-sm text-text-muted text-center py-6">No results for this genre</p>
           ) : (
             <>
               {content.tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={content.tracks} index={i} />)}
@@ -105,7 +105,7 @@ export function GenrePicker({ favGenre, onPick }: GenrePickerProps) {
   return (
     <div className="px-4 md:px-6 mb-4">
       <div className="bg-surface border border-white/6 rounded-2xl p-3 md:p-4">
-        <div className="text-xs font-semibold mb-2 text-muted">Pick your genre — one tap to play next time</div>
+        <div className="text-xs font-semibold mb-2 text-text-muted">Pick your genre — one tap to play next time</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
           {GENRES.map(g => (
             <button

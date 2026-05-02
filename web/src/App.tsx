@@ -23,7 +23,7 @@ export default function App() {
   const hasPlayer = ps.track !== null || ps.station !== null
 
   return (
-    <div className="min-h-[100dvh] bg-bg">
+    <div className="min-h-[100dvh] bg-base">
       {/* ===== DESKTOP TOP NAV (hidden on mobile) ===== */}
       <header className="hidden md:block border-b border-white/6">
         <div className="flex items-center justify-between gap-4 max-w-5xl mx-auto px-6 h-14">
@@ -45,7 +45,7 @@ export default function App() {
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   tab === t.id
                     ? 'text-accent bg-accent/10'
-                    : 'text-muted hover:text-txt hover:bg-white/4'
+                    : 'text-text-muted hover:text-text hover:bg-white/4'
                 }`}
               >
                 {t.label}
@@ -70,13 +70,13 @@ export default function App() {
       <MiniPlayer />
 
       {/* ===== MOBILE TAB BAR (hidden on desktop) ===== */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-bg/90 backdrop-blur-xl border-t border-white/6 pb-[env(safe-area-inset-bottom)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-base/90 backdrop-blur-xl border-t border-white/6 pb-[env(safe-area-inset-bottom)]">
         <div className="flex">
           {TABS.map(t => (
             <button
               key={t.id}
               className={`flex-1 flex flex-col items-center py-2.5 gap-0.5 relative ${
-                tab === t.id ? 'text-accent' : 'text-muted'
+                tab === t.id ? 'text-accent' : 'text-text-muted'
               }`}
               onClick={() => setTab(t.id)}
             >

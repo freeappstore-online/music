@@ -25,7 +25,7 @@ export function PlayIcon({ className = 'w-5 h-5' }: { className?: string }) {
 export function HeartIcon({ filled, className = 'w-5 h-5' }: { filled: boolean; className?: string }) {
   return (
     <svg
-      className={`${className} ${filled ? 'text-red-400 fill-red-400' : 'text-muted'}`}
+      className={`${className} ${filled ? 'text-red-400 fill-red-400' : 'text-text-muted'}`}
       fill={filled ? 'currentColor' : 'none'}
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -39,7 +39,7 @@ export function HeartIcon({ filled, className = 'w-5 h-5' }: { filled: boolean; 
 export function ThumbDownIcon({ active, className = 'w-5 h-5' }: { active?: boolean; className?: string }) {
   return (
     <svg
-      className={`${className} ${active ? 'text-red-400' : 'text-muted'}`}
+      className={`${className} ${active ? 'text-red-400' : 'text-text-muted'}`}
       fill={active ? 'currentColor' : 'none'}
       stroke="currentColor"
       viewBox="0 0 24 24"

@@ -32,7 +32,7 @@ export function MiniPlayer() {
             <Artwork src={artwork} alt={title} size={44} />
             <div className="flex-1 min-w-0">
               <div className="text-[13px] font-semibold truncate">{title}</div>
-              {subtitle && <div className="text-[11px] text-muted truncate">{subtitle}</div>}
+              {subtitle && <div className="text-[11px] text-text-muted truncate">{subtitle}</div>}
             </div>
             {ps.isLoading ? <Spinner size={16} /> : (
               <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/6 hover:bg-white/10" onClick={(e) => { e.stopPropagation(); player.togglePlayPause() }} aria-label={ps.isPlaying ? 'Pause' : 'Play'}>
@@ -58,7 +58,7 @@ export function MiniPlayer() {
             <Artwork src={artwork} alt={title} size={48} />
             <div className="min-w-0">
               <div className="text-sm font-semibold truncate">{title}</div>
-              {subtitle && <div className="text-xs text-muted truncate">{subtitle}</div>}
+              {subtitle && <div className="text-xs text-text-muted truncate">{subtitle}</div>}
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center gap-1.5">
@@ -71,9 +71,9 @@ export function MiniPlayer() {
             </div>
             {ps.track && ps.duration > 0 && (
               <div className="flex items-center gap-2 w-full max-w-md">
-                <span className="text-[10px] text-muted w-8 text-right tabular-nums">{formatTime(ps.currentTime)}</span>
+                <span className="text-[10px] text-text-muted w-8 text-right tabular-nums">{formatTime(ps.currentTime)}</span>
                 <input type="range" min={0} max={1} step={0.001} value={progress} onChange={(e) => player.seek(parseFloat(e.target.value))} className="flex-1" />
-                <span className="text-[10px] text-muted w-8 tabular-nums">{formatTime(ps.duration)}</span>
+                <span className="text-[10px] text-text-muted w-8 tabular-nums">{formatTime(ps.duration)}</span>
               </div>
             )}
           </div>
@@ -89,7 +89,7 @@ export function MiniPlayer() {
 }
 
 function ControlBtn({ onClick, label, children }: { onClick: () => void; label: string; children: React.ReactNode }) {
-  return <button onClick={onClick} className="p-1.5 rounded-full hover:bg-white/6 text-muted hover:text-txt transition-colors" aria-label={label}>{children}</button>
+  return <button onClick={onClick} className="p-1.5 rounded-full hover:bg-white/6 text-text-muted hover:text-text transition-colors" aria-label={label}>{children}</button>
 }
 
 function PlayCircleIcon({ className = '' }: { className?: string }) {
@@ -112,7 +112,7 @@ function DesktopRatingBtns() {
   return (
     <>
       <button
-        className="p-2 rounded-full hover:bg-white/6 text-muted hover:text-txt transition-colors"
+        className="p-2 rounded-full hover:bg-white/6 text-text-muted hover:text-text transition-colors"
         onClick={() => {
           if (ps.track) { blacklistTrack(ps.track); player.next() }
           else if (ps.station) { blacklistStation(ps.station) }

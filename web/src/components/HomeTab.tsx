@@ -55,7 +55,7 @@ export function HomeTab() {
     <div className="pb-4">
       <div className="px-4 md:px-6 pt-6 md:pt-10 pb-1">
         <h1 className="text-2xl md:text-3xl font-bold md:hidden">FreeMusic</h1>
-        <p className="text-sm text-muted mt-1">One tap. Your music. Right now.</p>
+        <p className="text-sm text-text-muted mt-1">One tap. Your music. Right now.</p>
       </div>
 
       <QuickPlayCards
@@ -85,8 +85,8 @@ export function HomeTab() {
       <GenreBrowser />
 
       <div className="px-4 mt-8 pb-4">
-        <p className="text-[10px] text-muted/60">Creative Commons & public domain music. Free forever.</p>
-        <p className="text-[9px] text-muted/30 mt-1">v{__APP_VERSION__} &middot; {__BUILD_TIME__.slice(0, 16).replace('T', ' ')}</p>
+        <p className="text-[10px] text-text-muted/60">Creative Commons & public domain music. Free forever.</p>
+        <p className="text-[9px] text-text-muted/30 mt-1">v{__APP_VERSION__} &middot; {__BUILD_TIME__.slice(0, 16).replace('T', ' ')}</p>
       </div>
     </div>
   )

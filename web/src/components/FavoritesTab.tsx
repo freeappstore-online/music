@@ -47,7 +47,7 @@ export function FavoritesTab() {
       <h1 className="text-2xl font-bold px-4 pt-4 pb-3">Favorites</h1>
 
       {empty ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted">
+        <div className="flex flex-col items-center justify-center py-20 gap-3 text-text-muted">
           <HeartIcon filled={false} className="w-12 h-12" />
           <span className="text-sm font-medium">No favorites yet</span>
           <span className="text-xs text-center px-8">Tap the heart icon on any track or station to save it here.</span>
@@ -56,13 +56,13 @@ export function FavoritesTab() {
         <>
           {tracks.length > 0 && (
             <>
-              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 mb-1">Tracks</h2>
+              <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider px-4 mb-1">Tracks</h2>
               {tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)}
             </>
           )}
           {stations.length > 0 && (
             <>
-              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 mb-1 mt-4">Stations</h2>
+              <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider px-4 mb-1 mt-4">Stations</h2>
               {stations.map(s => <StationRow key={s.id} station={s} />)}
             </>
           )}
@@ -74,7 +74,7 @@ export function FavoritesTab() {
         <div className="mt-8 px-4">
           <button
             onClick={() => { setShowBlacklist(!showBlacklist); if (!showBlacklist) { setBlTrackIds([...getBlacklistedTrackIds()]); setBlStationIds([...getBlacklistedStationIds()]) } }}
-            className="flex items-center gap-2 text-xs font-semibold text-muted"
+            className="flex items-center gap-2 text-xs font-semibold text-text-muted"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
@@ -87,7 +87,7 @@ export function FavoritesTab() {
             <div className="mt-2 space-y-1">
               {blTrackIds.map(id => (
                 <div key={id} className="flex items-center justify-between py-2 px-3 bg-surface rounded-lg">
-                  <span className="text-xs text-muted truncate flex-1">{id.replace(/^(jamendo|ia|ccmixter)-/, '')}</span>
+                  <span className="text-xs text-text-muted truncate flex-1">{id.replace(/^(jamendo|ia|ccmixter)-/, '')}</span>
                   <button
                     onClick={() => handleUnblacklist(id)}
                     className="text-[11px] text-accent font-semibold ml-2 hover:underline"
@@ -98,7 +98,7 @@ export function FavoritesTab() {
               ))}
               {blStationIds.map(id => (
                 <div key={id} className="flex items-center justify-between py-2 px-3 bg-surface rounded-lg">
-                  <span className="text-xs text-muted truncate flex-1">{id.replace(/^radio-/, '')}</span>
+                  <span className="text-xs text-text-muted truncate flex-1">{id.replace(/^radio-/, '')}</span>
                   <button
                     onClick={() => handleUnblacklist(id)}
                     className="text-[11px] text-accent font-semibold ml-2 hover:underline"

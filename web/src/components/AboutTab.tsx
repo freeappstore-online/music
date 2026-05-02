@@ -9,7 +9,7 @@ export function AboutTab() {
         <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
           All the world's<br/><em className="text-accent italic">free music</em><br/>in one app
         </h1>
-        <p className="text-muted text-base max-w-md mx-auto">
+        <p className="text-text-muted text-base max-w-md mx-auto">
           600,000+ Creative Commons tracks. 30,000+ live radio stations. Public domain recordings. Zero cost, forever.
         </p>
       </div>
@@ -18,15 +18,15 @@ export function AboutTab() {
       <div className="mx-4 grid grid-cols-3 border border-border rounded-2xl overflow-hidden mb-8">
         <div className="bg-surface p-4 text-center border-r border-border">
           <div className="text-xl font-bold text-accent" style={{ fontFamily: "'DM Serif Display', serif" }}>600K+</div>
-          <div className="text-xs text-muted">Free Tracks</div>
+          <div className="text-xs text-text-muted">Free Tracks</div>
         </div>
         <div className="bg-surface p-4 text-center border-r border-border">
           <div className="text-xl font-bold text-accent" style={{ fontFamily: "'DM Serif Display', serif" }}>30K+</div>
-          <div className="text-xs text-muted">Radio Stations</div>
+          <div className="text-xs text-text-muted">Radio Stations</div>
         </div>
         <div className="bg-surface p-4 text-center">
           <div className="text-xl font-bold text-accent" style={{ fontFamily: "'DM Serif Display', serif" }}>$0</div>
-          <div className="text-xs text-muted">Forever</div>
+          <div className="text-xs text-text-muted">Forever</div>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export function AboutTab() {
               <span className="text-2xl flex-shrink-0">{f.icon}</span>
               <div>
                 <div className="text-sm font-semibold mb-0.5">{f.title}</div>
-                <div className="text-xs text-muted leading-relaxed">{f.desc}</div>
+                <div className="text-xs text-text-muted leading-relaxed">{f.desc}</div>
               </div>
             </div>
           ))}
@@ -56,7 +56,7 @@ export function AboutTab() {
       {/* Sources */}
       <div className="px-4 mb-8">
         <h2 className="text-lg font-bold mb-4">Where the music comes from</h2>
-        <p className="text-sm text-muted mb-4">Every track is Creative Commons licensed or public domain. Completely legal.</p>
+        <p className="text-sm text-text-muted mb-4">Every track is Creative Commons licensed or public domain. Completely legal.</p>
         <div className="grid gap-3">
           {[
             { name: 'Jamendo', count: '600,000+', desc: "World's largest CC music catalog. Every genre." },
@@ -66,7 +66,7 @@ export function AboutTab() {
             <div key={s.name} className="bg-surface border border-border rounded-xl p-4 text-center">
               <div className="text-lg font-bold text-accent" style={{ fontFamily: "'DM Serif Display', serif" }}>{s.count}</div>
               <div className="text-sm font-semibold">{s.name}</div>
-              <div className="text-xs text-muted mt-1">{s.desc}</div>
+              <div className="text-xs text-text-muted mt-1">{s.desc}</div>
             </div>
           ))}
         </div>
@@ -75,7 +75,7 @@ export function AboutTab() {
       {/* Vision */}
       <div className="px-4 mb-8">
         <h2 className="text-lg font-bold mb-3">Our Vision</h2>
-        <p className="text-sm text-muted leading-relaxed mb-4">
+        <p className="text-sm text-text-muted leading-relaxed mb-4">
           Music belongs to everyone. Access shouldn't require a credit card, an account, or sitting through ads.
           Hundreds of thousands of artists have chosen to share freely. We're building the stage.
         </p>
@@ -91,7 +91,7 @@ export function AboutTab() {
               <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg className="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
               </div>
-              <div className="text-sm text-muted"><strong className="text-txt">{title}.</strong> {desc}</div>
+              <div className="text-sm text-text-muted"><strong className="text-text">{title}.</strong> {desc}</div>
             </div>
           ))}
         </div>
@@ -110,7 +110,7 @@ export function AboutTab() {
         </a>
       </div>
 
-      <div className="px-4 pb-4 text-center text-xs text-muted/50">
+      <div className="px-4 pb-4 text-center text-xs text-text-muted/50">
         &copy; 2026 FreeMusic. Open source, open music.
       </div>
     </div>

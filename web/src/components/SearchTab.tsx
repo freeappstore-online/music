@@ -73,7 +73,7 @@ export function SearchTab() {
 
       <form className="px-4 mb-4" onSubmit={(e) => { e.preventDefault(); doSearch() }}>
         <div className="flex items-center gap-2 bg-surface rounded-xl px-3 py-2.5 border border-border">
-          <svg className="w-5 h-5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
             type="search"
             placeholder="Songs, artists, stations..."
@@ -88,14 +88,14 @@ export function SearchTab() {
       {searching ? (
         <div className="flex flex-col items-center justify-center py-12 gap-2">
           <Spinner />
-          <span className="text-sm text-muted">Searching all sources...</span>
+          <span className="text-sm text-text-muted">Searching all sources...</span>
         </div>
       ) : showHistory ? (
         /* Recent searches */
         <div>
           <div className="flex items-center justify-between px-4 mb-2">
-            <h2 className="text-xs font-semibold text-muted uppercase tracking-wider">Recent</h2>
-            <button onClick={handleClear} className="text-[11px] text-muted hover:text-txt">Clear all</button>
+            <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Recent</h2>
+            <button onClick={handleClear} className="text-[11px] text-text-muted hover:text-text">Clear all</button>
           </div>
           {history.map(h => (
             <button
@@ -103,7 +103,7 @@ export function SearchTab() {
               className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-white/3 text-left group"
               onClick={() => doSearch(h)}
             >
-              <svg className="w-4 h-4 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <svg className="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               <span className="flex-1 text-sm">{h}</span>
               <button
                 className="p-1 rounded-full opacity-0 group-hover:opacity-60 hover:!opacity-100 hover:bg-white/6 transition-opacity"
@@ -116,12 +116,12 @@ export function SearchTab() {
           ))}
         </div>
       ) : !hasSearched ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-3 text-muted">
+        <div className="flex flex-col items-center justify-center py-16 gap-3 text-text-muted">
           <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <span className="text-sm">Search tracks, artists, and radio stations</span>
         </div>
       ) : !hasResults ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-3 text-muted">
+        <div className="flex flex-col items-center justify-center py-16 gap-3 text-text-muted">
           <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <span className="text-sm">No results found</span>
         </div>
@@ -129,7 +129,7 @@ export function SearchTab() {
         <>
           {tracks.length > 0 && (
             <>
-              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 mb-1">Tracks</h2>
+              <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider px-4 mb-1">Tracks</h2>
               {tracks.map((track, i) => (
                 <TrackRow key={track.id} track={track} queue={tracks} index={i} />
               ))}
@@ -137,7 +137,7 @@ export function SearchTab() {
           )}
           {stations.length > 0 && (
             <>
-              <h2 className="text-xs font-semibold text-muted uppercase tracking-wider px-4 mb-1 mt-4">Radio Stations</h2>
+              <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider px-4 mb-1 mt-4">Radio Stations</h2>
               {stations.map(station => (
                 <StationRow key={station.id} station={station} />
               ))}

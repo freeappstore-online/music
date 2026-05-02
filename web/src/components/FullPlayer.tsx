@@ -19,14 +19,14 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
   const source = ps.track?.source === 'jamendo' ? 'Jamendo' : ps.track?.source === 'internetarchive' ? 'Internet Archive' : ''
 
   return (
-    <div className="fixed inset-0 z-50 bg-bg flex flex-col items-center animate-[slideUp_0.3s_ease-out]">
+    <div className="fixed inset-0 z-50 bg-base flex flex-col items-center animate-[slideUp_0.3s_ease-out]">
       <div className="w-full max-w-lg flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-3 pb-2">
           <button onClick={onClose} className="p-2 -ml-2" aria-label="Close player">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
           </button>
-          {source && <span className="text-xs text-muted">{source}</span>}
+          {source && <span className="text-xs text-text-muted">{source}</span>}
           <div className="w-10" />
         </div>
 
@@ -43,14 +43,14 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
           {/* Info */}
           <div className="text-center w-full">
             <div className="text-xl font-bold truncate">{title}</div>
-            {subtitle && <div className="text-muted mt-1 truncate">{subtitle}</div>}
+            {subtitle && <div className="text-text-muted mt-1 truncate">{subtitle}</div>}
           </div>
 
           {/* Progress */}
           {ps.track && ps.duration > 0 && (
             <div className="w-full">
               <input type="range" min={0} max={1} step={0.001} value={progress} onChange={(e) => player.seek(parseFloat(e.target.value))} className="w-full" />
-              <div className="flex justify-between text-xs text-muted mt-1">
+              <div className="flex justify-between text-xs text-text-muted mt-1">
                 <span>{formatTime(ps.currentTime)}</span>
                 <span>-{formatTime(ps.duration - ps.currentTime)}</span>
               </div>
