@@ -9,6 +9,7 @@ import { Spinner } from './ui/Spinner'
 import { QuickPlayCards } from './home/QuickPlayCards'
 import { TrackGrid, StationGrid } from './home/MediaGrid'
 import { GenreBrowser, GenrePicker } from './home/GenreBrowser'
+import { MoodGrid } from './home/MoodGrid'
 
 export function HomeTab() {
   const [tracks, setTracks] = useState<Track[]>([])
@@ -81,6 +82,8 @@ export function HomeTab() {
           <TrackGrid tracks={classical} title="Classical & Archive" showPlayAll />
         </>
       )}
+
+      <MoodGrid />
 
       <GenreBrowser />
 
