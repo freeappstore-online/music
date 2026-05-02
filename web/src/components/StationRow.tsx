@@ -6,7 +6,7 @@ import { getUserTags } from '../services/usertags'
 import { usePlayer } from '../hooks'
 import { formatVotes } from '../lib/format'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon, ThumbDownIcon, PlayingBars } from './ui/Icons'
+import { HeartIcon, DislikeIcon, PlayingBars } from './ui/Icons'
 
 function isAdFree(station: RadioStation): boolean {
   if (station.id.startsWith('soma-')) return true
@@ -63,7 +63,7 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
 
         <button className="p-1.5 flex-shrink-0 rounded-full hover:bg-white/6 opacity-0 group-hover:opacity-60 transition-opacity"
           onClick={(e) => { e.stopPropagation(); blacklistStation(station); setBlocked(true); setFav(false); onBlacklist?.() }} aria-label="Block">
-          <ThumbDownIcon className="w-4 h-4" />
+          <DislikeIcon className="w-4 h-4" />
         </button>
 
         <button className="p-1.5 flex-shrink-0 rounded-full hover:bg-white/6 opacity-60 group-hover:opacity-100 transition-opacity"

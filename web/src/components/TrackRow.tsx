@@ -5,7 +5,7 @@ import { isTrackFavorite, toggleTrackFavorite, isTrackBlacklisted, blacklistTrac
 import { usePlayer } from '../hooks'
 import { formatDuration } from '../lib/format'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon, ThumbDownIcon, PlayingBars } from './ui/Icons'
+import { HeartIcon, DislikeIcon, PlayingBars } from './ui/Icons'
 
 export function TrackRow({ track, queue, index, onBlacklist }: { track: Track; queue?: Track[]; index?: number; onBlacklist?: () => void }) {
   const ps = usePlayer()
@@ -50,7 +50,7 @@ export function TrackRow({ track, queue, index, onBlacklist }: { track: Track; q
         onClick={handleBlacklist}
         aria-label="Never play again"
       >
-        <ThumbDownIcon className="w-4 h-4" />
+        <DislikeIcon className="w-4 h-4" />
       </button>
 
       <button

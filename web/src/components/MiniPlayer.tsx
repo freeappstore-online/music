@@ -3,7 +3,7 @@ import { player } from '../services/player'
 import { usePlayer } from '../hooks'
 import { formatTime } from '../lib/format'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon, ThumbDownIcon } from './ui/Icons'
+import { HeartIcon, DislikeIcon } from './ui/Icons'
 import { Spinner } from './ui/Spinner'
 import { FullPlayer } from './FullPlayer'
 import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite, blacklistTrack, blacklistStation } from '../services/favorites'
@@ -119,7 +119,7 @@ function DesktopRatingBtns() {
         }}
         aria-label="Never play again"
       >
-        <ThumbDownIcon className="w-[18px] h-[18px]" />
+        <DislikeIcon className="w-[18px] h-[18px]" />
       </button>
       <button
         className="p-2 rounded-full hover:bg-white/6 transition-colors"

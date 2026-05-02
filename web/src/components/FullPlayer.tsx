@@ -4,7 +4,7 @@ import { usePlayer } from '../hooks'
 import { formatTime } from '../lib/format'
 import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite, blacklistTrack, blacklistStation } from '../services/favorites'
 import { Artwork } from './ui/Artwork'
-import { HeartIcon, ThumbDownIcon } from './ui/Icons'
+import { HeartIcon, DislikeIcon } from './ui/Icons'
 
 export function FullPlayer({ onClose }: { onClose: () => void }) {
   const ps = usePlayer()
@@ -88,7 +88,7 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
               aria-label="Never play again"
               className="p-3 rounded-full hover:bg-red-500/10 active:bg-red-500/20 transition-colors"
             >
-              <ThumbDownIcon className="w-7 h-7" />
+              <DislikeIcon className="w-7 h-7" />
             </button>
             <button
               onClick={() => {
