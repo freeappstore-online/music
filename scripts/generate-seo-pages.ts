@@ -163,6 +163,165 @@ for (const w of WORKS) {
   writeFileSync(join(OUT, 'work', `${w.slug}.html`), workPage(w))
 }
 
+// ===== Rich composer pages =====
+import { COMPOSER_BIOS, type ComposerBio } from './composer-data'
+
+function richComposerPage(c: ComposerBio): string {
+  const timelineHTML = c.milestones.map(m => `
+    <div class="tl-item">
+      <div class="tl-dot">${m.icon}</div>
+      <div class="tl-content">
+        <div class="tl-year">${m.year}</div>
+        <div class="tl-title">${m.title}</div>
+        <div class="tl-desc">${m.desc}</div>
+      </div>
+    </div>`).join('')
+
+  const worksHTML = c.keyWorks.map(w => `
+    <div class="work-item">
+      <span class="work-year">${w.year}</span>
+      <span class="work-title">${w.title}</span>
+      <span class="work-type">${w.type}</span>
+    </div>`).join('')
+
+  const relatedHTML = c.related.map(id => {
+    const r = ARTISTS.find(a => a.id === id)
+    return r ? `<a href="/artist/${r.id}.html" class="related-link">${r.fullName}</a>` : ''
+  }).filter(Boolean).join('')
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${c.fullName} — Life, Works & Music | FreeMusic</title>
+  <meta name="description" content="${c.tagline}. Listen to ${c.fullName} (${c.years}) for free. ${c.intro.slice(0, 120)}">
+  <meta property="og:title" content="${c.fullName} — Life, Works & Free Music">
+  <meta property="og:description" content="${c.tagline}">
+  <meta name="theme-color" content="#111113">
+  <link rel="canonical" href="https://freemusicapp.online/artist/${c.id}.html">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"${c.fullName}","birthDate":"${c.birthYear}","deathDate":"${c.deathYear || ''}","nationality":"${c.nationality}","description":"${c.tagline.replace(/"/g, '\\"')}","sameAs":"https://en.wikipedia.org/wiki/${c.fullName.replace(/ /g, '_')}"}</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#111113;color:#f0f0f2;font-family:'Inter',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+    .c{max-width:720px;margin:0 auto;padding:40px 24px 80px}
+    a{color:#6ECE9E;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;margin-bottom:32px}
+    .hero{text-align:center;margin-bottom:48px}
+    .hero h1{font-family:'DM Serif Display',serif;font-size:clamp(32px,6vw,48px);font-weight:700;margin-bottom:4px}
+    .hero .sub{color:#9090a0;font-size:16px;margin-bottom:8px}
+    .hero .tagline{font-style:italic;color:#c0c0cc;font-size:15px;max-width:500px;margin:0 auto 20px}
+    .badge{display:inline-block;padding:4px 14px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}
+    .meta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+    .meta span{font-size:13px;color:#9090a0}
+    h2{font-family:'DM Serif Display',serif;font-size:24px;margin:40px 0 16px;color:#f0f0f2}
+    h3{font-size:16px;font-weight:600;margin:24px 0 8px}
+    p{font-size:15px;color:#c0c0cc;margin-bottom:16px}
+    .cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:14px 28px;border-radius:12px;font-weight:600;font-size:15px;margin:8px 0 0}
+    .cta:hover{background:#5cb888;text-decoration:none}
+
+    /* Timeline */
+    .timeline{position:relative;padding-left:40px;margin:24px 0}
+    .timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:#2e2e35}
+    .tl-item{position:relative;margin-bottom:24px}
+    .tl-dot{position:absolute;left:-40px;width:30px;height:30px;border-radius:50%;background:#1a1a1e;border:2px solid #2e2e35;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .tl-year{font-size:12px;color:#6ECE9E;font-weight:600;margin-bottom:2px}
+    .tl-title{font-size:14px;font-weight:600;color:#f0f0f2}
+    .tl-desc{font-size:13px;color:#9090a0}
+
+    /* Works */
+    .works-grid{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+    .work-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1a1a1e;border-radius:10px;border:1px solid #2e2e35}
+    .work-year{font-size:12px;color:#6ECE9E;font-weight:600;min-width:36px}
+    .work-title{flex:1;font-size:14px;font-weight:500;color:#f0f0f2}
+    .work-type{font-size:11px;color:#9090a0;background:#ffffff08;padding:2px 8px;border-radius:99px}
+
+    /* Fun fact */
+    .fact{background:#6ECE9E10;border-left:3px solid #6ECE9E;padding:16px 20px;border-radius:0 12px 12px 0;margin:24px 0}
+    .fact-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#6ECE9E;font-weight:600;margin-bottom:4px}
+    .fact p{color:#c0c0cc;margin:0;font-size:14px;font-style:italic}
+
+    /* Related */
+    .related{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .related-link{font-size:13px;padding:6px 14px;background:#1a1a1e;border:1px solid #2e2e35;border-radius:10px;color:#f0f0f2;font-weight:500}
+    .related-link:hover{border-color:#6ECE9E;text-decoration:none}
+
+    .footer{margin-top:48px;font-size:12px;color:#60606e;text-align:center}
+    .footer a{color:#6ECE9E}
+  </style>
+</head>
+<body>
+<div class="c">
+  <a href="/" class="back">&larr; Back to FreeMusic</a>
+
+  <div class="hero">
+    <div class="badge">${c.era} · ${c.nationality}</div>
+    <h1>${c.fullName}</h1>
+    <div class="sub">${c.years}</div>
+    <div class="meta">
+      <span>${c.nationality} ${c.genre === 'Classical' ? 'Composer' : 'Musician'}</span>
+      <span>${c.era}</span>
+      <span>${c.keyWorks.length} major works</span>
+    </div>
+    <p class="tagline">"${c.tagline}"</p>
+    <a href="/" class="cta">
+      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/></svg>
+      Play ${c.fullName.split(' ').pop()} on FreeMusic
+    </a>
+  </div>
+
+  <p>${c.intro}</p>
+
+  <h2>Early Life</h2>
+  <p>${c.earlyLife}</p>
+
+  <h2>Life Timeline</h2>
+  <div class="timeline">${timelineHTML}
+  </div>
+
+  <h2>Career & Music</h2>
+  <p>${c.career}</p>
+
+  <h2>Key Works</h2>
+  <div class="works-grid">${worksHTML}
+  </div>
+
+  <div class="fact">
+    <div class="fact-label">Did you know?</div>
+    <p>${c.funFact}</p>
+  </div>
+
+  <h2>Legacy</h2>
+  <p>${c.legacy}</p>
+
+  ${c.related.length > 0 ? `<h3>Related Composers</h3><div class="related">${relatedHTML}</div>` : ''}
+
+  <h2>Listen Free</h2>
+  <p>Stream ${c.fullName}'s music for free on FreeMusic. No ads, no subscription, no account required. All music is Creative Commons licensed or public domain.</p>
+  <a href="/" class="cta">
+    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/></svg>
+    Play on FreeMusic
+  </a>
+
+  <div class="footer">
+    <a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a> · <a href="https://github.com/FreeMusicApp/freemusic">GitHub</a>
+    <p style="margin-top:8px">&copy; 2026 FreeMusic. Open source, open music.</p>
+  </div>
+</div>
+</body>
+</html>`
+}
+
+// Override simple pages with rich ones where available
+for (const bio of COMPOSER_BIOS) {
+  writeFileSync(join(OUT, 'artist', `${bio.id}.html`), richComposerPage(bio))
+}
+console.log(`Enhanced ${COMPOSER_BIOS.length} composer pages with rich bios + timelines`)
+
 // Sitemap
 const urls = [
   'https://freemusicapp.online/',
