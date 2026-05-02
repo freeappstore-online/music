@@ -2,10 +2,19 @@ import { useState } from 'react'
 import type { RadioStation } from '../types'
 import { player } from '../services/player'
 import { isStationFavorite, toggleStationFavorite, isStationBlacklisted, blacklistStation } from '../services/favorites'
+import { getUserTags } from '../services/usertags'
 import { usePlayer } from '../hooks'
 import { formatVotes } from '../lib/format'
 import { Artwork } from './ui/Artwork'
 import { HeartIcon, ThumbDownIcon, PlayingBars } from './ui/Icons'
+
+function isAdFree(station: RadioStation): boolean {
+  // SomaFM is always ad-free
+  if (station.id.startsWith('soma-')) return true
+  // Check user tags
+  const tags = getUserTags(station.id)
+  return tags.some(t => t === 'ad-free' || t === 'adfree' || t === 'no-ads' || t === 'no ads')
+}
 
 export function StationRow({ station, onBlacklist }: { station: RadioStation; onBlacklist?: () => void }) {
   const ps = usePlayer()
@@ -13,6 +22,7 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
   const [blocked, setBlocked] = useState(() => isStationBlacklisted(station.id))
   const playing = ps.station?.id === station.id && ps.isPlaying
   const genre = station.genre?.split(',')[0] || ''
+  const adFree = isAdFree(station)
 
   if (blocked) return null
 
@@ -33,8 +43,9 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
       <Artwork src={station.favicon} alt={station.name} size={48} type="station" />
 
       <div className="flex-1 min-w-0">
-        <div className={`text-[13px] font-semibold truncate ${playing ? 'text-accent' : ''}`}>
+        <div className={`text-[13px] font-semibold truncate flex items-center gap-1.5 ${playing ? 'text-accent' : ''}`}>
           {station.name}
+          {adFree && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-accent/15 text-accent flex-shrink-0">AD-FREE</span>}
         </div>
         <div className="text-[11px] text-text-muted truncate mt-0.5">
           {genre}{station.country ? ` · ${station.country}` : ''}{station.votes ? ` · ${formatVotes(station.votes)} votes` : ''}

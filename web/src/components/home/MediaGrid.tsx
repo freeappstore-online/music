@@ -1,5 +1,6 @@
 import type { Track, RadioStation } from '../../types'
 import { player } from '../../services/player'
+import { getUserTags } from '../../services/usertags'
 import { Artwork } from '../ui/Artwork'
 
 export function TrackGrid({ tracks, title, showPlayAll }: { tracks: Track[]; title: string; showPlayAll?: boolean }) {
@@ -62,6 +63,9 @@ export function StationGrid({ stations, title }: { stations: RadioStation[]; tit
               </div>
             </div>
             <div className="text-[11px] font-semibold truncate mt-1.5">{s.name}</div>
+            {(s.id.startsWith('soma-') || getUserTags(s.id).some(t => /ad.?free|no.?ads/i.test(t))) && (
+              <div className="text-[8px] font-bold text-accent mt-0.5">AD-FREE</div>
+            )}
           </button>
         ))}
       </div>
