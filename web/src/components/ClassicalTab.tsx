@@ -122,8 +122,33 @@ export function ClassicalTab() {
             ))}
           </div>
 
-          {/* Category grid */}
-          {section !== 'radio' && (
+          {/* Composer grid with portraits */}
+          {section === 'composers' && (
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 px-4 md:px-6 mb-4">
+              {items.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => handleSelect(cat)}
+                  className={`flex flex-col items-center gap-1.5 py-3 rounded-xl transition-colors ${
+                    selected?.id === cat.id ? 'bg-accent/15 ring-1 ring-accent' : 'hover:bg-surface-hover'
+                  }`}
+                >
+                  <div className="w-16 h-16 rounded-full overflow-hidden ring-2 ring-white/10 bg-surface">
+                    {cat.image ? (
+                      <img src={cat.image} alt={cat.label} className="w-full h-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl">{cat.icon}</div>
+                    )}
+                  </div>
+                  <span className="text-xs font-semibold">{cat.label}</span>
+                  {cat.years && <span className="text-[9px] text-text-dim">{cat.years}</span>}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Other category grids (eras, instruments, forms, moods) */}
+          {section !== 'radio' && section !== 'composers' && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 px-4 md:px-6 mb-4">
               {items.map(cat => (
                 <button

@@ -9,21 +9,51 @@ export type ClassicalCategory = {
   id: string
   label: string
   icon: string
+  image?: string
+  years?: string
   // Jamendo: always uses tags=classical + optional search term
-  jamendoSearch?: string    // search= param (composer name, form, etc.)
-  jamendoTags: string       // tags= param (always includes classical)
+  jamendoSearch?: string
+  jamendoTags: string
   // Internet Archive: precise queries with subject:classical
   iaQuery: string
 }
 
-// Helper to define a composer entry
-function composer(id: string, label: string, icon: string, fullName?: string): ClassicalCategory {
-  const name = fullName || label
+// Composer portraits from Wikimedia Commons (public domain)
+const PORTRAITS: Record<string, string> = {
+  bach: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Johann_Sebastian_Bach.jpg/330px-Johann_Sebastian_Bach.jpg',
+  mozart: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/The_Mozart_Family_-_Wolfgang_Amadeus_Mozart_headshot.jpg/330px-The_Mozart_Family_-_Wolfgang_Amadeus_Mozart_headshot.jpg',
+  beethoven: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Joseph_Karl_Stieler%27s_Beethoven_mit_dem_Manuskript_der_Missa_solemnis.jpg/330px-Joseph_Karl_Stieler%27s_Beethoven_mit_dem_Manuskript_der_Missa_solemnis.jpg',
+  chopin: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Frederic_Chopin_photo.jpeg/330px-Frederic_Chopin_photo.jpeg',
+  vivaldi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Vivaldi.jpg/330px-Vivaldi.jpg',
+  brahms: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/JohannesBrahms_%28cropped%29.jpg/330px-JohannesBrahms_%28cropped%29.jpg',
+  tchaikovsky: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Tchaikovsky_by_Reutlinger_%28cropped%29.jpg/330px-Tchaikovsky_by_Reutlinger_%28cropped%29.jpg',
+  debussy: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Claude_Debussy_by_Atelier_Nadar.jpg/330px-Claude_Debussy_by_Atelier_Nadar.jpg',
+  schubert: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Franz_Schubert_by_Wilhelm_August_Rieder_1875.jpg/330px-Franz_Schubert_by_Wilhelm_August_Rieder_1875.jpg',
+  handel: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg/330px-George_Frideric_Handel_by_Balthasar_Denner.jpg',
+  liszt: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Franz_Liszt_by_Herman_Biow-_1843.png/330px-Franz_Liszt_by_Herman_Biow-_1843.png',
+  ravel: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Maurice_Ravel_1925.jpg/330px-Maurice_Ravel_1925.jpg',
+  haydn: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Joseph_Haydn.jpg/330px-Joseph_Haydn.jpg',
+  mendelssohn: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Felix_Mendelssohn_Bartholdy_by_Eduard_Magnus_%281833%29.jpg/330px-Felix_Mendelssohn_Bartholdy_by_Eduard_Magnus_%281833%29.jpg',
+  dvorak: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Dvorak.jpg/330px-Dvorak.jpg',
+  rachmaninoff: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Sergei_Rachmaninoff_cph.3a40575.jpg/330px-Sergei_Rachmaninoff_cph.3a40575.jpg',
+  mahler: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Photo_of_Gustav_Mahler_by_Moritz_N%C3%A4hr_01.jpg/330px-Photo_of_Gustav_Mahler_by_Moritz_N%C3%A4hr_01.jpg',
+  shostakovich: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B5%D0%B2%D0%B8%D1%87_%D0%A8%D0%BE%D1%81%D1%82%D0%B0%D0%BA%D0%BE%D0%B2%D0%B8%D1%87.jpg/330px-%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B5%D0%B2%D0%B8%D1%87_%D0%A8%D0%BE%D1%81%D1%82%D0%B0%D0%BA%D0%BE%D0%B2%D0%B8%D1%87.jpg',
+  strauss: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Johann_Strauss_II_by_Fritz_Luckhardt_3-4_crop.jpg/330px-Johann_Strauss_II_by_Fritz_Luckhardt_3-4_crop.jpg',
+  verdi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Giuseppe_Verdi_by_Ferdinand_Mulnier_BW.jpg/330px-Giuseppe_Verdi_by_Ferdinand_Mulnier_BW.jpg',
+  puccini: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/GiacomoPuccini.jpg/330px-GiacomoPuccini.jpg',
+  wagner: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/RichardWagner.jpg/330px-RichardWagner.jpg',
+  grieg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Edvard_Grieg_portrait_%28cropped%29.jpg/330px-Edvard_Grieg_portrait_%28cropped%29.jpg',
+  'saint-saens': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Saint-Sa%C3%ABns-circa-1880.jpg/330px-Saint-Sa%C3%ABns-circa-1880.jpg',
+}
+
+function composer(id: string, label: string, icon: string, fullName: string, years: string): ClassicalCategory {
   return {
     id, label, icon,
-    jamendoSearch: name.toLowerCase(),
+    image: PORTRAITS[id],
+    years,
+    jamendoSearch: fullName.toLowerCase(),
     jamendoTags: 'classical',
-    iaQuery: `creator:"${name}" subject:classical mediatype:audio`,
+    iaQuery: `creator:"${fullName}" subject:classical mediatype:audio`,
   }
 }
 
@@ -46,30 +76,30 @@ export const ERAS: ClassicalCategory[] = [
 ]
 
 export const COMPOSERS: ClassicalCategory[] = [
-  composer('bach', 'Bach', '⛪', 'Johann Sebastian Bach'),
-  composer('mozart', 'Mozart', '🎼', 'Wolfgang Amadeus Mozart'),
-  composer('beethoven', 'Beethoven', '🎵', 'Ludwig van Beethoven'),
-  composer('chopin', 'Chopin', '🎹', 'Frédéric Chopin'),
-  composer('vivaldi', 'Vivaldi', '🎻', 'Antonio Vivaldi'),
-  composer('brahms', 'Brahms', '🎵', 'Johannes Brahms'),
-  composer('tchaikovsky', 'Tchaikovsky', '🩰', 'Pyotr Ilyich Tchaikovsky'),
-  composer('debussy', 'Debussy', '🌊', 'Claude Debussy'),
-  composer('schubert', 'Schubert', '🎵', 'Franz Schubert'),
-  composer('handel', 'Handel', '🎵', 'George Frideric Handel'),
-  composer('liszt', 'Liszt', '🎹', 'Franz Liszt'),
-  composer('ravel', 'Ravel', '🎵', 'Maurice Ravel'),
-  composer('haydn', 'Haydn', '🎼', 'Joseph Haydn'),
-  composer('mendelssohn', 'Mendelssohn', '🎵', 'Felix Mendelssohn'),
-  composer('dvorak', 'Dvořák', '🎵', 'Antonín Dvořák'),
-  composer('rachmaninoff', 'Rachmaninoff', '🎹', 'Sergei Rachmaninoff'),
-  composer('mahler', 'Mahler', '🎼', 'Gustav Mahler'),
-  composer('shostakovich', 'Shostakovich', '🎵', 'Dmitri Shostakovich'),
-  composer('strauss', 'Strauss', '💃', 'Johann Strauss'),
-  composer('verdi', 'Verdi', '🎤', 'Giuseppe Verdi'),
-  composer('puccini', 'Puccini', '🎭', 'Giacomo Puccini'),
-  composer('wagner', 'Wagner', '🎭', 'Richard Wagner'),
-  composer('grieg', 'Grieg', '🏔️', 'Edvard Grieg'),
-  composer('saint-saens', 'Saint-Saëns', '🎵', 'Camille Saint-Saëns'),
+  composer('bach', 'Bach', '⛪', 'Johann Sebastian Bach', '1685–1750'),
+  composer('mozart', 'Mozart', '🎼', 'Wolfgang Amadeus Mozart', '1756–1791'),
+  composer('beethoven', 'Beethoven', '🎵', 'Ludwig van Beethoven', '1770–1827'),
+  composer('chopin', 'Chopin', '🎹', 'Frédéric Chopin', '1810–1849'),
+  composer('vivaldi', 'Vivaldi', '🎻', 'Antonio Vivaldi', '1678–1741'),
+  composer('brahms', 'Brahms', '🎵', 'Johannes Brahms', '1833–1897'),
+  composer('tchaikovsky', 'Tchaikovsky', '🩰', 'Pyotr Ilyich Tchaikovsky', '1840–1893'),
+  composer('debussy', 'Debussy', '🌊', 'Claude Debussy', '1862–1918'),
+  composer('schubert', 'Schubert', '🎵', 'Franz Schubert', '1797–1828'),
+  composer('handel', 'Handel', '🎵', 'George Frideric Handel', '1685–1759'),
+  composer('liszt', 'Liszt', '🎹', 'Franz Liszt', '1811–1886'),
+  composer('ravel', 'Ravel', '🎵', 'Maurice Ravel', '1875–1937'),
+  composer('haydn', 'Haydn', '🎼', 'Joseph Haydn', '1732–1809'),
+  composer('mendelssohn', 'Mendelssohn', '🎵', 'Felix Mendelssohn', '1809–1847'),
+  composer('dvorak', 'Dvořák', '🎵', 'Antonín Dvořák', '1841–1904'),
+  composer('rachmaninoff', 'Rachmaninoff', '🎹', 'Sergei Rachmaninoff', '1873–1943'),
+  composer('mahler', 'Mahler', '🎼', 'Gustav Mahler', '1860–1911'),
+  composer('shostakovich', 'Shostakovich', '🎵', 'Dmitri Shostakovich', '1906–1975'),
+  composer('strauss', 'Strauss', '💃', 'Johann Strauss II', '1825–1899'),
+  composer('verdi', 'Verdi', '🎤', 'Giuseppe Verdi', '1813–1901'),
+  composer('puccini', 'Puccini', '🎭', 'Giacomo Puccini', '1858–1924'),
+  composer('wagner', 'Wagner', '🎭', 'Richard Wagner', '1813–1883'),
+  composer('grieg', 'Grieg', '🏔️', 'Edvard Grieg', '1843–1907'),
+  composer('saint-saens', 'Saint-Saëns', '🎵', 'Camille Saint-Saëns', '1835–1921'),
 ]
 
 export const INSTRUMENTS: ClassicalCategory[] = [
