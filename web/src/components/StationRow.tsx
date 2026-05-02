@@ -41,13 +41,17 @@ export function StationRow({ station, onBlacklist }: { station: RadioStation; on
             {station.name}
             {adFree && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-accent/15 text-accent flex-shrink-0">AD-FREE</span>}
           </div>
-          <div className="text-[11px] text-text-muted truncate mt-0.5">
-            {mainGenre}
-            {station.country ? ` · ${station.country}` : ''}
-            {station.bitrate ? ` · ${station.bitrate}kbps` : ''}
-            {station.codec ? ` ${station.codec}` : ''}
-            {station.votes ? ` · ${formatVotes(station.votes)} votes` : ''}
+          <div className="text-[11px] text-text-muted mt-0.5">
+            {station.country || ''}{station.bitrate ? ` · ${station.bitrate}kbps ${station.codec || ''}` : ''}{station.votes ? ` · ${formatVotes(station.votes)} votes` : ''}
           </div>
+          {allTags.length > 0 && (
+            <div className="flex gap-1 flex-wrap mt-1">
+              {allTags.slice(0, 6).map(t => (
+                <span key={t} className="text-[8px] px-1.5 py-0.5 rounded bg-white/4 text-text-dim">{t}</span>
+              ))}
+              {allTags.length > 6 && <span className="text-[8px] text-text-dim">+{allTags.length - 6}</span>}
+            </div>
+          )}
         </div>
 
         {playing && <PlayingBars />}
