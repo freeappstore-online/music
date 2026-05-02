@@ -39,11 +39,17 @@ const LANGUAGES: LangItem[] = [
   { code: 'hindi', flag: '🇮🇳' },
 ]
 const SORT_OPTIONS = [
-  { id: 'clickcount', label: 'Popular', icon: '🔥' },
-  { id: 'votes', label: 'Top Voted', icon: '⭐' },
-  { id: 'clicktrend', label: 'Trending', icon: '📈' },
-  { id: 'changetimestamp', label: 'New', icon: '🆕' },
-  { id: 'random', label: 'Random', icon: '🎲' },
+  { id: 'clickcount', label: 'Popular' },
+  { id: 'votes', label: 'Top Voted' },
+  { id: 'clicktrend', label: 'Trending' },
+  { id: 'changetimestamp', label: 'New' },
+  { id: 'random', label: 'Random' },
+]
+const QUALITY_FILTERS = [
+  { id: '', label: 'Any Quality' },
+  { id: '128', label: '128+ kbps' },
+  { id: '192', label: '192+ kbps' },
+  { id: '320', label: '320 kbps (HD)' },
 ]
 
 export function RadioTab() {
@@ -54,11 +60,12 @@ export function RadioTab() {
   const [country, setCountry] = useState('')
   const [language, setLanguage] = useState('')
   const [sortBy, setSortBy] = useState('clickcount')
+  const [minBitrate, setMinBitrate] = useState('')
   const [taggingStation, setTaggingStation] = useState<string | null>(null)
   const [newTag, setNewTag] = useState('')
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const hasFilters = !!(genre || country || language)
+  const hasFilters = !!(genre || country || language || minBitrate)
 
   useEffect(() => {
     getTopStations(60).then(s => { setStations(s); setLoading(false) })
@@ -80,7 +87,7 @@ export function RadioTab() {
   }
 
   const clearAll = () => {
-    setGenre(''); setCountry(''); setLanguage(''); setSortBy('clickcount'); setNameQuery('')
+    setGenre(''); setCountry(''); setLanguage(''); setSortBy('clickcount'); setMinBitrate(''); setNameQuery('')
     setLoading(true)
     getTopStations(60).then(s => { setStations(s); setLoading(false) })
   }
@@ -89,7 +96,7 @@ export function RadioTab() {
     clearTimeout(timer.current)
     timer.current = setTimeout(doSearch, 300)
     return () => clearTimeout(timer.current)
-  }, [genre, country, language])
+  }, [genre, country, language, minBitrate])
 
   return (
     <div className="pb-4">
@@ -98,21 +105,37 @@ export function RadioTab() {
         <p className="text-sm text-text-muted mt-1">30,000+ stations · 237 countries · 620 languages</p>
       </div>
 
-      {/* Search + Sort */}
-      <div className="px-4 md:px-6 my-3 flex gap-2">
-        <form className="flex-1" onSubmit={e => { e.preventDefault(); doSearch() }}>
-          <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-2">
-            <svg className="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input type="search" placeholder="Station name..." className="flex-1 bg-transparent outline-none text-sm placeholder-text-dim" value={nameQuery} onChange={e => setNameQuery(e.target.value)} />
+      {/* Search */}
+      <form className="px-4 md:px-6 my-3" onSubmit={e => { e.preventDefault(); doSearch() }}>
+        <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-2.5">
+          <svg className="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <input type="search" placeholder="Station name..." className="flex-1 bg-transparent outline-none text-sm placeholder-text-dim" value={nameQuery} onChange={e => setNameQuery(e.target.value)} />
+        </div>
+      </form>
+
+      {/* Sort + Quality */}
+      <div className="px-4 md:px-6 mb-2 space-y-2">
+        <div>
+          <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Sort by</div>
+          <div className="flex gap-1 overflow-x-auto snap-x md:flex-wrap md:overflow-visible">
+            {SORT_OPTIONS.map(s => (
+              <button key={s.id} onClick={() => { setSortBy(s.id); doSearch() }}
+                className={`flex-shrink-0 snap-start text-[11px] px-2.5 py-1 rounded-lg transition-colors whitespace-nowrap ${sortBy === s.id ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+                {s.label}
+              </button>
+            ))}
           </div>
-        </form>
-        <div className="flex gap-1">
-          {SORT_OPTIONS.map(s => (
-            <button key={s.id} onClick={() => { setSortBy(s.id); doSearch() }} title={s.label}
-              className={`w-9 h-9 rounded-lg text-sm flex items-center justify-center transition-colors ${sortBy === s.id ? 'bg-accent/15 ring-1 ring-accent' : 'bg-surface hover:bg-surface-hover'}`}>
-              {s.icon}
-            </button>
-          ))}
+        </div>
+        <div>
+          <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Quality</div>
+          <div className="flex gap-1">
+            {QUALITY_FILTERS.map(q => (
+              <button key={q.id} onClick={() => setMinBitrate(minBitrate === q.id ? '' : q.id)}
+                className={`text-[11px] px-2.5 py-1 rounded-lg transition-colors whitespace-nowrap ${minBitrate === q.id ? 'bg-accent text-base font-semibold' : 'bg-white/4 text-text-muted hover:text-text'}`}>
+                {q.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -122,6 +145,7 @@ export function RadioTab() {
           {genre && <Chip label={`${GENRES.find(g => g.tag === genre)?.icon || ''} ${genre}`} onRemove={() => setGenre('')} />}
           {country && <Chip label={`${COUNTRIES.find(c => c.name === country)?.flag || ''} ${country}`} onRemove={() => setCountry('')} />}
           {language && <Chip label={`${LANGUAGES.find(l => l.code === language)?.flag || ''} ${language}`} onRemove={() => setLanguage('')} />}
+          {minBitrate && <Chip label={`${minBitrate}+ kbps`} onRemove={() => setMinBitrate('')} />}
           <button onClick={clearAll} className="text-[11px] text-text-muted hover:text-text px-2 py-1">Clear</button>
         </div>
       )}
@@ -169,17 +193,21 @@ export function RadioTab() {
       </div>
 
       {/* Results */}
-      {!loading && <div className="px-4 md:px-6 mb-1"><span className="text-xs text-text-muted">{stations.length} stations found</span></div>}
+      {(() => {
+        const filtered = minBitrate ? stations.filter(s => (s.bitrate || 0) >= parseInt(minBitrate)) : stations
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12"><Spinner /></div>
-      ) : stations.length === 0 ? (
+        if (loading) return <div className="flex items-center justify-center py-12"><Spinner /></div>
+
+        return <>
+        <div className="px-4 md:px-6 mb-1"><span className="text-xs text-text-muted">{filtered.length} stations found</span></div>
+
+        {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-text-muted gap-2">
           <span className="text-sm">No stations match your filters</span>
           <button onClick={clearAll} className="text-xs text-accent hover:underline">Clear all filters</button>
         </div>
       ) : (
-        stations.map(station => (
+        filtered.map(station => (
           <div key={station.id}>
             <StationRow station={station} />
             <div className="px-4 md:px-6 -mt-1 mb-1 flex items-center gap-1 flex-wrap">
@@ -200,6 +228,8 @@ export function RadioTab() {
           </div>
         ))
       )}
+      </>
+      })()}
     </div>
   )
 }
