@@ -62,15 +62,15 @@ function QuickCard({ gradient, icon, label, subtitle, onClick }: {
   return (
     <button
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} border border-white/6 p-3 pt-4 pb-5 text-left group active:scale-[0.97] transition-transform`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} border border-white/6 p-4 lg:p-5 text-left group active:scale-[0.97] transition-transform`}
       aria-label={`Play ${label}`}
     >
       <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
       </div>
-      <div className="mb-2 opacity-80">{icon}</div>
-      <div className="text-xs font-bold">{label}</div>
-      <div className="text-[10px] text-white/50 mt-0.5 leading-tight">{subtitle}</div>
+      <div className="mb-3 opacity-80">{icon}</div>
+      <div className="text-sm font-bold">{label}</div>
+      <div className="text-xs text-white/60 mt-0.5 leading-tight">{subtitle}</div>
     </button>
   )
 }
