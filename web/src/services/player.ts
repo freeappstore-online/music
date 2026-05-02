@@ -1,4 +1,5 @@
 import type { Track, RadioStation } from '../types'
+import { addToHistory } from './history'
 
 export type PlayerState = {
   track: Track | null
@@ -112,10 +113,12 @@ class AudioPlayerService {
     this.state.station = null
     this.state.error = false
     if (queue) { this.state.queue = queue; this.state.queueIndex = index ?? 0 }
+    addToHistory(track, undefined)
     this.startPlayback(track.streamUrl)
   }
 
   playStation(station: RadioStation) {
+    addToHistory(undefined, station)
     this.state.track = null
     this.state.station = station
     this.state.queue = []

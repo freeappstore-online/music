@@ -2,23 +2,23 @@ import { useState } from 'react'
 import { HomeTab } from './components/HomeTab'
 import { SearchTab } from './components/SearchTab'
 import { RadioTab } from './components/RadioTab'
-import { FavoritesTab } from './components/FavoritesTab'
+import { LibraryTab } from './components/LibraryTab'
 import { AboutTab } from './components/AboutTab'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
-type Tab = 'home' | 'search' | 'radio' | 'favorites' | 'about'
+type Tab = 'home' | 'search' | 'radio' | 'library'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'home', label: 'Home', icon: 'home' },
   { id: 'search', label: 'Search', icon: 'search' },
   { id: 'radio', label: 'Radio', icon: 'radio' },
-  { id: 'favorites', label: 'Favorites', icon: 'heart' },
-  { id: 'about', label: 'About', icon: 'about' },
+  { id: 'library', label: 'Library', icon: 'library' },
 ]
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home')
+  const [showAbout, setShowAbout] = useState(false)
   const ps = usePlayer()
   const hasPlayer = ps.track !== null || ps.station !== null
 
@@ -51,6 +51,7 @@ export default function App() {
                 {t.label}
               </button>
             ))}
+            <button onClick={() => setShowAbout(true)} className="px-3 py-1.5 rounded-lg text-sm font-medium text-text-muted hover:text-text hover:bg-white/4 transition-colors">About</button>
           </nav>
         </div>
       </header>
@@ -61,8 +62,7 @@ export default function App() {
           <div className={tab === 'home' ? '' : 'hidden'}><HomeTab /></div>
           <div className={tab === 'search' ? '' : 'hidden'}><SearchTab /></div>
           <div className={tab === 'radio' ? '' : 'hidden'}><RadioTab /></div>
-          <div className={tab === 'favorites' ? '' : 'hidden'}><FavoritesTab /></div>
-          <div className={tab === 'about' ? '' : 'hidden'}><AboutTab /></div>
+          <div className={tab === 'library' ? '' : 'hidden'}><LibraryTab /></div>
         </div>
       </main>
 
@@ -87,6 +87,21 @@ export default function App() {
           ))}
         </div>
       </nav>
+
+      {/* ===== ABOUT MODAL ===== */}
+      {showAbout && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowAbout(false)}>
+          <div className="bg-surface border border-border rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold">About FreeMusic</h2>
+              <button onClick={() => setShowAbout(false)} className="p-1 rounded-lg hover:bg-white/6 text-text-muted">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <AboutTab />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -100,10 +115,8 @@ function TabIcon({ name, size = 24 }: { name: string; size?: number }) {
       return <svg style={s} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
     case 'radio':
       return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
-    case 'heart':
-      return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
-    case 'about':
-      return <svg style={s} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    case 'library':
+      return <svg style={s} fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
     default:
       return null
   }
