@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { ARTISTS, STYLES, INSTRUMENTS, MOODS, ERAS, getJazzTracks, getJazzRadio, searchJazz, type JazzCategory } from '../services/jazz'
+import { JazzTimeline } from './TimelineView'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
 import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-type Section = 'artists' | 'styles' | 'instruments' | 'moods' | 'eras' | 'radio'
+type Section = 'timeline' | 'artists' | 'styles' | 'instruments' | 'moods' | 'eras' | 'radio'
 
 const SECTIONS: { id: Section; label: string }[] = [
+  { id: 'timeline', label: 'Timeline' },
   { id: 'artists', label: 'Artists' },
   { id: 'styles', label: 'Styles' },
   { id: 'eras', label: 'Eras' },
@@ -115,6 +117,9 @@ export function JazzTab() {
               </button>
             ))}
           </div>
+
+          {/* Timeline */}
+          {section === 'timeline' && <JazzTimeline />}
 
           {/* Artist grid with portraits */}
           {section === 'artists' && (

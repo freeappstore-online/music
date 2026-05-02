@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { ERAS, COMPOSERS, INSTRUMENTS, FORMS, MOODS, getClassicalTracks, getClassicalRadio, searchClassical, type ClassicalCategory } from '../services/classical'
+import { ClassicalTimeline } from './TimelineView'
 import type { Track, RadioStation } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
 import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-type Section = 'eras' | 'composers' | 'instruments' | 'forms' | 'moods' | 'radio'
+type Section = 'timeline' | 'composers' | 'eras' | 'instruments' | 'forms' | 'moods' | 'radio'
 
 const SECTIONS: { id: Section; label: string }[] = [
+  { id: 'timeline', label: 'Timeline' },
   { id: 'composers', label: 'Composers' },
   { id: 'eras', label: 'Eras' },
   { id: 'instruments', label: 'Instruments' },
@@ -122,6 +124,9 @@ export function ClassicalTab() {
               </button>
             ))}
           </div>
+
+          {/* Timeline */}
+          {section === 'timeline' && <ClassicalTimeline />}
 
           {/* Composer grid with portraits */}
           {section === 'composers' && (
