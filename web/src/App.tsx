@@ -23,9 +23,9 @@ export default function App() {
   const hasPlayer = ps.track !== null || ps.station !== null
 
   return (
-    <div className="min-h-[100dvh] bg-base">
+    <div className="h-[100dvh] bg-base flex flex-col overflow-hidden">
       {/* ===== DESKTOP TOP NAV (hidden on mobile) ===== */}
-      <header className="hidden md:block border-b border-white/6">
+      <header className="hidden md:block border-b border-white/6 flex-shrink-0">
         <div className="flex items-center justify-between gap-4 max-w-5xl mx-auto px-6 h-14">
           <div className="flex items-center gap-2.5">
             <svg className="w-6 h-6" viewBox="0 0 512 512" fill="none">
@@ -55,14 +55,14 @@ export default function App() {
         </div>
       </header>
 
-      {/* ===== MAIN CONTENT ===== */}
-      <main className={`${hasPlayer ? 'pb-28 md:pb-24' : 'pb-14 md:pb-0'}`}>
+      {/* ===== MAIN CONTENT (scrollable) ===== */}
+      <main className={`flex-1 overflow-y-auto ${hasPlayer ? 'pb-28 md:pb-24' : 'pb-14 md:pb-0'}`}>
         <div className="max-w-5xl mx-auto">
-          {tab === 'home' && <HomeTab />}
-          {tab === 'search' && <SearchTab />}
-          {tab === 'radio' && <RadioTab />}
-          {tab === 'favorites' && <FavoritesTab />}
-          {tab === 'about' && <AboutTab />}
+          <div className={tab === 'home' ? '' : 'hidden'}><HomeTab /></div>
+          <div className={tab === 'search' ? '' : 'hidden'}><SearchTab /></div>
+          <div className={tab === 'radio' ? '' : 'hidden'}><RadioTab /></div>
+          <div className={tab === 'favorites' ? '' : 'hidden'}><FavoritesTab /></div>
+          <div className={tab === 'about' ? '' : 'hidden'}><AboutTab /></div>
         </div>
       </main>
 

@@ -69,9 +69,19 @@ class AudioPlayerService {
     document.addEventListener('keydown', (e) => {
       // Don't capture when typing in inputs
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
-      if (!this.state.track && !this.state.station) return
+      if (!this.state.track && !this.state.station && e.key !== ' ') return
 
       switch (e.key) {
+        case ' ':
+          e.preventDefault()
+          this.togglePlayPause()
+          break
+        case 'Escape':
+          e.preventDefault()
+          this.audio.pause()
+          this.state.isPlaying = false
+          this.notify()
+          break
         case 'ArrowRight':
           e.preventDefault()
           this.next()
