@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { DiscoverTab } from './DiscoverTab'
 import { ClassicalTab } from './ClassicalTab'
 import { JazzTab } from './JazzTab'
+import { BluesTab } from './BluesTab'
 
-type Genre = 'discover' | 'classical' | 'jazz'
+type Genre = 'discover' | 'classical' | 'jazz' | 'blues'
 
 const GENRES: { id: Genre; label: string; color: string }[] = [
   { id: 'discover', label: 'All', color: 'from-accent to-emerald-700' },
   { id: 'classical', label: 'Classical', color: 'from-amber-500 to-amber-800' },
   { id: 'jazz', label: 'Jazz', color: 'from-blue-500 to-indigo-800' },
+  { id: 'blues', label: 'Blues', color: 'from-red-600 to-red-900' },
 ]
 
 export function ExploreTab() {
@@ -35,6 +37,7 @@ export function ExploreTab() {
       <div className={genre === 'discover' ? '' : 'hidden'}><DiscoverTab /></div>
       <div className={genre === 'classical' ? '' : 'hidden'}><ClassicalTab /></div>
       <div className={genre === 'jazz' ? '' : 'hidden'}><JazzTab /></div>
+      <div className={genre === 'blues' ? '' : 'hidden'}><BluesTab /></div>
     </div>
   )
 }
