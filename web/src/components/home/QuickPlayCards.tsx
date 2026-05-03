@@ -1,3 +1,5 @@
+import { Heart, Music, Play, Radio } from 'lucide-react'
+
 import type { Track, RadioStation } from '../../types'
 import { player } from '../../services/player'
 
@@ -66,7 +68,7 @@ function QuickCard({ gradient, icon, label, subtitle, onClick }: {
       aria-label={`Play ${label}`}
     >
       <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+        <Play className="w-4 h-4" strokeWidth={2} />
       </div>
       <div className="mb-3 opacity-80">{icon}</div>
       <div className="text-sm font-bold">{label}</div>
@@ -76,11 +78,11 @@ function QuickCard({ gradient, icon, label, subtitle, onClick }: {
 }
 
 function RadioSvg() {
-  return <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm-1 4h1v2H4V9zm1 4v2H4v-2h1z" clipRule="evenodd" /></svg>
+  return <Radio className="w-6 h-6" strokeWidth={2} />
 }
 function HeartSvg() {
-  return <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+  return <Heart className="w-6 h-6" fill="currentColor" strokeWidth={1.8} />
 }
 function NoteSvg() {
-  return <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" /></svg>
+  return <Music className="w-6 h-6" strokeWidth={2} />
 }
