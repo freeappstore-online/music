@@ -11,8 +11,12 @@
   --color-accent: #6ECE9E;
   --color-accent-hover: #5cb888;
 
-  --font-display: 'DM Serif Display', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Manrope', sans-serif;
+
+  --paper: #111113;
+  --ink: #f0f0f2;
+  --accent: #6ECE9E;
 }
 
 body {
