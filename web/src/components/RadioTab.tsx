@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getTopStations, advancedSearch, type RadioFilters } from '../services/radio'
 import { getUserTags, addUserTag, removeUserTag } from '../services/usertags'
 import type { RadioStation } from '../types'
@@ -84,7 +84,7 @@ export function RadioTab() {
     getTopStations(60).then(s => { setStations(s); setLoading(false) })
   }, [])
 
-  const doSearch = async () => {
+  const doSearch = useCallback(async () => {
     setLoading(true)
     const filters: RadioFilters = {}
     if (nameQuery.trim()) filters.name = nameQuery.trim()
@@ -97,7 +97,7 @@ export function RadioTab() {
       setStations(await advancedSearch(filters, 60))
     }
     setLoading(false)
-  }
+  }, [country, genre, language, nameQuery])
 
   const clearAll = () => {
     setGenre(''); setCountry(''); setLanguage(''); setSortBy('clickcount'); setMinBitrate(''); setNameQuery('')
@@ -109,7 +109,7 @@ export function RadioTab() {
     clearTimeout(timer.current)
     timer.current = setTimeout(doSearch, 300)
     return () => clearTimeout(timer.current)
-  }, [genre, country, language, minBitrate])
+  }, [country, doSearch, genre, language, minBitrate])
 
   return (
     <div className="pb-4">

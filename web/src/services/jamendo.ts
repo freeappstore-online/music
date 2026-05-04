@@ -3,11 +3,44 @@ import type { Track } from '../types'
 const CLIENT_ID = 'b0f2e95e'
 const BASE = 'https://api.jamendo.com/v3.0'
 
+interface JamendoTrackResult {
+  id: string | number
+  name: string
+  artist_name: string
+  album_name?: string
+  duration?: number
+  audio: string
+  album_image?: string
+  image?: string
+  releasedate?: string
+  license_ccurl?: string
+  musicinfo?: {
+    lang?: string
+    gender?: string
+    speed?: string
+    vocalinstrumental?: string
+    acousticelectric?: string
+    tags?: {
+      genres?: string[]
+      instruments?: string[]
+      vartags?: string[]
+    }
+  }
+  stats?: {
+    rate_downloads_total?: number
+    rate_listened_total?: number
+  }
+}
+
+interface JamendoResponse {
+  results?: JamendoTrackResult[]
+}
+
 async function jamendoFetch(url: string): Promise<Track[]> {
   try {
     const res = await fetch(url)
-    const data = await res.json()
-    return (data.results || []).map(mapTrack)
+    const data = await res.json() as JamendoResponse
+    return (data.results ?? []).map(mapTrack)
   } catch {
     return []
   }
@@ -56,17 +89,17 @@ export async function searchArtists(query: string, limit = 20): Promise<Track[]>
   return jamendoFetch(`${BASE}/tracks/?client_id=${CLIENT_ID}&format=json&limit=${limit}&artist_name=${encodeURIComponent(query)}&order=popularity_week`)
 }
 
-function mapTrack(t: any): Track {
-  const mi = t.musicinfo
-  const st = t.stats
+function mapTrack(track: JamendoTrackResult): Track {
+  const mi = track.musicinfo
+  const st = track.stats
   return {
-    id: `jamendo-${t.id}`,
-    title: t.name,
-    artist: t.artist_name,
-    album: t.album_name,
-    duration: t.duration,
-    streamUrl: t.audio,
-    artworkUrl: t.album_image || t.image,
+    id: `jamendo-${track.id}`,
+    title: track.name,
+    artist: track.artist_name,
+    album: track.album_name,
+    duration: track.duration ?? 0,
+    streamUrl: track.audio,
+    artworkUrl: track.album_image || track.image,
     source: 'jamendo',
     lang: mi?.lang || undefined,
     gender: mi?.gender || undefined,
@@ -76,8 +109,8 @@ function mapTrack(t: any): Track {
     genres: mi?.tags?.genres?.length ? mi.tags.genres : undefined,
     instruments: mi?.tags?.instruments?.length ? mi.tags.instruments : undefined,
     vartags: mi?.tags?.vartags?.length ? mi.tags.vartags : undefined,
-    releasedate: t.releasedate || undefined,
-    license: t.license_ccurl || undefined,
+    releasedate: track.releasedate || undefined,
+    license: track.license_ccurl || undefined,
     downloads: st?.rate_downloads_total || undefined,
     listens: st?.rate_listened_total || undefined,
   }

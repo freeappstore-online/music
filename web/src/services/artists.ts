@@ -10,6 +10,34 @@ export type Artist = {
   website?: string
 }
 
+interface RawArtist {
+  id: string | number
+  name: string
+  image?: string
+  website?: string
+}
+
+interface PopularArtistsResponse {
+  results?: RawArtist[]
+}
+
+interface RawArtistTrack {
+  id: string | number
+  name: string
+  album_name?: string
+  duration?: number
+  audio: string
+  album_image?: string
+  image?: string
+}
+
+interface ArtistTracksResponse {
+  results?: Array<{
+    name: string
+    tracks?: RawArtistTrack[]
+  }>
+}
+
 export async function getPopularArtists(limit = 20, tags?: string): Promise<Artist[]> {
   const params = new URLSearchParams({
     client_id: CLIENT_ID,
@@ -20,8 +48,8 @@ export async function getPopularArtists(limit = 20, tags?: string): Promise<Arti
   if (tags) params.set('tags', tags)
   try {
     const res = await fetch(`${BASE}/artists/?${params}`)
-    const data = await res.json()
-    return (data.results || []).map(mapArtist)
+    const data = await res.json() as PopularArtistsResponse
+    return (data.results ?? []).map(mapArtist)
   } catch {
     return []
   }
@@ -30,17 +58,17 @@ export async function getPopularArtists(limit = 20, tags?: string): Promise<Arti
 export async function getArtistTracks(artistId: string, limit = 20): Promise<Track[]> {
   try {
     const res = await fetch(`${BASE}/artists/tracks/?client_id=${CLIENT_ID}&format=json&id=${artistId}&limit=${limit}`)
-    const data = await res.json()
+    const data = await res.json() as ArtistTracksResponse
     const artist = data.results?.[0]
     if (!artist?.tracks) return []
-    return artist.tracks.map((t: any) => ({
-      id: `jamendo-${t.id}`,
-      title: t.name,
+    return artist.tracks.map((track) => ({
+      id: `jamendo-${track.id}`,
+      title: track.name,
       artist: artist.name,
-      album: t.album_name,
-      duration: t.duration,
-      streamUrl: t.audio,
-      artworkUrl: t.album_image || t.image,
+      album: track.album_name,
+      duration: track.duration ?? 0,
+      streamUrl: track.audio,
+      artworkUrl: track.album_image || track.image,
       source: 'jamendo' as const,
     }))
   } catch {
@@ -48,11 +76,11 @@ export async function getArtistTracks(artistId: string, limit = 20): Promise<Tra
   }
 }
 
-function mapArtist(a: any): Artist {
+function mapArtist(artist: RawArtist): Artist {
   return {
-    id: a.id,
-    name: a.name,
-    image: a.image || undefined,
-    website: a.website || undefined,
+    id: String(artist.id),
+    name: artist.name,
+    image: artist.image || undefined,
+    website: artist.website || undefined,
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getPopularArtists, getArtistTracks, type Artist } from '../services/artists'
 import { getTrending, getByGenre } from '../services/jamendo'
 import type { Track } from '../types'
@@ -18,11 +18,7 @@ export function DiscoverTab() {
   const [loading, setLoading] = useState(true)
   const [loadingArtist, setLoadingArtist] = useState(false)
 
-  useEffect(() => {
-    loadContent()
-  }, [])
-
-  const loadContent = async (tag?: string) => {
+  const loadContent = useCallback(async (tag?: string) => {
     setLoading(true)
     setSelectedArtist(null)
     setArtistTracks([])
@@ -33,12 +29,16 @@ export function DiscoverTab() {
     setArtists(a)
     setTracks(t)
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    void loadContent()
+  }, [loadContent])
 
   const handleGenre = (g: string) => {
     const next = genre === g ? '' : g
     setGenre(next)
-    loadContent(next || undefined)
+    void loadContent(next || undefined)
   }
 
   const handleArtist = async (artist: Artist) => {

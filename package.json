@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.2.0",
   "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "pnpm --filter @freemusic/web dev",
     "generate:seo": "npx tsx scripts/generate-seo-pages.ts",

@@ -2,10 +2,27 @@ import type { RadioStation } from '../types'
 
 const BASE = 'https://de1.api.radio-browser.info/json'
 
+interface RawRadioStation {
+  stationuuid: string
+  name: string
+  url_resolved?: string
+  url: string
+  tags?: string
+  country?: string
+  language?: string
+  bitrate?: number
+  codec?: string
+  favicon?: string
+  homepage?: string
+  votes?: number
+  clickcount?: number
+  state?: string
+}
+
 async function radioFetch(url: string): Promise<RadioStation[]> {
   try {
     const res = await fetch(url)
-    const data = await res.json()
+    const data = await res.json() as RawRadioStation[]
     return data.map(mapStation)
   } catch {
     return []
@@ -52,21 +69,21 @@ export function advancedSearch(filters: RadioFilters, limit = 40): Promise<Radio
   return radioFetch(`${BASE}/stations/search?${params}`)
 }
 
-function mapStation(s: any): RadioStation {
+function mapStation(station: RawRadioStation): RadioStation {
   return {
-    id: `radio-${s.stationuuid}`,
-    name: s.name,
-    streamUrl: s.url_resolved || s.url,
-    genre: s.tags,
-    country: s.country,
-    language: s.language,
-    bitrate: s.bitrate || undefined,
-    codec: s.codec || undefined,
-    favicon: s.favicon || undefined,
-    homepage: s.homepage || undefined,
-    votes: s.votes || 0,
-    clickcount: s.clickcount || 0,
-    state: s.state || undefined,
-    tags: s.tags || undefined,
+    id: `radio-${station.stationuuid}`,
+    name: station.name,
+    streamUrl: station.url_resolved || station.url,
+    genre: station.tags,
+    country: station.country,
+    language: station.language,
+    bitrate: station.bitrate || undefined,
+    codec: station.codec || undefined,
+    favicon: station.favicon || undefined,
+    homepage: station.homepage || undefined,
+    votes: station.votes || 0,
+    clickcount: station.clickcount || 0,
+    state: station.state || undefined,
+    tags: station.tags || undefined,
   }
 }

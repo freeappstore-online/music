@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { advancedSearch, type TrackFilters } from '../services/jamendo'
 import { searchTracks as searchArchive } from '../services/archive'
 import { searchStations } from '../services/radio'
@@ -89,7 +89,7 @@ export function SearchTab() {
 
   const hasFilters = !!(genre || speed || vocal || acoustic || lang || gender)
 
-  const doSearch = async (q?: string) => {
+  const doSearch = useCallback(async (q?: string) => {
     const term = (q ?? query).trim()
     if (!term && !hasFilters) return
     if (term) { setQuery(term); addToHistory(term); setHistory(getHistory()) }
@@ -113,7 +113,7 @@ export function SearchTab() {
     setTracks([...j, ...ia])
     setStations(radio)
     setLoading(false)
-  }
+  }, [acoustic, gender, genre, hasFilters, lang, query, speed, vocal])
 
   const clearAll = () => {
     setGenre(''); setSpeed(''); setVocal(''); setAcoustic(''); setLang(''); setGender('')
@@ -126,7 +126,7 @@ export function SearchTab() {
     clearTimeout(timer.current)
     timer.current = setTimeout(() => doSearch(), 300)
     return () => clearTimeout(timer.current)
-  }, [genre, speed, vocal, acoustic, lang, gender])
+  }, [doSearch, hasFilters, hasSearched])
 
   const hasResults = tracks.length > 0 || stations.length > 0
 

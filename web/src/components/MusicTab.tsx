@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getTrending, getByGenre } from '../services/jamendo'
 import { getFeatured as getIAFeatured } from '../services/archive'
 import { getByGenre as getStationsByGenre } from '../services/radio'
@@ -106,18 +106,20 @@ export function MusicTab() {
     if (t.length > 0) player.playTrack(t[0], t, 0)
   }
 
-  const loadTrending = async () => {
+  const loadTrending = useCallback(async () => {
     if (trendingLoaded) return
     setLoading(true)
     const t = await getTrending(30)
     setTrending(t)
     setTrendingLoaded(true)
     setLoading(false)
-  }
+  }, [trendingLoaded])
 
   useEffect(() => {
-    if (section === 'trending') loadTrending()
-  }, [section])
+    if (section === 'trending') {
+      void loadTrending()
+    }
+  }, [loadTrending, section])
 
   return (
     <div className="pb-4">

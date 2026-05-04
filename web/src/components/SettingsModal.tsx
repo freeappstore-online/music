@@ -56,7 +56,9 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
           </a>
         </div>
 
-        <p className="text-[10px] text-text-dim mt-4 text-center">FreeMusic — free music for everyone</p>
+        <a href="https://freeappstore.online" target="_blank" rel="noopener" className="block text-[10px] text-text-dim hover:text-text mt-4 text-center transition-colors">
+          Part of FreeAppStore — free forever
+        </a>
       </div>
     </div>
   )
