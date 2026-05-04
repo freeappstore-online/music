@@ -59,3 +59,5 @@ input[type="range"]::-webkit-slider-thumb {
 
 button, a { transition: all 0.15s ease; }
 button:active { transform: scale(0.97); }
+/* Dark mode: this app uses a dark-only theme */
+:root { color-scheme: dark; }
