@@ -11,6 +11,11 @@
     "generate:seo": "npx tsx scripts/generate-seo-pages.ts",
     "build": "pnpm run generate:seo && pnpm --filter @freemusic/web build",
     "preview": "pnpm --filter @freemusic/web preview",
-    "ios:generate": "cd ios && xcodegen generate"
+    "ios:generate": "cd ios && xcodegen generate",
+    "test": "pnpm --filter @music/web exec tsc -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freeappstore-online/music.git"
   }
 }
