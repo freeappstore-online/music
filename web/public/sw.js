@@ -1,4 +1,4 @@
-const CACHE = 'freemusic-v2';
+const CACHE = 'freemusic-v3';
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -16,30 +16,18 @@ self.addEventListener('fetch', e => {
 
   const url = new URL(e.request.url);
 
-  // API calls: network only, no caching
+  // External requests: skip
   if (url.hostname !== location.hostname) return;
 
-  // HTML pages: network first, fall back to cache
-  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
-    e.respondWith(
-      fetch(e.request).then(res => {
+  // Network-first for all same-origin requests.
+  // Deploys land immediately when online; offline falls back to cache.
+  e.respondWith(
+    fetch(e.request).then(res => {
+      if (res.ok) {
         const clone = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, clone));
-        return res;
-      }).catch(() => caches.match(e.request))
-    );
-    return;
-  }
-
-  // Static assets (JS, CSS, images): cache first (hashed filenames = safe)
-  if (url.pathname.includes('/assets/')) {
-    e.respondWith(
-      caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
-        return res;
-      }))
-    );
-    return;
-  }
+      }
+      return res;
+    }).catch(() => caches.match(e.request))
+  );
 });
