@@ -22,7 +22,7 @@
 body {
   background-color: var(--color-base);
   color: var(--color-text);
-  font-family: var(--font-body);
+  font-family: 'Manrope', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
