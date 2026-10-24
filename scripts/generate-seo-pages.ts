@@ -2,6 +2,8 @@ import { writeFileSync, mkdirSync } from 'fs'
 import { join } from 'path'
 
 const OUT = join(__dirname, '../web/public')
+// The approved public origin; keep generated pages and discovery in agreement.
+const ORIGIN = 'https://music.freeappstore.online'
 
 type Artist = { id: string; name: string; fullName: string; years: string; genre: string; bio: string }
 type Work = { slug: string; title: string; composer: string; year: number; type: string; description: string }
@@ -133,13 +135,13 @@ function artistPage(a: Artist): string {
   <meta property="og:title" content="${a.fullName} — Free ${a.genre} Music | FreeMusic">
   <meta property="og:description" content="${a.bio.slice(0, 200)}">
   <meta name="theme-color" content="#111113">
-  <link rel="canonical" href="https://freemusicapp.online/artist/${a.id}.html">
+  <link rel="canonical" href="${ORIGIN}/artist/${a.id}.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"${a.fullName}","genre":"${a.genre}","description":"${a.bio.replace(/"/g, '\\"').slice(0, 200)}"}</script>
-  <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#111113;color:#f0f0f2;font-family:'Inter',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}.c{max-width:680px;margin:0 auto;padding:48px 24px 80px}a{color:#6ECE9E}h1{font-family:'DM Serif Display',serif;font-size:36px;font-weight:700;margin-bottom:4px}.sub{color:#9090a0;font-size:15px;margin-bottom:32px}h2{font-size:20px;font-weight:600;margin:32px 0 12px}p{font-size:16px;color:#c0c0cc;margin-bottom:16px}.back{display:inline-flex;align-items:center;gap:6px;color:#6ECE9E;text-decoration:none;font-size:14px;font-weight:500;margin-bottom:32px}.back:hover{text-decoration:underline}.cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:12px 24px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:16px}.cta:hover{background:#5cb888}.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}</style>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#111113;color:#f0f0f2;font-family:'Manrope',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}.c{max-width:680px;margin:0 auto;padding:48px 24px 80px}a{color:#6ECE9E}h1{font-family:'Fraunces',serif;font-size:36px;font-weight:700;margin-bottom:4px}.sub{color:#9090a0;font-size:15px;margin-bottom:32px}h2{font-size:20px;font-weight:600;margin:32px 0 12px}p{font-size:16px;color:#c0c0cc;margin-bottom:16px}.back{display:inline-flex;align-items:center;gap:6px;color:#6ECE9E;text-decoration:none;font-size:14px;font-weight:500;margin-bottom:32px}.back:hover{text-decoration:underline}.cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:12px 24px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:16px}.cta:hover{background:#5cb888}.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}</style>
 </head>
 <body>
 <div class="c">
@@ -168,13 +170,13 @@ function workPage(w: Work): string {
   <meta property="og:title" content="${w.title} — ${w.composer} | FreeMusic">
   <meta property="og:description" content="${w.description.slice(0, 200)}">
   <meta name="theme-color" content="#111113">
-  <link rel="canonical" href="https://freemusicapp.online/work/${w.slug}.html">
+  <link rel="canonical" href="${ORIGIN}/work/${w.slug}.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicComposition","name":"${w.title}","composer":{"@type":"Person","name":"${w.composer}"},"dateCreated":"${w.year}","description":"${w.description.replace(/"/g, '\\"').slice(0, 200)}"}</script>
-  <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#111113;color:#f0f0f2;font-family:'Inter',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}.c{max-width:680px;margin:0 auto;padding:48px 24px 80px}a{color:#6ECE9E}h1{font-family:'DM Serif Display',serif;font-size:32px;font-weight:700;margin-bottom:4px;font-style:italic}.sub{color:#9090a0;font-size:15px;margin-bottom:32px}h2{font-size:20px;font-weight:600;margin:32px 0 12px}p{font-size:16px;color:#c0c0cc;margin-bottom:16px}.back{display:inline-flex;align-items:center;gap:6px;color:#6ECE9E;text-decoration:none;font-size:14px;font-weight:500;margin-bottom:32px}.back:hover{text-decoration:underline}.cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:12px 24px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:16px}.cta:hover{background:#5cb888}.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}.meta{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}.meta span{font-size:13px;color:#9090a0}</style>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#111113;color:#f0f0f2;font-family:'Manrope',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}.c{max-width:680px;margin:0 auto;padding:48px 24px 80px}a{color:#6ECE9E}h1{font-family:'Fraunces',serif;font-size:32px;font-weight:700;margin-bottom:4px;font-style:italic}.sub{color:#9090a0;font-size:15px;margin-bottom:32px}h2{font-size:20px;font-weight:600;margin:32px 0 12px}p{font-size:16px;color:#c0c0cc;margin-bottom:16px}.back{display:inline-flex;align-items:center;gap:6px;color:#6ECE9E;text-decoration:none;font-size:14px;font-weight:500;margin-bottom:32px}.back:hover{text-decoration:underline}.cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:12px 24px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:16px}.cta:hover{background:#5cb888}.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}.meta{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}.meta span{font-size:13px;color:#9090a0}</style>
 </head>
 <body>
 <div class="c">
@@ -241,26 +243,26 @@ function richComposerPage(c: ComposerBio): string {
   <meta property="og:title" content="${c.fullName} — Life, Works & Free Music">
   <meta property="og:description" content="${c.tagline}">
   <meta name="theme-color" content="#111113">
-  <link rel="canonical" href="https://freemusicapp.online/artist/${c.id}.html">
+  <link rel="canonical" href="${ORIGIN}/artist/${c.id}.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"${c.fullName}","birthDate":"${c.birthYear}","deathDate":"${c.deathYear || ''}","nationality":"${c.nationality}","description":"${c.tagline.replace(/"/g, '\\"')}","sameAs":"https://en.wikipedia.org/wiki/${c.fullName.replace(/ /g, '_')}"}</script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{background:#111113;color:#f0f0f2;font-family:'Inter',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+    body{background:#111113;color:#f0f0f2;font-family:'Manrope',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
     .c{max-width:720px;margin:0 auto;padding:40px 24px 80px}
     a{color:#6ECE9E;text-decoration:none}a:hover{text-decoration:underline}
     .back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;margin-bottom:32px}
     .hero{text-align:center;margin-bottom:48px}
-    .hero h1{font-family:'DM Serif Display',serif;font-size:clamp(32px,6vw,48px);font-weight:700;margin-bottom:4px}
+    .hero h1{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,48px);font-weight:700;margin-bottom:4px}
     .hero .sub{color:#9090a0;font-size:16px;margin-bottom:8px}
     .hero .tagline{font-style:italic;color:#c0c0cc;font-size:15px;max-width:500px;margin:0 auto 20px}
     .badge{display:inline-block;padding:4px 14px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}
     .meta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
     .meta span{font-size:13px;color:#9090a0}
-    h2{font-family:'DM Serif Display',serif;font-size:24px;margin:40px 0 16px;color:#f0f0f2}
+    h2{font-family:'Fraunces',serif;font-size:24px;margin:40px 0 16px;color:#f0f0f2}
     h3{font-size:16px;font-weight:600;margin:24px 0 8px}
     p{font-size:15px;color:#c0c0cc;margin-bottom:16px}
     .cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:14px 28px;border-radius:12px;font-weight:600;font-size:15px;margin:8px 0 0}
@@ -366,16 +368,16 @@ console.log(`Enhanced ${COMPOSER_BIOS.length} composer pages with rich bios + ti
 
 // Sitemap
 const urls = [
-  'https://freemusicapp.online/',
-  'https://freemusicapp.online/legal/privacy.html',
-  'https://freemusicapp.online/legal/terms.html',
-  ...ARTISTS.map(a => `https://freemusicapp.online/artist/${a.id}.html`),
-  ...WORKS.map(w => `https://freemusicapp.online/work/${w.slug}.html`),
+  `${ORIGIN}/`,
+  `${ORIGIN}/legal/privacy.html`,
+  `${ORIGIN}/legal/terms.html`,
+  ...ARTISTS.map(a => `${ORIGIN}/artist/${a.id}.html`),
+  ...WORKS.map(w => `${ORIGIN}/work/${w.slug}.html`),
 ]
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>`
 writeFileSync(join(OUT, 'sitemap.xml'), sitemap)
 
 // Robots.txt
-writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: https://freemusicapp.online/sitemap.xml\n`)
+writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`)
 
 console.log(`Generated ${ARTISTS.length} artist pages, ${WORKS.length} work pages, sitemap.xml, robots.txt`)
