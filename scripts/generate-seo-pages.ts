@@ -1,5 +1,6 @@
 import { writeFileSync, mkdirSync } from 'fs'
 import { join } from 'path'
+import { escapeHtml, plainText, richText, serializeJsonLd } from './seo-serialization.mjs'
 
 const OUT = join(__dirname, '../web/public')
 // The approved public origin; keep generated pages and discovery in agreement.
@@ -130,29 +131,29 @@ function artistPage(a: Artist): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${a.fullName} — Free ${a.genre} Music | FreeMusic</title>
-  <meta name="description" content="Listen to ${a.fullName} (${a.years}) for free on FreeMusic. ${a.bio.slice(0, 140)}">
-  <meta property="og:title" content="${a.fullName} — Free ${a.genre} Music | FreeMusic">
-  <meta property="og:description" content="${a.bio.slice(0, 200)}">
+  <title>${escapeHtml(a.fullName)} — Free ${escapeHtml(a.genre)} Music | FreeMusic</title>
+  <meta name="description" content="Listen to ${escapeHtml(a.fullName)} (${escapeHtml(a.years)}) for free on FreeMusic. ${escapeHtml(a.bio.slice(0, 140))}">
+  <meta property="og:title" content="${escapeHtml(a.fullName)} — Free ${escapeHtml(a.genre)} Music | FreeMusic">
+  <meta property="og:description" content="${escapeHtml(a.bio.slice(0, 200))}">
   <meta name="theme-color" content="#111113">
   <link rel="canonical" href="${ORIGIN}/artist/${a.id}.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"${a.fullName}","genre":"${a.genre}","description":"${a.bio.replace(/"/g, '\\"').slice(0, 200)}"}</script>
+  <script type="application/ld+json">${serializeJsonLd({ "@context": "https://schema.org", "@type": "MusicGroup", name: a.fullName, genre: a.genre, description: a.bio.slice(0, 200) })}</script>
   <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#111113;color:#f0f0f2;font-family:'Manrope',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}.c{max-width:680px;margin:0 auto;padding:48px 24px 80px}a{color:#6ECE9E}h1{font-family:'Fraunces',serif;font-size:36px;font-weight:700;margin-bottom:4px}.sub{color:#9090a0;font-size:15px;margin-bottom:32px}h2{font-size:20px;font-weight:600;margin:32px 0 12px}p{font-size:16px;color:#c0c0cc;margin-bottom:16px}.back{display:inline-flex;align-items:center;gap:6px;color:#6ECE9E;text-decoration:none;font-size:14px;font-weight:500;margin-bottom:32px}.back:hover{text-decoration:underline}.cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:12px 24px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:16px}.cta:hover{background:#5cb888}.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}</style>
 </head>
 <body>
 <div class="c">
   <a href="/" class="back">&larr; Back to FreeMusic</a>
-  <div class="badge">${a.genre}</div>
-  <h1>${a.fullName}</h1>
-  <p class="sub">${a.years}</p>
-  <p>${a.bio}</p>
+  <div class="badge">${escapeHtml(a.genre)}</div>
+  <h1>${escapeHtml(a.fullName)}</h1>
+  <p class="sub">${escapeHtml(a.years)}</p>
+  <p>${escapeHtml(a.bio)}</p>
   <h2>Listen Free</h2>
-  <p>Stream ${a.name}'s music for free on FreeMusic. No ads, no subscription, no account required. All music is Creative Commons licensed or public domain.</p>
-  <a href="/" class="cta"><svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>Play ${a.name} on FreeMusic</a>
+  <p>Stream ${escapeHtml(a.name)}'s music for free on FreeMusic. No ads, no subscription, no account required. All music is Creative Commons licensed or public domain.</p>
+  <a href="/" class="cta"><svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>Play ${escapeHtml(a.name)} on FreeMusic</a>
   <p style="margin-top:48px;font-size:12px;color:#60606e"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a> · <a href="https://github.com/FreeMusicApp/freemusic">GitHub</a></p>
 </div>
 </body>
@@ -165,29 +166,29 @@ function workPage(w: Work): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${w.title} by ${w.composer} — Free Music | FreeMusic</title>
-  <meta name="description" content="Listen to ${w.title} by ${w.composer} (${w.year}) for free. ${w.description.slice(0, 140)}">
-  <meta property="og:title" content="${w.title} — ${w.composer} | FreeMusic">
-  <meta property="og:description" content="${w.description.slice(0, 200)}">
+  <title>${escapeHtml(w.title)} by ${escapeHtml(w.composer)} — Free Music | FreeMusic</title>
+  <meta name="description" content="Listen to ${escapeHtml(w.title)} by ${escapeHtml(w.composer)} (${escapeHtml(w.year)}) for free. ${escapeHtml(w.description.slice(0, 140))}">
+  <meta property="og:title" content="${escapeHtml(w.title)} — ${escapeHtml(w.composer)} | FreeMusic">
+  <meta property="og:description" content="${escapeHtml(w.description.slice(0, 200))}">
   <meta name="theme-color" content="#111113">
   <link rel="canonical" href="${ORIGIN}/work/${w.slug}.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicComposition","name":"${w.title}","composer":{"@type":"Person","name":"${w.composer}"},"dateCreated":"${w.year}","description":"${w.description.replace(/"/g, '\\"').slice(0, 200)}"}</script>
+  <script type="application/ld+json">${serializeJsonLd({ "@context": "https://schema.org", "@type": "MusicComposition", name: w.title, composer: { "@type": "Person", name: w.composer }, dateCreated: String(w.year), description: w.description.slice(0, 200) })}</script>
   <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#111113;color:#f0f0f2;font-family:'Manrope',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}.c{max-width:680px;margin:0 auto;padding:48px 24px 80px}a{color:#6ECE9E}h1{font-family:'Fraunces',serif;font-size:32px;font-weight:700;margin-bottom:4px;font-style:italic}.sub{color:#9090a0;font-size:15px;margin-bottom:32px}h2{font-size:20px;font-weight:600;margin:32px 0 12px}p{font-size:16px;color:#c0c0cc;margin-bottom:16px}.back{display:inline-flex;align-items:center;gap:6px;color:#6ECE9E;text-decoration:none;font-size:14px;font-weight:500;margin-bottom:32px}.back:hover{text-decoration:underline}.cta{display:inline-flex;align-items:center;gap:8px;background:#6ECE9E;color:#111113;padding:12px 24px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;margin-top:16px}.cta:hover{background:#5cb888}.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:#6ECE9E20;color:#6ECE9E;margin-bottom:16px}.meta{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}.meta span{font-size:13px;color:#9090a0}</style>
 </head>
 <body>
 <div class="c">
   <a href="/" class="back">&larr; Back to FreeMusic</a>
-  <div class="badge">${w.type}</div>
-  <h1>${w.title}</h1>
-  <p class="sub">${w.composer}</p>
-  <div class="meta"><span>Composed: ${w.year}</span><span>Type: ${w.type}</span></div>
-  <p>${w.description}</p>
+  <div class="badge">${escapeHtml(w.type)}</div>
+  <h1>${escapeHtml(w.title)}</h1>
+  <p class="sub">${escapeHtml(w.composer)}</p>
+  <div class="meta"><span>Composed: ${escapeHtml(w.year)}</span><span>Type: ${escapeHtml(w.type)}</span></div>
+  <p>${escapeHtml(w.description)}</p>
   <h2>Listen Free</h2>
-  <p>Stream ${w.title} for free on FreeMusic. No ads, no subscription, no account required.</p>
+  <p>Stream ${escapeHtml(w.title)} for free on FreeMusic. No ads, no subscription, no account required.</p>
   <a href="/" class="cta"><svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>Play on FreeMusic</a>
   <p style="margin-top:48px;font-size:12px;color:#60606e"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a> · <a href="https://github.com/FreeMusicApp/freemusic">GitHub</a></p>
 </div>
@@ -213,24 +214,24 @@ import { COMPOSER_BIOS, type ComposerBio } from './composer-data'
 function richComposerPage(c: ComposerBio): string {
   const timelineHTML = c.milestones.map(m => `
     <div class="tl-item">
-      <div class="tl-dot">${m.icon}</div>
+      <div class="tl-dot">${escapeHtml(m.icon)}</div>
       <div class="tl-content">
-        <div class="tl-year">${m.year}</div>
-        <div class="tl-title">${m.title}</div>
-        <div class="tl-desc">${m.desc}</div>
+        <div class="tl-year">${escapeHtml(m.year)}</div>
+        <div class="tl-title">${escapeHtml(m.title)}</div>
+        <div class="tl-desc">${escapeHtml(m.desc)}</div>
       </div>
     </div>`).join('')
 
   const worksHTML = c.keyWorks.map(w => `
     <div class="work-item">
-      <span class="work-year">${w.year}</span>
-      <span class="work-title">${w.title}</span>
-      <span class="work-type">${w.type}</span>
+      <span class="work-year">${escapeHtml(w.year)}</span>
+      <span class="work-title">${escapeHtml(w.title)}</span>
+      <span class="work-type">${escapeHtml(w.type)}</span>
     </div>`).join('')
 
   const relatedHTML = c.related.map(id => {
     const r = ARTISTS.find(a => a.id === id)
-    return r ? `<a href="/artist/${r.id}.html" class="related-link">${r.fullName}</a>` : ''
+    return r ? `<a href="/artist/${r.id}.html" class="related-link">${escapeHtml(r.fullName)}</a>` : ''
   }).filter(Boolean).join('')
 
   return `<!DOCTYPE html>
@@ -238,17 +239,17 @@ function richComposerPage(c: ComposerBio): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${c.fullName} — Life, Works & Music | FreeMusic</title>
-  <meta name="description" content="${c.tagline}. Listen to ${c.fullName} (${c.years}) for free. ${c.intro.slice(0, 120)}">
-  <meta property="og:title" content="${c.fullName} — Life, Works & Free Music">
-  <meta property="og:description" content="${c.tagline}">
+  <title>${escapeHtml(c.fullName)} — Life, Works & Music | FreeMusic</title>
+  <meta name="description" content="${escapeHtml(c.tagline)}. Listen to ${escapeHtml(c.fullName)} (${escapeHtml(c.years)}) for free. ${escapeHtml(plainText(c.intro).slice(0, 120))}">
+  <meta property="og:title" content="${escapeHtml(c.fullName)} — Life, Works & Free Music">
+  <meta property="og:description" content="${escapeHtml(c.tagline)}">
   <meta name="theme-color" content="#111113">
   <link rel="canonical" href="${ORIGIN}/artist/${c.id}.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"${c.fullName}","birthDate":"${c.birthYear}","deathDate":"${c.deathYear || ''}","nationality":"${c.nationality}","description":"${c.tagline.replace(/"/g, '\\"')}","sameAs":"https://en.wikipedia.org/wiki/${c.fullName.replace(/ /g, '_')}"}</script>
+  <script type="application/ld+json">${serializeJsonLd({ "@context": "https://schema.org", "@type": "Person", name: c.fullName, birthDate: String(c.birthYear), deathDate: String(c.deathYear || ""), nationality: c.nationality, description: c.tagline, sameAs: `https://en.wikipedia.org/wiki/${encodeURIComponent(c.fullName.replace(/ /g, "_"))}` })}</script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{background:#111113;color:#f0f0f2;font-family:'Manrope',system-ui,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
@@ -303,32 +304,32 @@ function richComposerPage(c: ComposerBio): string {
   <a href="/" class="back">&larr; Back to FreeMusic</a>
 
   <div class="hero">
-    <div class="badge">${c.era} · ${c.nationality}</div>
-    <h1>${c.fullName}</h1>
-    <div class="sub">${c.years}</div>
+    <div class="badge">${escapeHtml(c.era)} · ${escapeHtml(c.nationality)}</div>
+    <h1>${escapeHtml(c.fullName)}</h1>
+    <div class="sub">${escapeHtml(c.years)}</div>
     <div class="meta">
-      <span>${c.nationality} ${c.genre === 'Classical' ? 'Composer' : 'Musician'}</span>
-      <span>${c.era}</span>
+      <span>${escapeHtml(c.nationality)} ${c.genre === 'Classical' ? 'Composer' : 'Musician'}</span>
+      <span>${escapeHtml(c.era)}</span>
       <span>${c.keyWorks.length} major works</span>
     </div>
-    <p class="tagline">"${c.tagline}"</p>
+    <p class="tagline">"${escapeHtml(c.tagline)}"</p>
     <a href="/" class="cta">
       <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/></svg>
-      Play ${c.fullName.split(' ').pop()} on FreeMusic
+      Play ${escapeHtml(c.fullName.split(' ').pop())} on FreeMusic
     </a>
   </div>
 
-  <p>${c.intro}</p>
+  <p>${richText(c.intro)}</p>
 
   <h2>Early Life</h2>
-  <p>${c.earlyLife}</p>
+  <p>${richText(c.earlyLife)}</p>
 
   <h2>Life Timeline</h2>
   <div class="timeline">${timelineHTML}
   </div>
 
   <h2>Career & Music</h2>
-  <p>${c.career}</p>
+  <p>${richText(c.career)}</p>
 
   <h2>Key Works</h2>
   <div class="works-grid">${worksHTML}
@@ -336,16 +337,16 @@ function richComposerPage(c: ComposerBio): string {
 
   <div class="fact">
     <div class="fact-label">Did you know?</div>
-    <p>${c.funFact}</p>
+    <p>${richText(c.funFact)}</p>
   </div>
 
   <h2>Legacy</h2>
-  <p>${c.legacy}</p>
+  <p>${richText(c.legacy)}</p>
 
   ${c.related.length > 0 ? `<h3>Related Composers</h3><div class="related">${relatedHTML}</div>` : ''}
 
   <h2>Listen Free</h2>
-  <p>Stream ${c.fullName}'s music for free on FreeMusic. No ads, no subscription, no account required. All music is Creative Commons licensed or public domain.</p>
+  <p>Stream ${escapeHtml(c.fullName)}'s music for free on FreeMusic. No ads, no subscription, no account required. All music is Creative Commons licensed or public domain.</p>
   <a href="/" class="cta">
     <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/></svg>
     Play on FreeMusic
