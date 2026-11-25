@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import type { Track, RadioStation } from '../../types'
+import type { Track } from '../../types'
 import { getByGenre } from '../../services/jamendo'
 import { getFeatured as getIAFeatured } from '../../services/archive'
-import { getByGenre as getStationsByGenre } from '../../services/radio'
 import { player } from '../../services/player'
 import { TrackRow } from '../TrackRow'
-import { StationRow } from '../StationRow'
 import { Spinner } from '../ui/Spinner'
 
 export const GENRES = ['pop', 'rock', 'electronic', 'jazz', 'classical', 'hiphop', 'ambient', 'metal', 'dance', 'oldies', '80s', 'blues']
@@ -31,23 +29,20 @@ export function genreLabel(g: string) {
 
 export function GenreBrowser() {
   const [selected, setSelected] = useState<string | null>(null)
-  const [content, setContent] = useState<{ tracks: Track[]; stations: RadioStation[] }>({ tracks: [], stations: [] })
+  const [content, setContent] = useState<Track[]>([])
   const [loading, setLoading] = useState(false)
 
   const handleGenre = async (genre: string) => {
     if (selected === genre) { setSelected(null); return }
     setSelected(genre)
     setLoading(true)
-    setContent({ tracks: [], stations: [] })
+    setContent([])
 
-    const [stations, jTracks, iaTracks] = await Promise.all([
-      getStationsByGenre(genre, 20),
+    const [jTracks, iaTracks] = await Promise.all([
       getByGenre(genre, 20),
       getIAFeatured(genre, 8),
     ])
-    const allTracks = [...jTracks, ...iaTracks]
-
-    setContent({ tracks: allTracks, stations })
+    setContent([...jTracks, ...iaTracks])
     setLoading(false)
   }
 
@@ -70,9 +65,9 @@ export function GenreBrowser() {
         <div className="mt-3">
           <div className="flex items-center justify-between px-4 md:px-6 mb-1">
             <h2 className="text-sm font-bold">{genreLabel(selected)}</h2>
-            {content.tracks.length > 0 && (
+            {content.length > 0 && (
               <button
-                onClick={() => player.playTrack(content.tracks[0], content.tracks, 0)}
+                onClick={() => player.playTrack(content[0], content, 0)}
                 className="text-[11px] text-accent font-semibold hover:underline"
               >
                 Play All
@@ -82,13 +77,10 @@ export function GenreBrowser() {
 
           {loading ? (
             <div className="flex items-center justify-center py-6"><Spinner /></div>
-          ) : content.tracks.length === 0 && content.stations.length === 0 ? (
+          ) : content.length === 0 ? (
             <p className="text-sm text-text-muted text-center py-6">No results for this genre</p>
           ) : (
-            <>
-              {content.tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={content.tracks} index={i} />)}
-              {content.stations.map(s => <StationRow key={s.id} station={s} />)}
-            </>
+            content.map((t, i) => <TrackRow key={t.id} track={t} queue={content} index={i} />)
           )}
         </div>
       )}

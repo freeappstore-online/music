@@ -1,11 +1,7 @@
-import { Ban, Heart, Music, Play, Radio } from 'lucide-react'
+import { Ban, Heart, Music, Play } from 'lucide-react'
 
 export function MusicNote({ className = 'w-5 h-5' }: { className?: string }) {
   return <Music className={className} strokeWidth={2} />
-}
-
-export function RadioIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return <Radio className={className} strokeWidth={2} />
 }
 
 export function PlayIcon({ className = 'w-5 h-5' }: { className?: string }) {

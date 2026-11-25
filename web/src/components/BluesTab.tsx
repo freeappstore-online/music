@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { ARTISTS, STYLES, INSTRUMENTS, MOODS, ERAS, getBluesTracks, getBluesRadio, searchBlues, type BluesCategory } from '../services/blues'
-import type { Track, RadioStation } from '../types'
+import { ARTISTS, STYLES, INSTRUMENTS, MOODS, ERAS, getBluesTracks, searchBlues, type BluesCategory } from '../services/blues'
+import type { Track } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
-import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-type Section = 'artists' | 'styles' | 'instruments' | 'moods' | 'eras' | 'radio'
+type Section = 'artists' | 'styles' | 'instruments' | 'moods' | 'eras'
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'artists', label: 'Artists' },
@@ -14,7 +13,6 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'eras', label: 'Eras' },
   { id: 'instruments', label: 'Instruments' },
   { id: 'moods', label: 'Moods' },
-  { id: 'radio', label: 'Radio' },
 ]
 
 function getItems(section: Section): BluesCategory[] {
@@ -32,7 +30,6 @@ export function BluesTab() {
   const [section, setSection] = useState<Section>('artists')
   const [selected, setSelected] = useState<BluesCategory | null>(null)
   const [tracks, setTracks] = useState<Track[]>([])
-  const [stations, setStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Track[]>([])
@@ -47,12 +44,6 @@ export function BluesTab() {
     setTracks(t)
     setLoading(false)
     if (t.length > 0) player.playTrack(t[0], t, 0)
-  }
-
-  const handleRadio = async () => {
-    setSection('radio'); setSelected(null); setLoading(true)
-    setStations(await getBluesRadio(20))
-    setLoading(false)
   }
 
   const doSearch = async () => {
@@ -93,7 +84,7 @@ export function BluesTab() {
         <>
           <div className="flex gap-1.5 overflow-x-auto px-4 md:px-6 pb-4 snap-x">
             {SECTIONS.map(s => (
-              <button key={s.id} onClick={() => { setSection(s.id); setSelected(null); setTracks([]); if (s.id === 'radio') handleRadio() }}
+              <button key={s.id} onClick={() => { setSection(s.id); setSelected(null); setTracks([]) }}
                 className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg snap-start transition-colors ${section === s.id ? 'bg-accent text-base' : 'bg-white/4 text-text-muted hover:text-text'}`}>
                 {s.label}
               </button>
@@ -125,7 +116,7 @@ export function BluesTab() {
             </div>
           )}
 
-          {section !== 'radio' && section !== 'artists' && (
+          {section !== 'artists' && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 px-4 md:px-6 mb-4">
               {items.map(cat => (
                 <button key={cat.id} onClick={() => handleSelect(cat)}
@@ -148,12 +139,6 @@ export function BluesTab() {
             <p className="text-sm text-text-muted text-center py-8">No tracks found for {selected.label}</p>
           ) : null}
 
-          {section === 'radio' && !loading && stations.length > 0 && (
-            <div>
-              <h2 className="text-sm font-bold px-4 md:px-6 mb-2">Blues Radio Stations</h2>
-              {stations.map(s => <StationRow key={s.id} station={s} />)}
-            </div>
-          )}
         </>
       )}
     </div>

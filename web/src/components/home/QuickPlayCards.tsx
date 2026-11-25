@@ -1,24 +1,17 @@
-import { Heart, Music, Play, Radio } from 'lucide-react'
+import { ExternalLink, Heart, Music, Play, Radio } from 'lucide-react'
 
-import type { Track, RadioStation } from '../../types'
+import type { Track } from '../../types'
 import { player } from '../../services/player'
 
 type Props = {
   favTracks: Track[]
-  favStations: RadioStation[]
-  topStations: RadioStation[]
   tracks: Track[]
   favGenre: string | null
   onPickGenre: () => void
   onPlayGenre: () => void
 }
 
-export function QuickPlayCards({ favTracks, favStations, topStations, tracks, favGenre, onPickGenre, onPlayGenre }: Props) {
-  const playRadio = () => {
-    const stations = favStations.length > 0 ? favStations : topStations
-    if (stations.length > 0) player.playStation(stations[0])
-  }
-
+export function QuickPlayCards({ favTracks, tracks, favGenre, onPickGenre, onPlayGenre }: Props) {
   const playPlaylist = () => {
     if (favTracks.length > 0) {
       player.playTrack(favTracks[0], favTracks, 0)
@@ -33,13 +26,18 @@ export function QuickPlayCards({ favTracks, favStations, topStations, tracks, fa
 
   return (
     <div className="grid grid-cols-3 gap-3 px-4 md:px-6 mb-6 mt-4">
-      <QuickCard
-        gradient="from-emerald-500 to-emerald-900"
-        icon={<RadioSvg />}
-        label="Radio"
-        subtitle={favStations.length > 0 ? `${favStations.length} saved` : 'Top stations'}
-        onClick={playRadio}
-      />
+      <a
+        href="https://radio.freeappstore.online"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-900 border border-white/6 p-4 text-left group active:scale-[0.97] transition-transform"
+        aria-label="Live radio — open the Radio app"
+      >
+        <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+          <ExternalLink className="w-4 h-4" strokeWidth={2} />
+        </div>
+        <div className="mb-3 opacity-80"><RadioSvg /></div>
+        <div className="text-sm font-bold">Radio</div>
+        <div className="text-xs text-white/60 mt-0.5 leading-tight">Live stations app</div>
+      </a>
       <QuickCard
         gradient="from-violet-500 to-violet-900"
         icon={<HeartSvg />}

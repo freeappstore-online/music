@@ -1,8 +1,7 @@
 import { lower } from '../lib/format'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
-import { getByGenre as getStationsByGenre } from './radio'
 
 // ===== Taxonomy =====
 
@@ -213,10 +212,6 @@ export async function getClassicalTracks(category: ClassicalCategory, limit = 50
     })
   }
   return jamendo
-}
-
-export async function getClassicalRadio(limit = 10): Promise<RadioStation[]> {
-  return getStationsByGenre('classical', limit)
 }
 
 export async function searchClassical(query: string, limit = 20): Promise<Track[]> {

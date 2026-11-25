@@ -1,23 +1,21 @@
 import { useState } from 'react'
-import { Folder, House, Music, Radio, Search, Settings2, Users } from 'lucide-react'
+import { Folder, House, Music, Search, Settings2, Users } from 'lucide-react'
 import { HomeTab } from './components/HomeTab'
 import { SearchTab } from './components/SearchTab'
 import { ExploreTab } from './components/ExploreTab'
 import { MusicTab } from './components/MusicTab'
-import { RadioTab } from './components/RadioTab'
 import { LibraryTab } from './components/LibraryTab'
 import { SettingsModal } from './components/SettingsModal'
 import { MiniPlayer } from './components/MiniPlayer'
 import { usePlayer } from './hooks'
 
-type Tab = 'home' | 'search' | 'artists' | 'music' | 'radio' | 'library'
+type Tab = 'home' | 'search' | 'artists' | 'music' | 'library'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'home', label: 'Home', icon: 'home' },
   { id: 'search', label: 'Search', icon: 'search' },
   { id: 'artists', label: 'Artists', icon: 'artists' },
   { id: 'music', label: 'Music', icon: 'music' },
-  { id: 'radio', label: 'Radio', icon: 'radio' },
   { id: 'library', label: 'Library', icon: 'library' },
 ]
 
@@ -25,7 +23,7 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('home')
   const [showSettings, setShowSettings] = useState(false)
   const ps = usePlayer()
-  const hasPlayer = ps.track !== null || ps.station !== null
+  const hasPlayer = ps.track !== null
 
   return (
     <div className="h-[100dvh] bg-base flex flex-col overflow-hidden">
@@ -70,7 +68,6 @@ export default function App() {
           <div className={tab === 'search' ? '' : 'hidden'}><SearchTab /></div>
           <div className={tab === 'artists' ? '' : 'hidden'}><ExploreTab /></div>
           <div className={tab === 'music' ? '' : 'hidden'}><MusicTab /></div>
-          <div className={tab === 'radio' ? '' : 'hidden'}><RadioTab /></div>
           <div className={tab === 'library' ? '' : 'hidden'}><LibraryTab /></div>
         </div>
       </main>
@@ -109,8 +106,6 @@ function TabIcon({ name, size = 24 }: { name: string; size?: number }) {
       return <House size={size} strokeWidth={2} />
     case 'search':
       return <Search size={size} strokeWidth={2} />
-    case 'radio':
-      return <Radio size={size} strokeWidth={2} />
     case 'artists':
       return <Users size={size} strokeWidth={2} />
     case 'music':

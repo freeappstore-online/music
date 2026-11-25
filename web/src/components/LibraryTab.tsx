@@ -1,18 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getFavoriteTracks, getFavoriteStations, getBlacklistedTrackIds, getBlacklistedStationIds, unblacklist, getBlacklistCount } from '../services/favorites'
+import { getFavoriteTracks, getBlacklistedTrackIds, unblacklist, getBlacklistCount } from '../services/favorites'
 import { getHistory, clearHistory, type HistoryEntry } from '../services/history'
 import { getPlaylists, createPlaylist, deletePlaylist, type Playlist } from '../services/playlists'
 import { player } from '../services/player'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { TrackRow } from './TrackRow'
-import { StationRow } from './StationRow'
 
 type Section = 'favorites' | 'playlists' | 'history' | 'blacklist'
 
 export function LibraryTab() {
   const [section, setSection] = useState<Section>('favorites')
   const [favTracks, setFavTracks] = useState<Track[]>([])
-  const [favStations, setFavStations] = useState<RadioStation[]>([])
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const [blacklistCount, setBlacklistCount] = useState(0)
@@ -21,7 +19,6 @@ export function LibraryTab() {
 
   const reload = useCallback(() => {
     setFavTracks(getFavoriteTracks())
-    setFavStations(getFavoriteStations())
     setHistory(getHistory())
     setPlaylists(getPlaylists())
     setBlacklistCount(getBlacklistCount())
@@ -73,20 +70,14 @@ export function LibraryTab() {
 
       {/* Favorites */}
       {section === 'favorites' && (
-        favTracks.length === 0 && favStations.length === 0 ? (
-          <Empty icon="heart" text="No favorites yet" sub="Tap the heart icon on any track or station." />
+        favTracks.length === 0 ? (
+          <Empty icon="heart" text="No favorites yet" sub="Tap the heart icon on any track." />
         ) : (
           <>
             {favTracks.length > 0 && (
               <>
                 <SectionHeader title="Tracks" count={favTracks.length} onPlayAll={() => player.playTrack(favTracks[0], favTracks, 0)} />
                 {favTracks.map((t, i) => <TrackRow key={t.id} track={t} queue={favTracks} index={i} />)}
-              </>
-            )}
-            {favStations.length > 0 && (
-              <>
-                <SectionHeader title="Stations" count={favStations.length} />
-                {favStations.map(s => <StationRow key={s.id} station={s} />)}
               </>
             )}
           </>
@@ -144,17 +135,13 @@ export function LibraryTab() {
       {/* History */}
       {section === 'history' && (
         history.length === 0 ? (
-          <Empty icon="clock" text="No listening history" sub="Tracks and stations you play will appear here." />
+          <Empty icon="clock" text="No listening history" sub="Tracks you play will appear here." />
         ) : (
           <>
             <div className="flex justify-end px-4 md:px-6 mb-2">
               <button onClick={() => { clearHistory(); setHistory([]) }} className="text-xs text-text-muted hover:text-text">Clear history</button>
             </div>
-            {history.map((h, i) => {
-              if (h.track) return <TrackRow key={`${h.track.id}-${i}`} track={h.track} />
-              if (h.station) return <StationRow key={`${h.station.id}-${i}`} station={h.station} />
-              return null
-            })}
+            {history.map((h, i) => <TrackRow key={`${h.track.id}-${i}`} track={h.track} />)}
           </>
         )
       )}
@@ -162,18 +149,12 @@ export function LibraryTab() {
       {/* Blacklist */}
       {section === 'blacklist' && (
         blacklistCount === 0 ? (
-          <Empty icon="block" text="No blocked items" sub="Thumbs-down a track or station to block it." />
+          <Empty icon="block" text="No blocked items" sub="Thumbs-down a track to block it." />
         ) : (
           <>
             {[...getBlacklistedTrackIds()].map(id => (
               <div key={id} className="flex items-center justify-between py-2 px-4 md:px-6">
                 <span className="text-xs text-text-muted truncate flex-1">{id.replace(/^(jamendo|ia)-/, '')}</span>
-                <button onClick={() => { unblacklist(id); reload() }} className="text-xs text-accent font-semibold hover:underline ml-2">Restore</button>
-              </div>
-            ))}
-            {[...getBlacklistedStationIds()].map(id => (
-              <div key={id} className="flex items-center justify-between py-2 px-4 md:px-6">
-                <span className="text-xs text-text-muted truncate flex-1">{id.replace(/^radio-/, '')}</span>
                 <button onClick={() => { unblacklist(id); reload() }} className="text-xs text-accent font-semibold hover:underline ml-2">Restore</button>
               </div>
             ))}

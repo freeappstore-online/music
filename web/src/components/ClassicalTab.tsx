@@ -1,14 +1,13 @@
 import { useState } from 'react'
-import { ERAS, COMPOSERS, INSTRUMENTS, FORMS, MOODS, getClassicalTracks, getClassicalRadio, searchClassical, type ClassicalCategory } from '../services/classical'
+import { ERAS, COMPOSERS, INSTRUMENTS, FORMS, MOODS, getClassicalTracks, searchClassical, type ClassicalCategory } from '../services/classical'
 import { ClassicalTimeline } from './TimelineView'
 import { WorksView } from './WorksView'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
-import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-type Section = 'timeline' | 'composers' | 'works' | 'eras' | 'instruments' | 'forms' | 'moods' | 'radio'
+type Section = 'timeline' | 'composers' | 'works' | 'eras' | 'instruments' | 'forms' | 'moods'
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'timeline', label: 'Timeline' },
@@ -18,7 +17,6 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'instruments', label: 'Instruments' },
   { id: 'forms', label: 'Forms' },
   { id: 'moods', label: 'Moods' },
-  { id: 'radio', label: 'Radio' },
 ]
 
 function getItems(section: Section): ClassicalCategory[] {
@@ -36,7 +34,6 @@ export function ClassicalTab() {
   const [section, setSection] = useState<Section>('composers')
   const [selected, setSelected] = useState<ClassicalCategory | null>(null)
   const [tracks, setTracks] = useState<Track[]>([])
-  const [stations, setStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Track[]>([])
@@ -52,15 +49,6 @@ export function ClassicalTab() {
     setLoading(false)
     if (t.length > 0) player.playTrack(t[0], t, 0)
     // IA results will trickle in via onMore callback
-  }
-
-  const handleRadio = async () => {
-    setSection('radio')
-    setSelected(null)
-    setLoading(true)
-    const s = await getClassicalRadio(20)
-    setStations(s)
-    setLoading(false)
   }
 
   const doSearch = async () => {
@@ -117,7 +105,7 @@ export function ClassicalTab() {
             {SECTIONS.map(s => (
               <button
                 key={s.id}
-                onClick={() => { setSection(s.id); setSelected(null); setTracks([]); if (s.id === 'radio') handleRadio() }}
+                onClick={() => { setSection(s.id); setSelected(null); setTracks([]) }}
                 className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg snap-start transition-colors ${
                   section === s.id ? 'bg-accent text-base' : 'bg-white/4 text-text-muted hover:text-text'
                 }`}
@@ -168,7 +156,7 @@ export function ClassicalTab() {
           )}
 
           {/* Other category grids (eras, instruments, forms, moods) */}
-          {section !== 'radio' && section !== 'composers' && (
+          {section !== 'composers' && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 px-4 md:px-6 mb-4">
               {items.map(cat => (
                 <button
@@ -199,13 +187,6 @@ export function ClassicalTab() {
             <p className="text-sm text-text-muted text-center py-8">No tracks found for {selected.label}</p>
           ) : null}
 
-          {/* Radio stations */}
-          {section === 'radio' && !loading && stations.length > 0 && (
-            <div>
-              <h2 className="text-sm font-bold px-4 md:px-6 mb-2">Classical Radio Stations</h2>
-              {stations.map(s => <StationRow key={s.id} station={s} />)}
-            </div>
-          )}
         </>
       )}
     </div>

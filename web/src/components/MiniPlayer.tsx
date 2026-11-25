@@ -7,17 +7,17 @@ import { Artwork } from './ui/Artwork'
 import { HeartIcon, DislikeIcon } from './ui/Icons'
 import { Spinner } from './ui/Spinner'
 import { FullPlayer } from './FullPlayer'
-import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite, blacklistTrack, blacklistStation } from '../services/favorites'
+import { isTrackFavorite, toggleTrackFavorite, blacklistTrack } from '../services/favorites'
 
 export function MiniPlayer() {
   const ps = usePlayer()
   const [showFull, setShowFull] = useState(false)
 
-  if (!ps.track && !ps.station) return null
+  if (!ps.track) return null
 
-  const title = ps.track?.title ?? ps.station?.name ?? ''
-  const subtitle = ps.track?.artist ?? ''
-  const artwork = ps.track?.artworkUrl ?? ps.station?.favicon
+  const title = ps.track.title
+  const subtitle = ps.track.artist
+  const artwork = ps.track.artworkUrl
   const progress = ps.duration > 0 ? ps.currentTime / ps.duration : 0
 
   return (
@@ -40,11 +40,9 @@ export function MiniPlayer() {
                 {ps.isPlaying ? <PauseIcon /> : <PlayCircleIcon />}
               </button>
             )}
-            {ps.track && (
-              <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/6 hover:bg-white/10" onClick={(e) => { e.stopPropagation(); player.next() }} aria-label="Next">
-                <NextIcon />
-              </button>
-            )}
+            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/6 hover:bg-white/10" onClick={(e) => { e.stopPropagation(); player.next() }} aria-label="Next">
+              <NextIcon />
+            </button>
           </div>
         </div>
       </div>
@@ -64,13 +62,13 @@ export function MiniPlayer() {
           </div>
           <div className="flex-1 flex flex-col items-center gap-1.5">
             <div className="flex items-center gap-4">
-              {ps.track && <ControlBtn onClick={() => player.previous()} label="Previous"><PrevIcon /></ControlBtn>}
+              <ControlBtn onClick={() => player.previous()} label="Previous"><PrevIcon /></ControlBtn>
               <button onClick={() => player.togglePlayPause()} className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:scale-105 active:scale-95 transition-transform" aria-label={ps.isPlaying ? 'Pause' : 'Play'}>
                 {ps.isPlaying ? <PauseIcon className="text-black" /> : <PlayCircleIcon className="text-black" />}
               </button>
-              {ps.track && <ControlBtn onClick={() => player.next()} label="Next"><NextIcon /></ControlBtn>}
+              <ControlBtn onClick={() => player.next()} label="Next"><NextIcon /></ControlBtn>
             </div>
-            {ps.track && ps.duration > 0 && (
+            {ps.duration > 0 && (
               <div className="flex items-center gap-2 w-full max-w-md">
                 <span className="text-[10px] text-text-muted w-8 text-right tabular-nums">{formatTime(ps.currentTime)}</span>
                 <input type="range" min={0} max={1} step={0.001} value={progress} onChange={(e) => player.seek(parseFloat(e.target.value))} className="flex-1" />
@@ -108,7 +106,7 @@ function PrevIcon() {
 
 function DesktopRatingBtns() {
   const ps = usePlayer()
-  const fav = ps.track ? isTrackFavorite(ps.track.id) : ps.station ? isStationFavorite(ps.station.id) : false
+  const fav = ps.track ? isTrackFavorite(ps.track.id) : false
 
   return (
     <>
@@ -116,7 +114,6 @@ function DesktopRatingBtns() {
         className="p-2 rounded-full hover:bg-white/6 text-text-muted hover:text-text transition-colors"
         onClick={() => {
           if (ps.track) { blacklistTrack(ps.track); player.next() }
-          else if (ps.station) { blacklistStation(ps.station) }
         }}
         aria-label="Never play again"
       >
@@ -126,7 +123,6 @@ function DesktopRatingBtns() {
         className="p-2 rounded-full hover:bg-white/6 transition-colors"
         onClick={() => {
           if (ps.track) toggleTrackFavorite(ps.track)
-          else if (ps.station) toggleStationFavorite(ps.station)
         }}
         aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
       >

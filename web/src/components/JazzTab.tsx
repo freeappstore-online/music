@@ -1,14 +1,13 @@
 import { useState } from 'react'
-import { ARTISTS, STYLES, INSTRUMENTS, MOODS, ERAS, getJazzTracks, getJazzRadio, searchJazz, type JazzCategory } from '../services/jazz'
+import { ARTISTS, STYLES, INSTRUMENTS, MOODS, ERAS, getJazzTracks, searchJazz, type JazzCategory } from '../services/jazz'
 import { JazzTimeline } from './TimelineView'
 import { JazzWorksView } from './JazzWorksView'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
-import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
-type Section = 'timeline' | 'artists' | 'works' | 'styles' | 'instruments' | 'moods' | 'eras' | 'radio'
+type Section = 'timeline' | 'artists' | 'works' | 'styles' | 'instruments' | 'moods' | 'eras'
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'timeline', label: 'Timeline' },
@@ -18,7 +17,6 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'eras', label: 'Eras' },
   { id: 'instruments', label: 'Instruments' },
   { id: 'moods', label: 'Moods' },
-  { id: 'radio', label: 'Radio' },
 ]
 
 function getItems(section: Section): JazzCategory[] {
@@ -36,7 +34,6 @@ export function JazzTab() {
   const [section, setSection] = useState<Section>('artists')
   const [selected, setSelected] = useState<JazzCategory | null>(null)
   const [tracks, setTracks] = useState<Track[]>([])
-  const [stations, setStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Track[]>([])
@@ -51,15 +48,6 @@ export function JazzTab() {
     setTracks(t)
     setLoading(false)
     if (t.length > 0) player.playTrack(t[0], t, 0)
-  }
-
-  const handleRadio = async () => {
-    setSection('radio')
-    setSelected(null)
-    setLoading(true)
-    const s = await getJazzRadio(20)
-    setStations(s)
-    setLoading(false)
   }
 
   const doSearch = async () => {
@@ -110,7 +98,7 @@ export function JazzTab() {
             {SECTIONS.map(s => (
               <button
                 key={s.id}
-                onClick={() => { setSection(s.id); setSelected(null); setTracks([]); if (s.id === 'radio') handleRadio() }}
+                onClick={() => { setSection(s.id); setSelected(null); setTracks([]) }}
                 className={`flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg snap-start transition-colors ${
                   section === s.id ? 'bg-accent text-base' : 'bg-white/4 text-text-muted hover:text-text'
                 }`}
@@ -161,7 +149,7 @@ export function JazzTab() {
           )}
 
           {/* Other categories */}
-          {section !== 'radio' && section !== 'artists' && (
+          {section !== 'artists' && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 px-4 md:px-6 mb-4">
               {items.map(cat => (
                 <button
@@ -189,12 +177,6 @@ export function JazzTab() {
             <p className="text-sm text-text-muted text-center py-8">No tracks found for {selected.label}</p>
           ) : null}
 
-          {section === 'radio' && !loading && stations.length > 0 && (
-            <div>
-              <h2 className="text-sm font-bold px-4 md:px-6 mb-2">Jazz Radio Stations</h2>
-              {stations.map(s => <StationRow key={s.id} station={s} />)}
-            </div>
-          )}
         </>
       )}
     </div>

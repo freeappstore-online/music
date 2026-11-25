@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getTrending, getByGenre } from '../services/jamendo'
 import { getFeatured as getIAFeatured } from '../services/archive'
-import { getByGenre as getStationsByGenre } from '../services/radio'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { player } from '../services/player'
 import { TrackRow } from './TrackRow'
-import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 import { WorksView } from './WorksView'
 import { JazzWorksView } from './JazzWorksView'
@@ -74,7 +72,6 @@ export function MusicTab() {
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null)
   const [tracks, setTracks] = useState<Track[]>([])
-  const [stations, setStations] = useState<RadioStation[]>([])
   const [trending, setTrending] = useState<Track[]>([])
   const [loading, setLoading] = useState(false)
   const [trendingLoaded, setTrendingLoaded] = useState(false)
@@ -84,13 +81,11 @@ export function MusicTab() {
     setSelectedGenre(genre)
     setSelectedMood(null)
     setLoading(true)
-    const [s, jt, iat] = await Promise.all([
-      getStationsByGenre(genre, 20),
+    const [jt, iat] = await Promise.all([
       getByGenre(genre, 20),
       getIAFeatured(genre, 8),
     ])
     setTracks([...jt, ...iat])
-    setStations(s)
     setLoading(false)
   }
 
@@ -101,7 +96,6 @@ export function MusicTab() {
     setLoading(true)
     const t = await getByGenre(mood.tags, 20)
     setTracks(t)
-    setStations([])
     setLoading(false)
     if (t.length > 0) player.playTrack(t[0], t, 0)
   }
@@ -161,7 +155,6 @@ export function MusicTab() {
             <GenreResults
               label={genreLabel(selectedGenre)}
               tracks={tracks}
-              stations={stations}
               loading={loading}
             />
           )}
@@ -249,7 +242,7 @@ export function MusicTab() {
   )
 }
 
-function GenreResults({ label, tracks, stations, loading }: { label: string; tracks: Track[]; stations: RadioStation[]; loading: boolean }) {
+function GenreResults({ label, tracks, loading }: { label: string; tracks: Track[]; loading: boolean }) {
   return (
     <div className="mt-2">
       <div className="flex items-center justify-between px-4 md:px-6 mb-1">
@@ -260,18 +253,10 @@ function GenreResults({ label, tracks, stations, loading }: { label: string; tra
       </div>
       {loading ? (
         <div className="flex items-center justify-center py-6"><Spinner /></div>
-      ) : tracks.length === 0 && stations.length === 0 ? (
+      ) : tracks.length === 0 ? (
         <p className="text-sm text-text-muted text-center py-6">No results for this genre</p>
       ) : (
-        <>
-          {tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)}
-          {stations.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-xs font-bold px-4 md:px-6 mb-2 text-text-muted">{label} Radio</h3>
-              {stations.map(s => <StationRow key={s.id} station={s} />)}
-            </div>
-          )}
-        </>
+        tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)
       )}
     </div>
   )

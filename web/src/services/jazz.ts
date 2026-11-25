@@ -1,8 +1,7 @@
 import { lower } from '../lib/format'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { advancedSearch } from './jamendo'
 import { searchTracks as searchIA } from './archive'
-import { getByGenre as getStationsByGenre } from './radio'
 
 export type JazzCategory = {
   id: string
@@ -185,10 +184,6 @@ export async function getJazzTracks(category: JazzCategory, limit = 50, onMore?:
     })
   }
   return jamendo
-}
-
-export async function getJazzRadio(limit = 10): Promise<RadioStation[]> {
-  return getStationsByGenre('jazz', limit)
 }
 
 export async function searchJazz(query: string, limit = 20): Promise<Track[]> {

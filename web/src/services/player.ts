@@ -1,9 +1,8 @@
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { addToHistory } from './history'
 
 export type PlayerState = {
   track: Track | null
-  station: RadioStation | null
   queue: Track[]
   queueIndex: number
   isPlaying: boolean
@@ -20,7 +19,6 @@ class AudioPlayerService {
   private listeners: Listener[] = []
   state: PlayerState = {
     track: null,
-    station: null,
     queue: [],
     queueIndex: 0,
     isPlaying: false,
@@ -70,7 +68,7 @@ class AudioPlayerService {
     document.addEventListener('keydown', (e) => {
       // Don't capture when typing in inputs
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
-      if (!this.state.track && !this.state.station) return
+      if (!this.state.track) return
 
       switch (e.key) {
         case ' ':
@@ -108,20 +106,10 @@ class AudioPlayerService {
 
   playTrack(track: Track, queue?: Track[], index?: number) {
     this.state.track = track
-    this.state.station = null
     this.state.error = false
     if (queue) { this.state.queue = queue; this.state.queueIndex = index ?? 0 }
-    addToHistory(track, undefined)
+    addToHistory(track)
     this.startPlayback(track.streamUrl)
-  }
-
-  playStation(station: RadioStation) {
-    addToHistory(undefined, station)
-    this.state.track = null
-    this.state.station = station
-    this.state.queue = []
-    this.state.error = false
-    this.startPlayback(station.streamUrl)
   }
 
   togglePlayPause() {
@@ -177,7 +165,7 @@ class AudioPlayerService {
 
   private updateMediaSession() {
     if (!('mediaSession' in navigator)) return
-    const artSrc = this.state.track?.artworkUrl ?? this.state.station?.favicon
+    const artSrc = this.state.track?.artworkUrl
     // Ensure HTTPS for iOS
     const artUrl = artSrc?.replace(/^http:\/\//, 'https://') || ''
 
@@ -188,7 +176,7 @@ class AudioPlayerService {
     ] : []
 
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: this.state.track?.title ?? this.state.station?.name ?? '',
+      title: this.state.track?.title ?? '',
       artist: this.state.track?.artist ?? '',
       album: this.state.track?.album ?? '',
       artwork,

@@ -1,7 +1,7 @@
 # Design System -- FreeMusic
 
 ## Product Context
-- **What this is:** Free music aggregator and player. CC-licensed tracks, public domain audio, live radio -- all in one app.
+- **What this is:** Free music aggregator and player. CC-licensed tracks and public domain audio. Live radio lives in the separate Radio app (radio.freeappstore.online).
 - **Who it's for:** Anyone who wants free music without ads, subscriptions, or accounts. Music lovers who value independence from Big Tech streaming.
 - **Space/industry:** Music streaming -- but open, free, and community-driven.
 - **Project type:** PWA (web app, installable) + native iOS app + marketing website

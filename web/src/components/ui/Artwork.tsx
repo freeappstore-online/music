@@ -1,17 +1,15 @@
 import { useState } from 'react'
-import { MusicNote, RadioIcon } from './Icons'
+import { MusicNote } from './Icons'
 
 type ArtworkProps = {
   src?: string
   alt?: string
   size: number
   rounded?: string
-  type?: 'track' | 'station'
 }
 
-export function Artwork({ src, alt = '', size, rounded = 'rounded-lg', type = 'track' }: ArtworkProps) {
+export function Artwork({ src, alt = '', size, rounded = 'rounded-lg' }: ArtworkProps) {
   const [failed, setFailed] = useState(false)
-  const Icon = type === 'station' ? RadioIcon : MusicNote
 
   return (
     <div
@@ -27,7 +25,7 @@ export function Artwork({ src, alt = '', size, rounded = 'rounded-lg', type = 't
           onError={() => setFailed(true)}
         />
       ) : (
-        <Icon className="w-5 h-5 text-accent/40" />
+        <MusicNote className="w-5 h-5 text-accent/40" />
       )}
     </div>
   )

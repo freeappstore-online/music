@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { advancedSearch, type TrackFilters } from '../services/jamendo'
 import { searchTracks as searchArchive } from '../services/archive'
-import { searchStations } from '../services/radio'
 import { player } from '../services/player'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { TrackRow } from './TrackRow'
-import { StationRow } from './StationRow'
 import { Spinner } from './ui/Spinner'
 
 const GENRES = [
@@ -74,7 +72,6 @@ function removeFromHistory(q: string) {
 export function SearchTab() {
   const [query, setQuery] = useState('')
   const [tracks, setTracks] = useState<Track[]>([])
-  const [stations, setStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [history, setHistory] = useState(getHistory)
@@ -105,13 +102,11 @@ export function SearchTab() {
     if (lang) filters.lang = lang
     if (gender) filters.gender = gender as TrackFilters['gender']
 
-    const [j, ia, radio] = await Promise.all([
+    const [j, ia] = await Promise.all([
       advancedSearch(filters, 30),
       term ? searchArchive(term, 10) : Promise.resolve([]),
-      term ? searchStations(term, 10) : Promise.resolve([]),
     ])
     setTracks([...j, ...ia])
-    setStations(radio)
     setLoading(false)
   }, [acoustic, gender, genre, hasFilters, lang, query, speed, vocal])
 
@@ -128,13 +123,13 @@ export function SearchTab() {
     return () => clearTimeout(timer.current)
   }, [doSearch, hasFilters, hasSearched])
 
-  const hasResults = tracks.length > 0 || stations.length > 0
+  const hasResults = tracks.length > 0
 
   return (
     <div className="pb-4">
       <div className="px-4 md:px-6 pt-6 md:pt-10 pb-1">
         <h1 className="text-2xl md:text-3xl font-bold">Search</h1>
-        <p className="text-sm text-text-muted mt-1">600K+ tracks · 63K+ classical · 30K+ radio stations</p>
+        <p className="text-sm text-text-muted mt-1">600K+ tracks · 63K+ classical</p>
       </div>
 
       {/* Search bar */}
@@ -143,13 +138,13 @@ export function SearchTab() {
           <svg className="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
             type="search"
-            placeholder="Songs, artists, albums, stations..."
+            placeholder="Songs, artists, albums..."
             className="flex-1 bg-transparent outline-none text-sm placeholder-text-dim"
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
           {(query || hasFilters) && (
-            <button type="button" onClick={() => { setQuery(''); clearAll(); setHasSearched(false); setTracks([]); setStations([]) }}
+            <button type="button" onClick={() => { setQuery(''); clearAll(); setHasSearched(false); setTracks([]) }}
               className="text-text-muted hover:text-text p-1">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -267,18 +262,12 @@ export function SearchTab() {
       ) : hasSearched && hasResults ? (
         <>
           <div className="px-4 md:px-6 mb-1 flex items-center justify-between">
-            <span className="text-xs text-text-muted">{tracks.length} tracks{stations.length > 0 ? ` · ${stations.length} stations` : ''}</span>
+            <span className="text-xs text-text-muted">{tracks.length} tracks</span>
             {tracks.length > 0 && (
               <button onClick={() => player.playTrack(tracks[0], tracks, 0)} className="text-xs text-accent font-semibold hover:underline">Play All</button>
             )}
           </div>
           {tracks.map((t, i) => <TrackRow key={t.id} track={t} queue={tracks} index={i} />)}
-          {stations.length > 0 && (
-            <>
-              <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider px-4 md:px-6 mb-1 mt-4">Radio Stations</h2>
-              {stations.map(s => <StationRow key={s.id} station={s} />)}
-            </>
-          )}
         </>
       ) : hasSearched && !hasResults ? (
         <div className="flex flex-col items-center justify-center py-12 gap-2 text-text-muted">

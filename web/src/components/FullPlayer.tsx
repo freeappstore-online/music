@@ -2,19 +2,19 @@ import { useState } from 'react'
 import { player } from '../services/player'
 import { usePlayer } from '../hooks'
 import { formatTime } from '../lib/format'
-import { isTrackFavorite, isStationFavorite, toggleTrackFavorite, toggleStationFavorite, blacklistTrack, blacklistStation } from '../services/favorites'
+import { isTrackFavorite, toggleTrackFavorite, blacklistTrack } from '../services/favorites'
 import { Artwork } from './ui/Artwork'
 import { HeartIcon, DislikeIcon } from './ui/Icons'
 
 export function FullPlayer({ onClose }: { onClose: () => void }) {
   const ps = usePlayer()
   const [fav, setFav] = useState(() =>
-    ps.track ? isTrackFavorite(ps.track.id) : ps.station ? isStationFavorite(ps.station.id) : false
+    ps.track ? isTrackFavorite(ps.track.id) : false
   )
 
-  const title = ps.track?.title ?? ps.station?.name ?? ''
+  const title = ps.track?.title ?? ''
   const subtitle = ps.track?.artist ?? ''
-  const artwork = ps.track?.artworkUrl ?? ps.station?.favicon
+  const artwork = ps.track?.artworkUrl
   const progress = ps.duration > 0 ? ps.currentTime / ps.duration : 0
   const source = ps.track?.source === 'jamendo' ? 'Jamendo' : ps.track?.source === 'internetarchive' ? 'Internet Archive' : ''
 
@@ -37,7 +37,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             alt={title}
             size={280}
             rounded="rounded-2xl"
-            type={ps.station ? 'station' : 'track'}
           />
 
           {/* Info */}
@@ -83,7 +82,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             <button
               onClick={() => {
                 if (ps.track) { blacklistTrack(ps.track); player.next() }
-                else if (ps.station) { blacklistStation(ps.station); onClose() }
               }}
               aria-label="Never play again"
               className="p-3 rounded-full hover:bg-red-500/10 active:bg-red-500/20 transition-colors"
@@ -93,7 +91,6 @@ export function FullPlayer({ onClose }: { onClose: () => void }) {
             <button
               onClick={() => {
                 if (ps.track) setFav(toggleTrackFavorite(ps.track))
-                else if (ps.station) setFav(toggleStationFavorite(ps.station))
               }}
               aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
               className="p-3 rounded-full hover:bg-accent/10 active:bg-accent/20 transition-colors"

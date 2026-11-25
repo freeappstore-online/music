@@ -1,53 +1,38 @@
 import { useEffect, useState } from 'react'
 import { SettingsModal } from './SettingsModal'
 import { getTrending, getByGenre } from '../services/jamendo'
-import { getTopStations, getByGenre as getStationsByGenre } from '../services/radio'
-import { getSomaFMChannels } from '../services/somafm'
-import { getFavoriteTracks, getFavoriteStations, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
+import { getFavoriteTracks, getFavoriteGenre, setFavoriteGenre } from '../services/favorites'
 import { getHistory } from '../services/history'
-import type { Track, RadioStation } from '../types'
+import type { Track } from '../types'
 import { player } from '../services/player'
 import { Spinner } from './ui/Spinner'
 import { QuickPlayCards } from './home/QuickPlayCards'
-import { TrackGrid, StationGrid } from './home/MediaGrid'
+import { TrackGrid } from './home/MediaGrid'
 import { GenreBrowser, GenrePicker } from './home/GenreBrowser'
 import { MoodGrid } from './home/MoodGrid'
 import { TrackRow } from './TrackRow'
 
 export function HomeTab() {
   const [tracks, setTracks] = useState<Track[]>([])
-  const [topStations, setTopStations] = useState<RadioStation[]>([])
-  const [somaStations, setSomaStations] = useState<RadioStation[]>([])
   const [loading, setLoading] = useState(true)
   const [showGenrePicker, setShowGenrePicker] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
 
   const favTracks = getFavoriteTracks()
-  const favStations = getFavoriteStations()
   const favGenre = getFavoriteGenre()
   const history = getHistory()
-  const recentTracks = history.filter(h => h.track).map(h => h.track!).slice(0, 5)
+  const recentTracks = history.map(h => h.track).slice(0, 5)
 
   useEffect(() => {
     // Fast: load Jamendo trending first (fastest API)
     getTrending(20).then(t => { setTracks(t); setLoading(false) })
-    // Background: stations + SomaFM
-    getTopStations(10).then(setTopStations)
-    getSomaFMChannels().then(setSomaStations)
   }, [])
 
   const playGenre = async (genre?: string) => {
     const g = genre || favGenre || 'electronic'
     if (genre) { setFavoriteGenre(genre); setShowGenrePicker(false) }
-    const [stations, jTracks] = await Promise.all([
-      getStationsByGenre(g, 10),
-      getByGenre(g, 10),
-    ])
-    if (jTracks.length > 0) {
-      player.playTrack(jTracks[0], jTracks, 0)
-    } else if (stations.length > 0) {
-      player.playStation(stations[0])
-    }
+    const jTracks = await getByGenre(g, 10)
+    if (jTracks.length > 0) player.playTrack(jTracks[0], jTracks, 0)
   }
 
   return (
@@ -67,8 +52,6 @@ export function HomeTab() {
       {/* Quick play */}
       <QuickPlayCards
         favTracks={favTracks}
-        favStations={favStations}
-        topStations={topStations}
         tracks={tracks}
         favGenre={favGenre}
         onPickGenre={() => setShowGenrePicker(true)}
@@ -98,10 +81,6 @@ export function HomeTab() {
       ) : (
         <TrackGrid tracks={tracks} title="Trending" showPlayAll />
       )}
-
-      {/* Radio */}
-      {somaStations.length > 0 && <StationGrid stations={somaStations} title="SomaFM · Ad-Free Radio" />}
-      {topStations.length > 0 && <StationGrid stations={topStations} title="Popular Stations" />}
 
       {/* Genre browser */}
       <GenreBrowser />

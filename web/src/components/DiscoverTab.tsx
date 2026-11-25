@@ -90,7 +90,7 @@ export function DiscoverTab() {
                 className={`flex-shrink-0 w-20 md:w-auto snap-start text-center group ${selectedArtist?.id === a.id ? 'opacity-100' : ''}`}
               >
                 <div className={`w-20 h-20 md:w-full md:aspect-square rounded-full overflow-hidden ring-2 transition-colors ${selectedArtist?.id === a.id ? 'ring-accent' : 'ring-white/6 group-hover:ring-white/15'}`}>
-                  <Artwork src={a.image} alt={a.name} size={80} type="track" rounded="rounded-full" />
+                  <Artwork src={a.image} alt={a.name} size={80} rounded="rounded-full" />
                 </div>
                 <div className="text-[11px] font-semibold truncate mt-2">{a.name}</div>
               </button>
